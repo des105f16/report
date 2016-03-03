@@ -26,7 +26,7 @@ Each policy contains an owner $o$ and a set of readers $r_1,r_2,\dots,r_n$.
 Then, for each label $L$ we have a set of owners, denoted $owners(L)$ and for each $o \in owners(L)$ we have a reader set, denoted $readers(L, o)$.
 
 \begin{example}{A label with two policies}\label{dlm:ex:simple_label}
-  \texttt{int \{\{o1<-r1,r2; o2<-r2,r3\}\} x = 0;}
+  \texttt{int \{\{o1->r1,r2; o2->r2,r3\}\} x = 0;}
 \end{example}
 
 \subsection{Principals}
@@ -48,10 +48,7 @@ The property of labels that we want to compare is their \emph{restrictiveness}.
 We will use the simple, and more strict, definition, as we for the moment will not take into account the principal hierarchies.
 The ``at most as restrictive as'' $\sqsubseteq$ is defined as follows:
 
-\begin{equation}
-  \begin{split}
-    \text{For } L_1 \sqsubseteq L_2 \text{ we have that}\\
-    owners(L_1) \subseteq owners(L_2) \text{ and}\\
-    \forall o \in owners(L_1), readers(L_1, o) \supseteq readers(L_2, o)
-  \end{split}
-\end{equation}
+\begin{definition}{$L_1 \sqsubseteq L_2$}
+  $owners(L_1) \subseteq owners(L_2)$\\
+  $\forall o, o \in owners(L_1), readers(L_1, o) \supseteq readers(L_2, o)$
+\end{definition}
