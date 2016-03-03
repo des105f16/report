@@ -68,3 +68,11 @@ Since each label is a set of policies, the definition of label join $\sqcup$ is 
    which is equal to\\
    \texttt{\{\{a->z,y;b->x,w\}\}}.
 \end{example}
+
+\subsection{Implicit flows}
+\newcommand{\dlmpc}{$\underline{pc}$}
+When assigning a value to a slot, possibly from another slot, it is an explicit flow.
+It is also possible to have implicit flows throughout a program due to control structures, such as loops and conditionals in general.
+For whatever assignments we would do inside a block (or within a deeper block hierarchy) we need to take the predicates of these blocks into consideration.
+This is done by adding the concept of \emph{program counter labels}, denoted \dlmpc.
+For each scope we will have an implicit \dlmpc, depending on the surrounding predicates' labels.
