@@ -29,7 +29,7 @@ Then, for each label $L$ we have a set of owners, denoted $owners(L)$ and for ea
   \texttt{int \{\{o1->r1,r2; o2->r2,r3\}\} x = 0;}
 \end{example}
 
-\subsection{Principals}
+\subsubsection{Principals}
 In the above description, we saw examples of \textit{principals}.
 Both the owners and readers of a policy are considered principals.
 In short, principals represent either real-world users or the authority under which programs are run.
@@ -56,8 +56,22 @@ The ``at most as restrictive as'' $\sqsubseteq$ is defined as follows:
 
 \subsubsection{Label join}
 In order to compare composite labels, such as those for arithmetical expressions, we need to be able to create and use a ``joined label''.
+This is also needed when we consider implicit flows via scope blocks, as will be described in the following section.
+The result of a label join is the least restrictive label that maintains all flow restrictions.
 Since each label is a set of policies, the definition of label join $\sqcup$ is simply:
 
 \begin{definition}{Label Join Rule}
   $L_1 \sqcup L_2 = L_1 \cup L_2$
 \end{definition}
+
+\begin{example}{Joining of two labels}
+  If we have the two initializations:\\
+  \texttt{int \{\{a->z,y\}\} val1 = 4;}\\
+  \texttt{int \{\{b->x,w\}\} val2 = 8;}\\[1em]
+  The joined label of the expression\\
+   \texttt{val1 + val2}\\
+   is\\
+   \texttt{\{\{a->z,y\}\} JOIN \{\{b->x,w\}\}}\\
+   which is equal to\\
+   \texttt{\{\{a->z,y;b->x,w\}\}}.
+\end{example}
