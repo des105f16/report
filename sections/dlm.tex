@@ -25,6 +25,12 @@ It is possible to define both read (privacy) and write (integrity) policies, how
 Each policy contains an owner $o$ and a set of readers $r_1,r_2,\dots,r_n$.
 Then, for each label $L$ we have a set of owners, denoted $owners(L)$ and for each $o \in owners(L)$ we have a reader set, denoted $readers(L, o)$.
 
-\begin{example}{A label with two policies}
+\begin{example}{A label with two policies}\label{dlm:ex:simple_label}
   \texttt{int \{\{o1<-r1,r2; o2<-r2,r3\}\} x = 0;}
 \end{example}
+
+\subsubsection{The effective reader set}
+Having multiple owners, where each owner defining its own policy, enables the individual owner to ensure that ``shared'' data isn't redistributed without all owners' consent.
+This also means that we need to determine the \emph{effective reader set}, which is the set of readers that all owners agree upon.
+Thus, the effective reader set is the intersection of the readers defined in each policy.
+For the label in \cref{dlm:ex:simple_label}, the effective reader set is $\{r2\}$ $= \{r1,r2\} \cap \{r2, r3\}$.
