@@ -1,3 +1,5 @@
+% !TEX root = ../master.tex
+
 \section{The Decentralized Label Model}
 % labels (owner,reader, no writer yet)
 % at most as restrictive definition
@@ -10,10 +12,19 @@ The Decentralized Label Model \cite{myers1997, myers1998, myers2000} is a method
 This is done by annotating the source code with security policies, in the form of labels attached to data-holding constructs.
 This section will present the necessary information needed to understand the first implementation of \thetool.
 The descriptions and definitions in this section are based on \cite{myers1997, myers1998, myers2000}, but only relevant parts will be presented now.
-Throughout the descriptions and examples, we will use the same grammar as that used by \thetool.
+Throughout the examples, we will use the same grammar as that used by \thetool.
 
 \subsection{Labels and Policies}
 Throughout a program, values are declared, initialized, and assigned to variables and other value-holders.
-Value-holders are collectively known as \emph{slots}, which cover constructs such as variables, structs, and other storage locations.
-In order to ensure that a certain assignment is legal, such that no information is unintentionally leaked, we assign labels to these value-holders so that they can be compared.
+Value-holders are collectively known as \emph{slots}, which cover constructs such as variables, structs, return values, and other storage locations.
+In order to ensure that a certain assignment is legal, such that no information is unintentionally leaked, we assign \emph{labels} to these value-holders so that they can be compared.
 This way we can ensure that an assignment is only legal in the cases where higher-security values aren't assigned to lower-security slots.
+
+For any slot, we can attach a label $L$, which is a set of \emph{policies}.
+It is possible to define both read (privacy) and write (integrity) policies, however, we will leave out write policies for now.
+Each policy contains an owner $o$ and a set of readers $r_1,r_2,\dots,r_n$.
+Then, for each label $L$ we have a set of owners, denoted $owners(L)$ and for each $o \in owners(L)$ we have a reader set, denoted $readers(L, o)$.
+
+\begin{example}{A label with two policies}
+  \texttt{int \{\{o1<-r1,r2; o2<-r2,r3\}\} x = 0;}
+\end{example}
