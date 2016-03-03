@@ -29,6 +29,13 @@ Then, for each label $L$ we have a set of owners, denoted $owners(L)$ and for ea
   \texttt{int \{\{o1<-r1,r2; o2<-r2,r3\}\} x = 0;}
 \end{example}
 
+\subsection{Principals}
+In the above description, we saw examples of \textit{principals}.
+Both the owners and readers of a policy are considered principals.
+In short, principals represent either real-world users or the authority under which programs are run.
+It is also possible to defined principal hierarchies, so that we can describe more complex principal relationships, such as groups or roles.
+However, principal hierarchies will be left out for now.
+
 \subsubsection{The effective reader set}
 Having multiple owners, where each owner defining its own policy, enables the individual owner to ensure that ``shared'' data isn't redistributed without all owners' consent.
 This also means that we need to determine the \emph{effective reader set}, which is the set of readers that all owners agree upon.
