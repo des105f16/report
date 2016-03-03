@@ -45,10 +45,19 @@ For the label in \cref{dlm:ex:simple_label}, the effective reader set is $\{r2\}
 \subsubsection{Label comparison}
 In order to check that security policies are enforced throughout a program, we need to be able to compare the labels.
 The property of labels that we want to compare is their \emph{restrictiveness}.
-We will use the simple, and more strict, definition, as we for the moment will not take into account the principal hierarchies.
+We will use the simple, and more strict, definition\cite{myers1997}, as we for the moment will not take into account the principal hierarchies.
 The ``at most as restrictive as'' $\sqsubseteq$ is defined as follows:
 
-\begin{definition}{$L_1 \sqsubseteq L_2$}
-  $owners(L_1) \subseteq owners(L_2)$\\
+\begin{definition}{Label Comparison Rule}
+  For $L_1 \sqsubseteq L_2$, we have that
+  $owners(L_1) \subseteq owners(L_2)$ and\\
   $\forall o, o \in owners(L_1), readers(L_1, o) \supseteq readers(L_2, o)$
+\end{definition}
+
+\subsubsection{Label join}
+In order to compare composite labels, such as those for arithmetical expressions, we need to be able to create and use a ``joined label''.
+Since each label is a set of policies, the definition of label join $\sqcup$ is simply:
+
+\begin{definition}{Label Join Rule}
+  $L_1 \sqcup L_2 = L_1 \cup L_2$
 \end{definition}
