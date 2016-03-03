@@ -10,3 +10,9 @@ The Decentralized Label Model \cite{myers1997, myers1998, myers2000} is a method
 This is done by annotating the source code with security policies, in the form of labels attached to data-holding constructs.
 This section will present the necessary information needed to understand the first implementation of our flow-checking tool.
 The descriptions and definitions in this section are based on \cite{myers1997, myers1998, myers2000}, but only relevant parts will be presented now.
+
+\subsection{Labels and Policies}
+Throughout a program, values are declared, initialized, and assigned to variables and other value-holders.
+Value-holders are collectively known as \emph{slots}, which cover constructs such as variables, structs, and other storage locations.
+In order to ensure that a certain assignment is legal, such that no information is unintentionally leaked, we assign labels to these value-holders so that they can be compared.
+This way we can ensure that an assignment is only legal in the cases where higher-security values aren't assigned to lower-security slots.
