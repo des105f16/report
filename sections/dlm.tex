@@ -88,7 +88,7 @@ For whatever assignments we would do inside a block (or within a deeper block hi
 This is done by adding the concept of \emph{program counter labels}, denoted \dlmpc.
 For each scope we will have an implicit \dlmpc, depending on the surrounding predicates' labels.
 
-\begin{example}{Implicit leak}
+\begin{example}{Implicit leak}\label{dlm:ex:implicit_leak}
   If we have the following program (each line commented with the current \dlmpc):
   \begin{lstlisting}[style=dlmc]
 int {{a->z,y}} val = 0;   // BOTTOM
@@ -101,4 +101,37 @@ return val;               // BOTTOM
   In this example we would have an implicit leak of \texttt{cond}, by way of \texttt{val}.
   This is due to the assignment of \texttt{val} inside of the \texttt{if}, as the \dlmpc~ is increased to the join of the outer scope (BOTTOM) and the predicate of the current scope (\texttt{cond}'s label).
   For this program to pass \thetool, we would have to add a more strict policy to \texttt{val}, so that it could match the policy of \texttt{cond}.
+\end{example}
+
+\newcommand{\dlmactsfor}{\texttt{if\_acts\_for}}
+\newcommand{\dlmdeclassify}{\texttt{declassify}}
+
+\subsection{Authority and declassification}
+In order to avoid mishaps by setting certain policies too lax, so that certain flows are permitted, we can temporarily set some policies to be more strict, and then only relax (\emph{declassify}) them when we really need to.
+In order to do this, we need the concept of \emph{authority}.
+At any point during running a program, it will have a \emph{true authority}, which is the maximal authority by which the program can carry out operations.
+When we call functions, we can do this with a certain authority, corresponding to running that method with the authority of a specific principal.
+However, in order to take advantage of this given authority, we need to explicitly claim it, this is done by using the \dlmactsfor\texttt{(a, b)} function.
+Calling this function, from within a function $a$ given the ability to act for $b$, we can obtain \emph{effective authority}, enabling us to carry out operations that would normally only be permissible for $b$ itself.
+
+Inside the \dlmactsfor~ block, we now have the ability to carry out operations that normally would be permissible only to $b$ itself.
+Most importantly, we can do declassification, deliberately and explicitly relaxing the security policies in which $b$ is owner.
+This is done by calling the \dlmdeclassify\texttt(v, l) function, with a slot $v$ and a new label $l$ as inputs, returning the value $v$ relabeled to $l$.
+
+The combination of these two concepts is especially useful when we have sensitive inputs to a method and want to carry out our calculations without the fear of neither explicit or implicit leakage.
+This way we can keep our strict policies throughout the calculations of the method and only relax the label once we want to return the result.
+
+\begin{example}{Temporarily restricting a label}
+  Building on \cref{dlm:ex:implicit_leak}, we can set the label for \texttt{val} to match that of \texttt{cond}, and then only relax that label when we need to return \texttt{val}, ensuring that we have the ability to do so:
+  \begin{lstlisting}[style=dlmc]
+int {{a->y}} val = 0;
+int {{a->y}} cond = 1;
+if (cond) {
+  val++;
+}
+if_acts_for(this, a) {
+  return declassify(x, {{a->y,z}});
+}
+return -1;
+  \end{lstlisting}
 \end{example}
