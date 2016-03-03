@@ -73,9 +73,24 @@ Since each label is a set of policies, the definition of label join $\sqcup$ is 
 \end{example}
 
 \subsection{Implicit flows}
-\newcommand{\dlmpc}{$\underline{pc}$}
 When assigning a value to a slot, possibly from another slot, it is an explicit flow.
 It is also possible to have implicit flows throughout a program due to control structures, such as loops and conditionals in general.
 For whatever assignments we would do inside a block (or within a deeper block hierarchy) we need to take the predicates of these blocks into consideration.
 This is done by adding the concept of \emph{program counter labels}, denoted \dlmpc.
 For each scope we will have an implicit \dlmpc, depending on the surrounding predicates' labels.
+
+\begin{example}{Implicit leak}
+  If we have the following program (each line commented with the current \dlmpc):
+  \begin{code}
+    int \{\{a->z,y\}\} val = 0; // BOTTOM
+    int \{\{a->y\}\} cond = 1; // BOTTOM
+
+    if (cond) \{
+    \hspace{0.5em} val++; // BOTTOM JOIN \{\{a->y\}\}
+    \}
+    return val; // BOTTOM
+  \end{code}
+  In this example we would have an implicit leak of \texttt{cond}, by way of \texttt{val}.
+  This is due to the assignment of \texttt{val} inside of the \texttt{if}, as the \dlmpc~ is increased to the join of the outer scope (BOTTOM) and the predicate of the current scope (\texttt{cond}'s label).
+  For this program to pass \thetool, we would have to add a more strict policy to \texttt{val}, so that it could match the policy of \texttt{cond}.
+\end{example}
