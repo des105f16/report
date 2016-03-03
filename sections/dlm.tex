@@ -18,11 +18,10 @@ It is possible to define both read (privacy) and write (integrity) policies, how
 Each policy contains an owner $o$ and a set of readers $r_1,r_2,\dots,r_n$.
 Then, for each label $L$ we have a set of owners, denoted $owners(L)$ and for each $o \in owners(L)$ we have a reader set, denoted $readers(L, o)$.
 
-\newcommand{\dlmpc}{$\underline{pc}$}
-\newenvironment{code}{\setlength\parindent{0pt}\obeylines\ttfamily}{\par}
-
 \begin{example}{A label with two policies}\label{dlm:ex:simple_label}
-  \texttt{int \{\{o1->r1,r2; o2->r2,r3\}\} x = 0;}
+  \begin{lstlisting}[style=dlmc]
+int {{o1->r1,r2; o2->r2,r3}} x = 0;
+  \end{lstlisting}
 \end{example}
 
 \subsubsection{Principals}
@@ -61,16 +60,26 @@ Since each label is a set of policies, the definition of label join $\sqcup$ is 
 \end{definition}
 
 \begin{example}{Joining of two labels}
-  If we have the two initializations:\\
-  \texttt{int \{\{a->z,y\}\} val1 = 4;}\\
-  \texttt{int \{\{b->x,w\}\} val2 = 8;}\\[1em]
+  If we have the two initializations:
+  \begin{lstlisting}[style=dlmc]
+int {{a->z,y}} val1 = 4;
+int {{b->x,w}} val2 = 8;
+  \end{lstlisting}
   The joined label of the expression\\
-   \texttt{val1 + val2}\\
-   is\\
-   \texttt{\{\{a->z,y\}\} JOIN \{\{b->x,w\}\}}\\
-   which is equal to\\
-   \texttt{\{\{a->z,y;b->x,w\}\}}.
+  \begin{lstlisting}[style=dlmc]
+val1 + val2
+  \end{lstlisting}
+  is
+  \begin{lstlisting}[style=dlmc]
+{{a->z,y}} JOIN {{b->x,w}}
+  \end{lstlisting}
+  which is equal to
+  \begin{lstlisting}[style=dlmc]
+{{a->z,y; b->x,w}}
+  \end{lstlisting}
 \end{example}
+
+\newcommand{\dlmpc}{$\underline{pc}$}
 
 \subsection{Implicit flows}
 When assigning a value to a slot, possibly from another slot, it is an explicit flow.
@@ -81,15 +90,14 @@ For each scope we will have an implicit \dlmpc, depending on the surrounding pre
 
 \begin{example}{Implicit leak}
   If we have the following program (each line commented with the current \dlmpc):
-  \begin{code}
-    int \{\{a->z,y\}\} val = 0; // BOTTOM
-    int \{\{a->y\}\} cond = 1; // BOTTOM
-
-    if (cond) \{
-    \hspace{0.5em} val++; // BOTTOM JOIN \{\{a->y\}\}
-    \}
-    return val; // BOTTOM
-  \end{code}
+  \begin{lstlisting}[style=dlmc]
+int {{a->z,y}} val = 0;   // BOTTOM
+int {{a->y}} cond = 1;    // BOTTOM
+if (cond) {
+  val++;                  // BOTTOM JOIN {{a->y}}
+}
+return val;               // BOTTOM
+  \end{lstlisting}
   In this example we would have an implicit leak of \texttt{cond}, by way of \texttt{val}.
   This is due to the assignment of \texttt{val} inside of the \texttt{if}, as the \dlmpc~ is increased to the join of the outer scope (BOTTOM) and the predicate of the current scope (\texttt{cond}'s label).
   For this program to pass \thetool, we would have to add a more strict policy to \texttt{val}, so that it could match the policy of \texttt{cond}.
