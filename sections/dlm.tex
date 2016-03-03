@@ -34,3 +34,17 @@ Having multiple owners, where each owner defining its own policy, enables the in
 This also means that we need to determine the \emph{effective reader set}, which is the set of readers that all owners agree upon.
 Thus, the effective reader set is the intersection of the readers defined in each policy.
 For the label in \cref{dlm:ex:simple_label}, the effective reader set is $\{r2\}$ $= \{r1,r2\} \cap \{r2, r3\}$.
+
+\subsubsection{Label comparison}
+In order to check that security policies are enforced throughout a program, we need to be able to compare the labels.
+The property of labels that we want to compare is their \emph{restrictiveness}.
+We will use the simple, and more strict, definition, as we for the moment will not take into account the principal hierarchies.
+The ``at most as restrictive as'' $\sqsubseteq$ is defined as follows:
+
+\begin{equation}
+  \begin{split}
+    \text{For } L_1 \sqsubseteq L_2 \text{ we have that}\\
+    owners(L_1) \subseteq owners(L_2) \text{ and}\\
+    \forall o \in owners(L_1), readers(L_1, o) \supseteq readers(L_2, o)
+  \end{split}
+\end{equation}
