@@ -57,6 +57,13 @@
 \newcommand{\mikael}[2][]
 {
   \stepcounter{todomikael}
+  \namedtodo{#1}{#2}
+  {
+    \rfrac{\arabic{todomikael}}{\arabic{todofull}} Mikael}{green}{black}
+}
+\newcommand{\mikaelin}[2][]
+{
+  \stepcounter{todomikael}
   \namedtodoinline{#1}{#2}
   {
     \rfrac{\arabic{todomikael}}{\arabic{todofull}} Mikael}{green}{black}
