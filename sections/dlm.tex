@@ -79,6 +79,12 @@ val1 + val2
   \end{lstlisting}
 \end{example}
 
+\subsubsection{Security class lattice}
+By having this relationship between labels, we can see the set of all our labels as a partially-ordered set: a \emph{lattice}.
+This means that we have a hierarchy, in which every two elements have a unique parent: the result of a join ($\sqcup$) of the two labels, as well as a unique child: the result of a meet ($\sqcap$) of the same two labels.
+Additionally, to represent the least restrictive label of any security class lattice we have a bottom element, denoted $\bot$.
+Dual to the bottom element, we also have the most restrictive label: the top element, denoted $\top$.
+
 \newcommand{\dlmpc}{$\underline{pc}$}
 
 \subsection{Implicit flows}
