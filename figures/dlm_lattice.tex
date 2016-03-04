@@ -1,0 +1,25 @@
+% !TEX root = ../master.tex
+
+\newcommand{\mydistance}{1em}
+\begin{tikzpicture}[node distance=0em]
+\node(top)                                        {$\top = \{a \rightarrow; b \rightarrow \}$};
+\node(aa_ba)  [below left=\mydistance of top]     {$\{a \rightarrow a; b \rightarrow a\}$};
+\node(ab_bb)  [below right=\mydistance of top]    {$\{a \rightarrow b; b \rightarrow b\}$};
+\node(aa)     [below left=\mydistance of aa_ba]   {$\{a \rightarrow a\}$};
+\node(ab)     [below right=\mydistance of aa_ba]  {$\{a \rightarrow b\}$};
+\node(ba)     [below left=\mydistance of ab_bb]   {$\{b \rightarrow a\}$};
+\node(bb)     [below right=\mydistance of ab_bb]  {$\{b \rightarrow b\}$};
+\node(aab)    [below right=\mydistance of aa]     {$\{a \rightarrow a,b\}$};
+\node(bab)    [below left=\mydistance of bb]      {$\{b \rightarrow a,b\}$};
+\node(bottom) [below=3cm of top]  {$\bot = \{a \rightarrow a,b; b \rightarrow a,b\}$};
+\draw (top) -- (aa_ba);
+\draw (top) -- (ab_bb);
+\draw (top) -- (ab);
+\draw (top) -- (ba);
+\draw (aa_ba) -- (aa);
+\draw (aa_ba) -- (ab);
+\draw (ab_bb) -- (ab);
+\draw (ab_bb) -- (bb);
+\draw (aa_ba) -- (ba);
+\draw (ab_bb) -- (ba);
+\end{tikzpicture}
