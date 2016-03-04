@@ -1,5 +1,12 @@
 % !TEX root = ../master.tex
 
+\newcommand{\labelof}[1]{\underline{#1}}
+\newcommand{\dlmc}[1]{\lstinline[style=dlmc]{#1}}
+\newcommand{\dlmactsfor}{\dlmc{if\_acts\_for}}
+\newcommand{\dlmdeclassify}{\dlmc{declassify}}
+\newcommand{\dlmpc}{$\underline{pc}$}
+\newcommand{\mathcomment}[1]{\color{green!50!black}{#1}}
+
 \section{The Decentralized Label Model}
 The Decentralized Label Model \cite{myers1997, myers1998, myers2000} is a method of ensuring information flow control in a system.
 This is done by annotating the source code with security policies, in the form of labels attached to data-holding constructs.
@@ -9,54 +16,57 @@ Throughout the examples, we will use the same grammar as that used by \thetool.
 
 \subsection{Labels and Policies}
 Throughout a program, values are declared, initialized, and assigned to variables and other value-holders.
-Value-holders are collectively known as \emph{slots}, which cover constructs such as variables, structs, return values, and other storage locations.
+Value-holders are collectively known as \emph{slots}, which cover constructs such as variables, structs, and other storage locations.
 In order to ensure that a certain assignment is legal, such that no information is unintentionally leaked, we assign \emph{labels} to these value-holders so that they can be compared.
 This way we can ensure that an assignment is only legal in the cases where higher-security values aren't assigned to lower-security slots.
+The same concept applies to more abstract language constructs, such as functions (and their return values).
 
 For any slot, we can attach a label $L$, which is a set of \emph{policies}.
-It is possible to define both read (privacy) and write (integrity) policies, however, we will leave out write policies for now.
+It is possible to define both read (\emph{privacy}) and write (\emph{integrity}) policies, however, we will leave out write policies for now.
 Each policy contains an owner $o$ and a set of readers $r_1,r_2,\dots,r_n$.
 Then, for each label $L$ we have a set of owners, denoted $owners(L)$ and for each $o \in owners(L)$ we have a reader set, denoted $readers(L, o)$.
 
 \begin{example}{A label with two policies}\label{dlm:ex:simple_label}
-  \begin{lstlisting}[style=dlmc]
-int {{o1->r1,r2; o2->r2,r3}} x = 0;
-  \end{lstlisting}
+  \[\{o1 \rightarrow r1, r2; o2 \rightarrow r2, r3\}\]
 \end{example}
 
 \subsubsection{Principals}
-In the above description, we saw examples of \textit{principals}.
+In the above description, we saw examples of \emph{principals}.
 Both the owners and readers of a policy are considered principals.
 In short, principals represent either real-world users or the authority under which programs are run.
-It is also possible to defined principal hierarchies, so that we can describe more complex principal relationships, such as groups or roles.
+It is also possible to defined \emph{principal hierarchies}, so that we can describe more complex principal relationships, such as groups or roles.
 However, principal hierarchies will be left out for now.
 
 \subsubsection{The effective reader set}
-Having multiple owners, where each owner defining its own policy, enables the individual owner to ensure that ``shared'' data isn't redistributed without all owners' consent.
+Having multiple owners, where each owner defining its own policy, enables the individual owner to ensure that ``shared'' data isn't redistributed without the consent of all owners.
 This also means that we need to determine the \emph{effective reader set}, which is the set of readers that all owners agree upon.
 Thus, the effective reader set is the intersection of the readers defined in each policy.
 For the label in \cref{dlm:ex:simple_label}, the effective reader set is $\{r2\}$ $= \{r1,r2\} \cap \{r2, r3\}$.
 
 \subsubsection{Label comparison}
 In order to check that security policies are enforced throughout a program, we need to be able to compare the labels.
-The property of labels that we want to compare is their \emph{restrictiveness}.
-We will use the simple, and more strict, definition\cite{myers1997}, as we for the moment will not take into account the principal hierarchies.
-The ``at most as restrictive as'' $\sqsubseteq$ is defined as follows:
+The property of labels that we want to compare is their \emph{strictness}.
+We will use the simple definition\cite{myers1997}, as we for the moment will not take into account the principal hierarchies.
+The ``at most as restrictive as''-relation ($\sqsubseteq$) is defined as follows:
 
 \begin{definition}{Label Comparison Rule}
-  For $L_1 \sqsubseteq L_2$, we have that\\
-  $owners(L_1) \subseteq owners(L_2)$ and\\
-  $\forall o, o \in owners(L_1), readers(L_1, o) \supseteq readers(L_2, o)$
+  \begin{align}
+    \text{For } & L_1 \sqsubseteq L_2 \text{ we have that} \nonumber \\
+    & owners(L_1) \subseteq owners(L_2) \text{ and} \nonumber \\
+    & \forall o, o \in owners(L_1), readers(L_1, o) \supseteq readers(L_2, o) \nonumber
+  \end{align}
 \end{definition}
 
 \subsubsection{Label join}
 In order to compare composite labels, such as those for arithmetical expressions, we need to be able to create and use a ``joined label''.
 This is also needed when we consider implicit flows via scope blocks, as will be described in the following section.
 The result of a label join is the least restrictive label that maintains all flow restrictions.
-Since each label is a set of policies, the definition of label join $\sqcup$ is simply:
+Since each label is a set of policies, the definition of label join ($\sqcup$) is simply:
 
 \begin{definition}{Label Join Rule}
-  $L_1 \sqcup L_2 = L_1 \cup L_2$
+  \[
+    L_1 \sqcup L_2 = L_1 \cup L_2
+  \]
 \end{definition}
 
 \begin{example}{Joining of two labels}
@@ -71,7 +81,7 @@ val1 + val2
   \end{lstlisting}
   is
   \begin{lstlisting}[style=dlmc]
-{{a->z,y}} JOIN {{b->x,w}}
+{{a->z,y}};{{b->x,w}}
   \end{lstlisting}
   which is equal to
   \begin{lstlisting}[style=dlmc]
@@ -85,11 +95,9 @@ This means that we have a hierarchy, in which every two elements have a unique p
 Additionally, to represent the least restrictive label of any security class lattice we have a bottom element, denoted $\bot$.
 Dual to the bottom element, we also have the most restrictive label: the top element, denoted $\top$.
 
-\newcommand{\dlmpc}{$\underline{pc}$}
-
 \subsection{Implicit flows}
 When assigning a value to a slot, possibly from another slot, it is an explicit flow.
-It is also possible to have implicit flows throughout a program due to control structures, such as loops and conditionals in general.
+In addition to explicit flows, it is also possible to have implicit flows throughout a program, due to conditional control structures (such as loops).
 For whatever assignments we would do inside a block (or within a deeper block hierarchy) we need to take the predicates of these blocks into consideration.
 This is done by adding the concept of \emph{program counter labels}, denoted \dlmpc.
 For each scope we will have an implicit \dlmpc, depending on the surrounding predicates' labels.
@@ -97,38 +105,36 @@ For each scope we will have an implicit \dlmpc, depending on the surrounding pre
 \begin{example}{Implicit leak}\label{dlm:ex:implicit_leak}
   If we have the following program (each line commented with the current \dlmpc):
   \begin{lstlisting}[style=dlmc]
-int {{a->z,y}} val = 0;   // BOTTOM
-int {{a->y}} cond = 1;    // BOTTOM
+int {{a->z,y}} val = 0;   // $\mathcomment{\bot}$
+int {{a->y}} cond = 1;    // $\mathcomment{\bot}$
 if (cond) {
-  val++;                  // BOTTOM JOIN {{a->y}}
+  val++;                  // $\mathcomment{\bot \sqcup \{a \rightarrow y\}}$
 }
-return val;               // BOTTOM
+return val;               // $\mathcomment{\bot}$
   \end{lstlisting}
-  In this example we would have an implicit leak of \texttt{cond}, by way of \texttt{val}.
-  This is due to the assignment of \texttt{val} inside of the \texttt{if}, as the \dlmpc~ is increased to the join of the outer scope (BOTTOM) and the predicate of the current scope (\texttt{cond}'s label).
-  For this program to pass \thetool, we would have to add a more strict policy to \texttt{val}, so that it could match the policy of \texttt{cond}.
+  In this example we would have an implicit leak of \dlmc{cond}, by way of \dlmc{val}.
+  This is due to the assignment of \dlmc{val} inside of the \dlmc{if}-statement, as \dlmpc~ is increased to the join of the outer scope ($\bot$) and the label of the scope's predicate (\labelof{\dlmc{cond}}).
+  For this program to pass \thetool, we would have to add a more strict policy to \dlmc{val}, so that it could match the policy of \dlmc{cond}.
 \end{example}
-
-\newcommand{\dlmactsfor}{\texttt{if\_acts\_for}}
-\newcommand{\dlmdeclassify}{\texttt{declassify}}
 
 \subsection{Authority and declassification}
 In order to avoid mishaps by setting certain policies too lax, so that certain flows are permitted, we can temporarily set some policies to be more strict, and then only relax (\emph{declassify}) them when we really need to.
 In order to do this, we need the concept of \emph{authority}.
 At any point during running a program, it will have a \emph{true authority}, which is the maximal authority by which the program can carry out operations.
-When we call functions, we can do this with a certain authority, corresponding to running that method with the authority of a specific principal.
-However, in order to take advantage of this given authority, we need to explicitly claim it, this is done by using the \dlmactsfor\texttt{(a, b)} function.
-Calling this function, from within a function $a$ given the ability to act for $b$, we can obtain \emph{effective authority}, enabling us to carry out operations that would normally only be permissible for $b$ itself.
+Whenever we call a function, we can do this with a certain authority, corresponding to running that method with the authority of a specific principal.
+However, in order to take advantage of this given authority, we need to explicitly claim it.
+This is done by using the \dlmactsfor\dlmc{(a, b)} function, where $a$ is the principal (typically the function itself) trying to obtain the authority of $b$.
+Only after calling this function will we obtain the \emph{effective authority} to act for $b$, enabling us to carry out operations that would normally only be permissible for $b$ itself.
 
 Inside the \dlmactsfor~ block, we now have the ability to carry out operations that normally would be permissible only to $b$ itself.
-Most importantly, we can do declassification, deliberately and explicitly relaxing the security policies in which $b$ is owner.
-This is done by calling the \dlmdeclassify\texttt(v, l) function, with a slot $v$ and a new label $l$ as inputs, returning the value $v$ relabeled to $l$.
+Most importantly, we can do declassification -- deliberately and explicitly relaxing the security policies in which $b$ is owner.
+This is done by calling the \dlmdeclassify\dlmc{(v, l)} function, with a slot $v$ and a new label $l$ as inputs, returning the value $v$ relabeled to $l$.
 
 The combination of these two concepts is especially useful when we have sensitive inputs to a method and want to carry out our calculations without the fear of neither explicit or implicit leakage.
 This way we can keep our strict policies throughout the calculations of the method and only relax the label once we want to return the result.
 
 \begin{example}{Temporarily restricting a label}
-  Building on \cref{dlm:ex:implicit_leak}, we can set the label for \texttt{val} to match that of \texttt{cond}, and then only relax that label when we need to return \texttt{val}, ensuring that we have the ability to do so:
+  Building on \cref{dlm:ex:implicit_leak}, we can set the label for \dlmc{val} to match that of \dlmc{cond}, and then only relax that label when we need to return \dlmc{val}, ensuring that we have the ability to do so:
   \begin{lstlisting}[style=dlmc]
 int {{a->y}} val = 0;
 int {{a->y}} cond = 1;
@@ -140,4 +146,5 @@ if_acts_for(this, a) {
 }
 return -1;
   \end{lstlisting}
+  While we still leak some information about \dlmc{cond}, we do it explicitly.
 \end{example}
