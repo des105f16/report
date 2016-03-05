@@ -1,25 +1,32 @@
 % !TEX root = ../master.tex
 
-\newcommand{\mydistance}{1em}
-\begin{tikzpicture}[node distance=0em]
-\node(top)                                        {$\top = \{a \rightarrow; b \rightarrow \}$};
-\node(aa_ba)  [below left=\mydistance of top]     {$\{a \rightarrow a; b \rightarrow a\}$};
-\node(ab_bb)  [below right=\mydistance of top]    {$\{a \rightarrow b; b \rightarrow b\}$};
-\node(aa)     [below left=\mydistance of aa_ba]   {$\{a \rightarrow a\}$};
-\node(ab)     [below right=\mydistance of aa_ba]  {$\{a \rightarrow b\}$};
-\node(ba)     [below left=\mydistance of ab_bb]   {$\{b \rightarrow a\}$};
-\node(bb)     [below right=\mydistance of ab_bb]  {$\{b \rightarrow b\}$};
-\node(aab)    [below right=\mydistance of aa]     {$\{a \rightarrow a,b\}$};
-\node(bab)    [below left=\mydistance of bb]      {$\{b \rightarrow a,b\}$};
-\node(bottom) [below=3cm of top]  {$\bot = \{a \rightarrow a,b; b \rightarrow a,b\}$};
-\draw (top) -- (aa_ba);
-\draw (top) -- (ab_bb);
-\draw (top) -- (ab);
-\draw (top) -- (ba);
-\draw (aa_ba) -- (aa);
-\draw (aa_ba) -- (ab);
-\draw (ab_bb) -- (ab);
-\draw (ab_bb) -- (bb);
-\draw (aa_ba) -- (ba);
-\draw (ab_bb) -- (ba);
+\newcommand{\vdist}{3em}
+\newcommand{\hdist}{1em}
+\begin{tikzpicture}[node distance=1em]
+\node(top)                                              {$\top = \{a \rightarrow;~b \rightarrow \}$};
+\node(aa_ba)  [below left=\vdist and \hdist of top]     {$\{a \rightarrow a;~b \rightarrow a\}$};
+\node(ab_bb)  [below right=\vdist and \hdist of top]    {$\{a \rightarrow b;~b \rightarrow b\}$};
+\node(aa)     [below left=\vdist and \hdist of aa_ba]   {$\{a \rightarrow a\}$};
+\node(ab)     [below right=\vdist and \hdist of aa_ba]  {$\{a \rightarrow b\}$};
+\node(ba)     [below left=\vdist and \hdist of ab_bb]   {$\{b \rightarrow a\}$};
+\node(bb)     [below right=\vdist and \hdist of ab_bb]  {$\{b \rightarrow b\}$};
+\node(aab)    [below right=\vdist and \hdist of aa]     {$\{a \rightarrow a,b\}$};
+\node(bab)    [below left=\vdist and \hdist of bb]      {$\{b \rightarrow a,b\}$};
+\node(bottom) [below=18em of top]  {$\bot = \{a \rightarrow a,b;~b \rightarrow a,b\}$};
+\draw [<-] (top.south) -- (aa_ba.north);
+\draw [<-] (top.south) -- (ab_bb.north);
+\draw [<-] (top.south) -- (ab.north);
+\draw [<-] (top.south) -- (ba.north);
+\draw [<-] (aa_ba.south) -- (aa.north);
+\draw [<-] (aa_ba.south) -- (ab.north);
+\draw [<-] (ab_bb.south) -- (ab.north);
+\draw [<-] (ab_bb.south) -- (bb.north);
+\draw [<-] (aa_ba.south) -- (ba.north);
+\draw [<-] (ab_bb.south) -- (ba.north);
+\draw [<-] (aa.south) -- (aab.north);
+\draw [<-] (ab.south) -- (aab.north);
+\draw [<-] (ba.south) -- (bab.north);
+\draw [<-] (bb.south) -- (bab.north);
+\draw [<-] (aab.south) -- (bottom.north);
+\draw [<-] (bab.south) -- (bottom.north);
 \end{tikzpicture}
