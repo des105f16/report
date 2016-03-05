@@ -21,10 +21,13 @@ In order to ensure that a certain assignment is legal, such that no information 
 This way we can ensure that an assignment is only legal in the cases where higher-security values aren't assigned to lower-security slots.
 The same concept applies to more abstract language constructs, such as functions (and their return values).
 
-For any slot, we can attach a label $L$, which is a set of \emph{policies}.
-It is possible to define both read (\emph{privacy}) and write (\emph{integrity}) policies, however, we will leave out write policies for now.
+For any slot, we can attach a label, denoted $L$, which is a set of \emph{policies}.
+For specific labels, as those attached to slots, the label is instead denoted as the underlined variable name: e.g. for a slot $x$ we denote its label by $\underline{x}$.
+This is useful when we are describing programs, and when we have variable labels such as those for implicit labels (as we will se in \cref{dlm:implicit_labels}).
+
+For a given label it is possible to define both read (\emph{privacy}) and write (\emph{integrity}) policies, however, we will leave out write policies for now.
 Each policy contains an owner $o$ and a set of readers $r_1,r_2,\dots,r_n$.
-Then, for each label $L$ we have a set of owners, denoted $owners(L)$ and for each $o \in owners(L)$ we have a reader set, denoted $readers(L, o)$.
+Then, for each label we have a set of owners, denoted $owners(L)$ and for each $o \in owners(L)$ we have a reader set, denoted $readers(L, o)$.
 
 \begin{example}{A label with two policies}\label{dlm:ex:simple_label}
   \[\{o1 \rightarrow r1, r2; o2 \rightarrow r2, r3\}\]
