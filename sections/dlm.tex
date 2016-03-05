@@ -33,6 +33,11 @@ Then, for each label we have a set of owners, denoted $owners(L)$ and for each $
   \[\{o1 \rightarrow r1, r2; o2 \rightarrow r2, r3\}\]
 \end{example}
 
+If we imagine a system with the principals $o_1, o_2, o_3$, then the above label would have the policies for $o_1$ and $o_2$ as are explicitly stated.
+However, for $o_3$ there would also be an implicit policy of $\{o_3 \rightarrow {}^*\}$, where ${}^*$ is used to denote the set of all possible principals.
+Similarly, we could have $\{o_3 \rightarrow \}$ (right hand side deliberately left empty), denoting that $o_3$ allows no readers.
+If a principal does not have itself in the reader set, of its policy for some slot, it means that said principal is not allowed to read the value, but is still allowed to change its own policy.
+
 \subsubsection{Principals}
 In the above description, we saw examples of \emph{principals}.
 Both the owners and readers of a policy are considered principals.
