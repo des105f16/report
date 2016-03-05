@@ -17,12 +17,12 @@ Throughout the examples, we will use the same grammar as that used by \thetool.
 \subsection{Labels and Policies}
 Throughout a program, values are declared, initialized, and assigned to variables and other value-holders.
 Value-holders are collectively known as \emph{slots}, which cover constructs such as variables, structs, and other storage locations.
-In order to ensure that a certain assignment is legal, such that no information is unintentionally leaked, we assign \emph{labels} to these value-holders so that they can be compared.
+In order to ensure that a certain assignment is legal, such that no information is unintentionally leaked, we assign \emph{labels} to slots so that they can be compared.
 This way we can ensure that an assignment is only legal in the cases where higher-security values aren't assigned to lower-security slots.
-The same concept applies to more abstract language constructs, such as functions (and their return values).
+The same concept applies to more complex language constructs, such as functions (and their return values).
 
-For any slot, we can attach a label, denoted $L$, which is a set of \emph{policies}.
-For specific labels, as those attached to slots, the label is instead denoted as the underlined variable name: e.g. for a slot $x$ we denote its label by $\underline{x}$.
+For any slot we can attach a label, denoted $L$, which is defined as a set of \emph{policies}.
+For specific labels, as those attached to slots, the label is instead denoted as the underlined slot name: e.g. for a variable $x$ we denote its label by $\underline{x}$.
 This is useful when we are describing programs, and when we have variable labels such as those for implicit labels (as we will se in \cref{dlm:implicit_labels}).
 
 For a given label it is possible to define both read (\emph{privacy}) and write (\emph{integrity}) policies, however, we will leave out write policies for now.
@@ -33,10 +33,10 @@ Then, for each label we have a set of owners, denoted $owners(L)$ and for each $
   \[\{o1 \rightarrow r1, r2; o2 \rightarrow r2, r3\}\]
 \end{example}
 
-If we imagine a system with the principals $o_1, o_2, o_3$, then the above label would have the policies for $o_1$ and $o_2$ as are explicitly stated.
-However, for $o_3$ there would also be an implicit policy of $\{o_3 \rightarrow {}^*\}$, where ${}^*$ is used to denote the set of all possible principals.
+If we imagine a system with the owners $o_1, o_2, o_3$, then the above label would have the policies for $o_1$ and $o_2$ as are explicitly stated.
+However, for $o_3$ there would also be an implicit policy of $\{o_3 \rightarrow {}^*\}$, where ${}^*$ is used to denote the set of all possible readers.
 Similarly, we could have $\{o_3 \rightarrow \}$ (right hand side deliberately left empty), denoting that $o_3$ allows no readers.
-If a principal does not have itself in the reader set, of its policy for some slot, it means that said principal is not allowed to read the value, but is still allowed to change its own policy.
+If an owner does not have itself in the reader set, of it's policy for some slot, it means that said owner is not allowed to read the value, but is still allowed to change its own policy.
 
 \subsubsection{Principals}
 In the above description, we saw examples of \emph{principals}.
@@ -46,7 +46,7 @@ It is also possible to defined \emph{principal hierarchies}, so that we can desc
 However, principal hierarchies will be left out for now.
 
 \subsubsection{The effective reader set}
-Having multiple owners, where each owner defining its own policy, enables the individual owner to ensure that ``shared'' data isn't redistributed without the consent of all owners.
+Having multiple owners, where each owner defining its own policy, enables the individual owner to ensure that data isn't redistributed without the consent of all owners.
 This also means that we need to determine the \emph{effective reader set}, which is the set of readers that all owners agree upon.
 Thus, the effective reader set is the intersection of the readers defined in each policy.
 For the label in \cref{dlm:ex:simple_label}, the effective reader set is $\{r2\}$ $= \{r1,r2\} \cap \{r2, r3\}$.
@@ -55,13 +55,13 @@ For the label in \cref{dlm:ex:simple_label}, the effective reader set is $\{r2\}
 In order to check that security policies are enforced throughout a program, we need to be able to compare the labels.
 The property of labels that we want to compare is their \emph{strictness}.
 We will use the simple definition\cite{myers1997}, as we for the moment will not take into account the principal hierarchies.
-The ``at most as restrictive as''-relation ($\sqsubseteq$) is defined as follows:
+The ``at most as restrictive as''-relation ($\sqsubseteq$) is then defined as follows:
 
 \begin{definition}{Label Comparison Rule}
   \begin{align}
     \text{For } & L_1 \sqsubseteq L_2 \text{ we have that} \nonumber \\
     & owners(L_1) \subseteq owners(L_2) \text{ and} \nonumber \\
-    & \forall o, o \in owners(L_1), readers(L_1, o) \supseteq readers(L_2, o) \nonumber
+    & \forall o \in owners(L_1), readers(L_1, o) \supseteq readers(L_2, o) \nonumber
   \end{align}
 \end{definition}
 
