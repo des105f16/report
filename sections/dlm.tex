@@ -134,8 +134,22 @@ Only after calling this function will we obtain the \emph{effective authority} t
 If the check passed, then we will inside the \dlmactsfor~ block now have the ability to carry out operations that normally would be permissible only to $b$ itself.
 Most importantly, we can do declassification -- deliberately and explicitly relaxing the security policies in which $b$ is owner.
 This is done by calling the \dlmdeclassify\dlmc{(v, l)} function, with a slot $v$ and a new label $l$ as inputs, returning the value $v$ relabeled to $l$.
+The relabeling by declassification rule (the inference rule) is defined as follows:
 
-The combination of these two concepts is especially useful when we have sensitive inputs to a method and want to carry out our calculations without the fear of neither explicit or implicit leakage.
+\begin{definition}{Relabeling by declassification}
+  If we have $P$ denoting the set of principals in the current authority.
+  \[
+  \frac{
+  \begin{array}{c}
+    L_A = \mathlarger{\mathlarger\sqcup}_{(p \in P)} \{p \rightarrow \} \\
+    L_1 \sqsubseteq L_2 \sqcup L_A
+  \end{array}
+  }
+  {L_1 \text{ may be declassified to } L_2}
+  \]
+\end{definition}
+
+The combination of these two concepts, \dlmactsfor~ and \dlmdeclassify, is especially useful when we have sensitive inputs to a method and want to carry out our calculations without the fear of neither explicit or implicit leakage.
 This way we can keep our strict policies throughout the calculations of the method and only relax the label once we want to return the result.
 
 \begin{example}{Temporarily restricting a label}
