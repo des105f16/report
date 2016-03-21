@@ -8,11 +8,11 @@
 \newcommand{\mathcomment}[1]{\color{green!50!black}{#1}}
 
 \section{The Decentralized Label Model}
-The Decentralized Label Model \cite{myers1997, myers1998, myers2000} is a method of ensuring information flow control in a system.
-This is done by annotating the source code with security policies, in the form of labels attached to data-holding constructs.
-This section will present the necessary information needed to understand the first implementation of \thetool.
-The descriptions and definitions in this section are based on \cite{myers1997, myers1998, myers2000}, but only relevant parts will be presented now.
-Throughout the examples, we will use the same grammar as that used by \thetool.
+The Decentralized Label Model \cite{myers1997, myers1998, myers2000} is a model for ensuring information flow control in a system.
+This is done by annotating source code with security policies, in the form of labels attached to data-holding constructs.
+This section will present the necessary information needed to understand the first implementation of \thetool. \mikkel{Why the \textit{first} implementation?}
+The descriptions and definitions in this section are based on \cite{myers1997, myers1998, myers2000}.
+Throughout the examples, we will use the same grammar as that used by \thetool. \mikkel{Remember to write something about the grammar/parser...}
 
 \subsection{Labels and Policies}
 Throughout a program, values are declared, initialized, and assigned to variables and other value-holders.
@@ -21,41 +21,60 @@ In order to ensure that a certain assignment is legal, such that no information 
 This way we can ensure that an assignment is only legal in the cases where higher-security values aren't assigned to lower-security slots.
 The same concept applies to more complex language constructs, such as functions (and their return values).
 
-For any slot we can attach a label, denoted $L$, which is defined as a set of \emph{policies}.
-For specific labels, as those attached to slots, the label is instead denoted as the underlined slot name: e.g. for a variable $x$ we denote its label by $\underline{x}$.
-This is useful when we are describing programs, and when we have variable labels such as those for implicit labels (as we will see in \cref{dlm:implicit_labels}).
+Each slot is associated with a label, that describes how the data in the slot can be handled.
+We denote the label of slot $s$ as $\underline{s}$.
+Referring to labels in this fashion serves the same purpose as letters in algebra; it allows for handling labels without knowledge about their actual value.
+This proves useful as it allows for label inference and label polymorphism (see \cref{dlm:implicit_labels} and ??). \mikkel{Insert reference when written.}
 
-For a given label it is possible to define both read (\emph{privacy}) and write (\emph{integrity}) policies, however, we will leave out write policies for now.
-Each policy contains an owner $o$ and a set of readers $r_1,r_2,\dots,r_n$.
-Then, for each label we have a set of owners, denoted $owners(L)$ and for each $o \in owners(L)$ we have a reader set, denoted $readers(L, o)$.
-
-\begin{example}{A label with two policies}\label{dlm:ex:simple_label}
-  \[\{o1 \rightarrow r1, r2; o2 \rightarrow r2, r3\}\]
-\end{example}
-
-If we imagine a system with the owners $o_1, o_2, o_3$, then the above label would have the policies for $o_1$ and $o_2$ as are explicitly stated.
-However, for $o_3$ there would also be an implicit policy of $\{o_3 \rightarrow {}^*\}$, where ${}^*$ is used to denote the set of all possible readers.
-Similarly, we could have $\{o_3 \rightarrow \}$ (right hand side deliberately left empty), denoting that $o_3$ allows no readers.
-If an owner does not have itself in the reader set, of its policy for some slot, it means that said owner is not allowed to read the value, but is still allowed to change its own policy.
+For a given label it is possible to define both read (\emph{privacy}) and write (\emph{integrity}) policies.
+The first represents information flow out of a system and the latter information flow into a system.
+In this report only read policies will be considered.
+Due to the relation between the two types of policies, we note that write policies can be ensured in a fashion similar to read policies.
+Because of this we choose to simplify the scope of the report such that it only discusses read policies.
 
 \subsubsection{Principals}
-In the above description, we saw examples of \emph{principals}.
-Both the owners and readers of a policy are considered principals.
-In short, principals represent either real-world users or the authority under which programs are run.
-It is also possible to defined \emph{principal hierarchies}, so that we can describe more complex principal relationships, such as groups or roles.
-However, principal hierarchies will be left out for now.
+In the following, we employ the concept of \emph{principals}.
+A principal (or \emph{subject}, \emph{agent}) is an entity in a system that represents some interest.
+In short, principals represent real-world users or the authority under which a program/system runs.
+Principals can exists in a \emph{principal hierarchy}, that describe more complex principal relationships, such as groups or roles.
+\mikkel{Reminder about principal hierarchies}
+In the following we make use of the special set of principals; $*$.
+This set represents all principals in a system.
+
+\subsubsection{Labels}
+A label can be described as a set of policies, where a policy consists of an owner principal $o$ and a set of reader principals $r_1, r_2, \dots, r_n$.
+Formally we provide the following, equivalent definition:
+\begin{definition}{Labels}
+A label $L$ is a set of owners $owners(L)$, and a function $readers(L, o)$ that retrieves the set of reader principals that $o$ allows to read.
+Note that given this definition we have that $$o \notin owners(L) \;|\; readers(L, o) = *$$
+\end{definition}
+
+Owners are allowed to change their own policies within a label.
+We describe how this is done in \cref{dlm:auth_and_declass}.
+If an owner is not part of its own policies reader set, that owner is not allowed to read from the slot associated with the label.
+He is however still allowed to change his policy.
 
 \subsubsection{The effective reader set}
-Having multiple owners, where each owner defining its own policy, enables the individual owner to ensure that data is not redistributed without the consent of all owners.
-This also means that we need to determine the \emph{effective reader set}, which is the set of readers that all owners agree upon.
-Thus, the effective reader set is the intersection of the readers defined in each policy.
-For the label in \cref{dlm:ex:simple_label}, the effective reader set is $\{r2\}$ $= \{r1,r2\} \cap \{r2, r3\}$.
+To ensure that the policies of all owners in a label are enforced, only readers that the all ``agree'' on can read from the slot associated with the label.
+This is known as the \emph{effective reader set}, which is the intersection of \emph{all} reader sets of a label:
+$$readers(L) = \bigcap_{o \in *} readers(L, o)$$
+
+\begin{example}{A label with two policies}\label{dlm:ex:simple_label}
+  Below is an example of a label with two policies using the notation from above;
+  $$L_1 = \{o1 \rightarrow r1, r2; o2 \rightarrow r2, r3\}$$
+
+  The owner set of the label is $owners(L_1) = \{o1, o2\}$, and its reader sets are $readers(L_1, o1) = \{r1, r2\}, readers(L_1, o2) = \{r2, r3\}$.
+  By intersecting the reader sets of the label we get the effective reader set.
+  In practice we can disregard the reader set of labels that are not owners.
+  Thus the effective reader set is
+  $$readers(L_1) = \{r1,r2\} \cap \{r2, r3\} = \{r2\}$$
+\end{example}
 
 \subsubsection{Label comparison}
-In order to check that security policies are enforced throughout a program, we need to be able to compare the labels.
-The property of labels that we want to compare is their \emph{strictness}.
-We will use the simple definition\cite{myers1997}, as we for the moment will not take into account the principal hierarchies.
-The ``at most as restrictive as''-relation ($\sqsubseteq$) is then defined as follows:
+As mentioned above, labels provide restrictions on which principals can read from the slots that the labels ``protect''.
+In order to check that security policies are enforced throughout a program, we need to be able to compare how restrictive labels are.
+To do this we introduce the ``at most as restrictive as''-relation ($\sqsubseteq$) from \cite{myers1997}.
+
 
 \begin{definition}{Label Comparison Rule}
   \begin{align}
@@ -122,7 +141,7 @@ return val;               // $\mathcomment{\bot}$
   For this program to pass \thetool, we would have to add a more strict policy to \dlmc{val}, so that it could match the policy of \dlmc{cond}.
 \end{example}
 
-\subsection{Authority and declassification}
+\subsection{Authority and declassification}\label{dlm:auth_and_declass}
 In order to avoid mishaps by setting certain policies too lax, so that certain flows are permitted, we can temporarily set some policies to be more strict, and then only relax (\emph{declassify}) them when we really need to.
 In order to do this, we need the concept of \emph{authority}.
 At any point during running a program, it will have a \emph{true authority}, which is the maximal authority by which the program can carry out operations.
