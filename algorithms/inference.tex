@@ -2,8 +2,15 @@
 \begin{algorithm}[h]
 \SetAlgoNoEnd
 CHECK\_LABELS(p)\\
-  Let $Q$ be all constraints for program $p$\\
-
+Function arguments with implicit labels will get constant labels named after the argument\\
+Slots with implicit labels will get variable labels named after the slot, with current upper bound set to $\top$\\
+Conditional blocks will get variable labels named $L_i$, for blocks $0, 1, \dots, i$\\
+Declassifications will get variable labels named $L_{d_j}$ for declassifications $0, 1, \dots, j$\\
+Let $Q$ be all constraints for program $p$, created as such:\\
+For each assignment, the constraint is $\underline{block} \sqcup \underline{expr} \sqsubseteq \underline{slot}$\\
+For each return statement, the constraint is $\underline{expr} \sqsubseteq returnLabel$\\
+For each block $i$, the constraint is $\underline{block} \sqcup \underline{cond} \sqsubseteq \underline{L_i}$\\
+For each declassification $j$, the constraint is $\underline{slot} \sqsubseteq \underline{L_{d_j}} \sqcup (\forall p \in authority \longrightarrow \{ p \rightarrow \emptyset\})$\\
 \ForEach {$c \in Q$}
 {
   \If {left($c$) is variable}
