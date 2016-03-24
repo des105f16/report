@@ -1,0 +1,46 @@
+% !TEX root = ../master.tex
+\begin{algorithm}[h]
+\SetAlgoNoEnd
+DBSCAN(D, eps, MinPts)\\
+	C $\leftarrow$ 0\\
+	\ForEach {unvisited point P in dataset D}
+	{
+  	mark P as visited\\
+		NeighborPts $\leftarrow$ regionQuery(D, P, eps)\\
+		\eIf {sizeof(NeighborPts) < MinPts}{
+			mark P as NOISE\\
+		}
+		{
+			C $\leftarrow$ next cluster\\
+			expandCluster(D, P, NeighborPts, C, eps, MinPts)
+		}
+	}
+\caption{The DBSCAN clustering algorithm\cite{dbscanwiki}}\label{dbscan-algo}
+\phantom{ForLineBreak}
+\setcounter{AlgoLine}{0}
+
+expandCluster(D, P, NeighborPts, C, eps, MinPts)\\
+	add P to cluster C\\
+	\ForEach {point Pn in NeighborPts}
+	{
+		\If{Pn is not visited}
+		{
+			mark Pn as visited\\
+			NeighborPtsn $\leftarrow$ regionQuery(D, Pn, eps)\\
+					\If {sizeof(NeighborPtsn) $\geq$ MinPts}
+					{
+						NeighborPts $\leftarrow$ $ NeighborPts \cup NeighborPtsn $
+					}
+		}
+					\If {Pn is not yet member of any cluster}
+					{
+						{add Pn to cluster C\\}
+					}
+	}
+%(Pn) is used instead of (p') in source (wiki).
+\phantom{ForLineBreak}
+\setcounter{AlgoLine}{0}
+
+regionQuery(D, P, eps)\\
+	\Return {all points from D within the eps-neighborhood of P (including P)\\}
+\end{algorithm}
