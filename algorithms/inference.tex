@@ -2,11 +2,12 @@
 \begin{algorithm}[h]
 \SetAlgoNoEnd
 CHECK\_LABELS(p)\\
+-- Assign constant/variable labels to those without label:\\
 Function parameters without a label will get a constant label named after the parameter\\
 Slots without a label will get a variable label named after the slot, with current upper bound set to $\top$\\
 Conditional blocks will get a variable label named $L_i$, for blocks $0, 1, \dots, i$, where $L$ is the type of block\\
 Declassifications will get variable labels named $D_{s_j}$ for declassifications $0, 1, \dots, j$, where $\underline{s}$ is the declassified slot\\
-Let $Q$ be all constraints for program $p$, created as such:\\
+-- Let $Q$ be all constraints for program $p$, created as such:\\
 For each assignment, the constraint is $\underline{block} \sqcup \underline{expr} \sqsubseteq \underline{slot}$\\
 For each return statement, the constraint is $\underline{expr} \sqsubseteq returnLabel$\\
 For each block $i$, the constraint is $\underline{block} \sqcup \underline{cond} \sqsubseteq \underline{L_i}$\\
