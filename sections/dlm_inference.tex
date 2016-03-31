@@ -26,6 +26,7 @@ Transition system: $(\Gamma_L, \rightarrow_L, T_L)$, with
   T_L & = \iLbl
 \end{align*}
 
+\begin{table}
 \begin{align*}
   [\text{VAR-DECL-EXP}] \trtspc & \frac{
     \langle D_V, lbl[x \mapsto l] \rangle \rightarrow_L (lbl')
@@ -40,5 +41,7 @@ Transition system: $(\Gamma_L, \rightarrow_L, T_L)$, with
   }\\
   & \text{where } l = \epsilon
 \end{align*}
+\caption{Label semantics for variable declarations}
+\end{table}
 
 \input{algorithms/inference.tex}
