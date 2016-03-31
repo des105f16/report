@@ -1,4 +1,44 @@
 % !TEX root = ../master.tex
+
+\newcommand{\iVar}{\mathbf{Var}}
+\newcommand{\iProc}{\mathbf{Proc}}
+\newcommand{\iDecv}{\mathbf{DecV}}
+\newcommand{\iDecp}{\mathbf{DecP}}
+\newcommand{\iStmc}{\mathbf{StmC}}
+\newcommand{\iExpd}{\mathbf{ExpD}}
+\newcommand{\iLbl}{\mathbf{Lbl}}
+
+\newcommand{\trtspc}{\hspace{2em}} %transition relation table space
+
 \section{Inference Algorithm}
+
+\subsection{Semantics for determining labels}
+The set of label states is called $\iLbl$ and is defined by:
+\[
+  \iLbl = \iVar \cup \iProc \cup \iStmc \cup \iExpd \rightharpoonup \mathbb{L}
+\]
+Where $\mathbb{L}$ is the set of labels.
+
+\subsubsection{Transition system}
+Transition system: $(\Gamma_L, \rightarrow_L, T_L)$, with
+\begin{align*}
+  \Gamma_L & = (\iDecv \times \iLbl) \cup \iLbl \\
+  T_L & = \iLbl
+\end{align*}
+
+\begin{align*}
+  [\text{VAR-DECL-EXP}] \trtspc & \frac{
+    \langle D_V, lbl[x \mapsto l] \rangle \rightarrow_L (lbl')
+  }{
+    \langle T \, l \, x, lbl \rangle \rightarrow_L (lbl')
+  }\\
+  & \text{where } l \in \mathbb{L}\\[2em]
+  [\text{VAR-DECL-IMP}] \trtspc & \frac{
+    \langle D_V, lbl[x \mapsto \underline{x}] \rangle \rightarrow_L (lbl')
+  }{
+    \langle T \, l \, x, lbl \rangle \rightarrow_L (lbl')
+  }\\
+  & \text{where } l = \epsilon
+\end{align*}
 
 \input{algorithms/inference.tex}
