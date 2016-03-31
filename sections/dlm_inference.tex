@@ -1,9 +1,9 @@
 % !TEX root = ../master.tex
 
 \newcommand{\iVar}{\mathbf{Var}}
-\newcommand{\iProc}{\mathbf{Proc}}
+\newcommand{\iFun}{\mathbf{Fun}}
 \newcommand{\iDecv}{\mathbf{DecV}}
-\newcommand{\iDecp}{\mathbf{DecP}}
+\newcommand{\iDecf}{\mathbf{DecF}}
 \newcommand{\iStmc}{\mathbf{StmC}}
 \newcommand{\iExpd}{\mathbf{ExpD}}
 \newcommand{\iLbl}{\mathbf{Lbl}}
@@ -15,12 +15,12 @@
 \subsection{Semantics for determining labels}
 The set of label states is called $\iLbl$ and is defined by:
 \[
-  \iLbl = \iVar \cup \iProc \cup \iStmc \cup \iExpd \rightharpoonup \mathbb{L}
+  \iLbl = \iVar \cup \iFun \cup \iStmc \cup \iExpd \rightharpoonup \mathbb{L}
 \]
 Where $\mathbb{L}$ is the set of labels.
 
 \subsubsection{Variable declarations}
-Transition system: $(\Gamma_{DV}, \rightarrow_{DV}, T_{DV})$, with
+$(\Gamma_{DV}, \rightarrow_{DV}, T_{DV})$, with
 \begin{align*}
   \Gamma_{DV} & = (\iDecv \times \iLbl) \cup \iLbl \\
   T_{DV} & = \iLbl \\
@@ -30,20 +30,29 @@ For $\rightarrow_{DV}$ see \cref{dlmi:var_decl}.
 \begin{table}
 \begin{align*}
   [\text{VAR-DECL-EXP}] \trtspc & \frac{
-    \langle D_V, lbl[x \mapsto l] \rangle \rightarrow_L (lbl')
+    \langle D_V, lbl[x \mapsto l] \rangle \rightarrow_{DV} (lbl')
   }{
-    \langle T \, l \, x, lbl \rangle \rightarrow_L (lbl')
+    \langle T \, l \, x, lbl \rangle \rightarrow_{DV} (lbl')
   }\\
   & \text{where } l \in \mathbb{L}\\[2em]
   [\text{VAR-DECL-IMP}] \trtspc & \frac{
-    \langle D_V, lbl[x \mapsto \underline{x}] \rangle \rightarrow_L (lbl')
+    \langle D_V, lbl[x \mapsto \underline{x}] \rangle \rightarrow_{DV} (lbl')
   }{
-    \langle T \, l \, x, lbl \rangle \rightarrow_L (lbl')
+    \langle T \, l \, x, lbl \rangle \rightarrow_{DV} (lbl')
   }\\
   & \text{where } l = \epsilon
 \end{align*}
 \caption{Label semantics for variable declarations}
 \label{dlmi:var_decl}
 \end{table}
+
+\subsubsection{Function declarations}
+
+$(\Gamma_{DF}, \rightarrow_{DF}, T_{DF})$, with
+\begin{align*}
+  \Gamma_{DF} & = (\iDecf \times \iLbl) \cup \iLbl \\
+  T_{DF} & = \iLbl \\
+\end{align*}
+For $\rightarrow_{DF}$ see \cref{dlmi:func_decl}.
 
 \input{algorithms/inference.tex}
