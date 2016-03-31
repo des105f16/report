@@ -19,12 +19,13 @@ The set of label states is called $\iLbl$ and is defined by:
 \]
 Where $\mathbb{L}$ is the set of labels.
 
-\subsubsection{Transition system}
-Transition system: $(\Gamma_L, \rightarrow_L, T_L)$, with
+\subsubsection{Variable declarations}
+Transition system: $(\Gamma_{DV}, \rightarrow_{DV}, T_{DV})$, with
 \begin{align*}
-  \Gamma_L & = (\iDecv \times \iLbl) \cup \iLbl \\
-  T_L & = \iLbl
+  \Gamma_{DV} & = (\iDecv \times \iLbl) \cup \iLbl \\
+  T_{DV} & = \iLbl \\
 \end{align*}
+For $\rightarrow_{DV}$ see \cref{dlmi:var_decl}.
 
 \begin{table}
 \begin{align*}
@@ -42,6 +43,7 @@ Transition system: $(\Gamma_L, \rightarrow_L, T_L)$, with
   & \text{where } l = \epsilon
 \end{align*}
 \caption{Label semantics for variable declarations}
+\label{dlmi:var_decl}
 \end{table}
 
 \input{algorithms/inference.tex}
