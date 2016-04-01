@@ -48,7 +48,15 @@ The function environment $\iDecf$ is given as:
 where $p_i \in \iVar \land 1 \leq i \leq n$.
 
 \begin{table}
-\trule{NAME}{bottom}{top}{\text{where stuff}}
+\trule{FUN-DECL-EXP}
+      {\langle T \, l \, f(p_1, p_2, \dots, p_n) \{S^*\}, lbl \rangle \rightarrow (lbl')}
+      {\langle D_F, lbl[f \mapsto l] \rangle \rightarrow_{D_F} (lbl')}
+      {\text{where } l \in \mathbb{L}}
+\trule{FUN-DECL-IMP}
+      {\langle T \, l \, f(p_1, p_2, \dots, p_n) \{S^*\}, lbl \rangle \rightarrow (lbl')}
+      {\langle D_F, lbl[f \mapsto l'] \rangle \rightarrow_{D_F} (lbl')}
+      {\text{where } l = \epsilon\\
+      \text{and } l' = \sqcupl\limits_{i=1}^{n} lbl \, p_i}
 \caption{Label semantics for function declarations}
 \label{dlmi:fun_decl}
 \end{table}
