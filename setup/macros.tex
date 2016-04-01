@@ -93,24 +93,3 @@
     \textbf{Afleveringsdato:}\\ #8
   }
 }
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% An example environment
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\theoremheaderfont{\normalfont\bfseries}
-\theorembodyfont{\normalfont}
-\theoremstyle{break}
-\def\theoremframecommand{{\color{gray!50}\vrule width 5pt \hspace{5pt}}}
-\newshadedtheorem{exa}{Example}[chapter]
-\newenvironment{example}[1]{%
-		\begin{exa}[#1]
-}{%
-		\end{exa}
-}
-
-\newshadedtheorem{defini}{Definition}[chapter]
-\newenvironment{definition}[1]{%
-    \begin{defini}[#1]
-}{%
-    \end{defini}
-}

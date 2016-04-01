@@ -1,21 +1,5 @@
 % !TEX root = ../master.tex
 
-\newcommand{\iVar}{\mathbf{Var}}
-\newcommand{\iFun}{\mathbf{Fun}}
-\newcommand{\iDecv}{\mathbf{DecV}}
-\newcommand{\iDecf}{\mathbf{DecF}}
-\newcommand{\iStmc}{\mathbf{StmC}}
-\newcommand{\iExpd}{\mathbf{ExpD}}
-\newcommand{\iLbl}{\mathbf{Lbl}}
-
-\newcommand{\trtspc}{\hspace{2em}} %transition relation table space
-
-\newcommand{\trule}[4]{%
-\begin{align*}
-  \text{[#1]} \hspace{2em}  & \ifthenelse{\equal{#3}{}}{#2}{\frac{#3}{#2}} \\[1em]
-                            & #4
-\end{align*}}
-
 \section{Inference Algorithm}
 
 \subsection{Semantics for determining labels}
