@@ -10,6 +10,12 @@
 
 \newcommand{\trtspc}{\hspace{2em}} %transition relation table space
 
+\newcommand{\trule}[4]{%
+\begin{align*}
+  \text{[#1]} \hspace{2em}  & \ifthenelse{\equal{#3}{}}{#2}{\frac{#3}{#2}} \\[1em]
+                            & #4
+\end{align*}}
+
 \section{Inference Algorithm}
 
 \subsection{Semantics for determining labels}
@@ -34,22 +40,14 @@ $(\Gamma_{DV}, \rightarrow_{DV}, T_{DV})$, with
 For $\rightarrow_{DV}$ see \cref{dlmi:var_decl}.
 
 \begin{table}
-\begin{align*}
-  \text{[VAR-DECL-EXP]} \trtspc & \frac{
-    \langle D_V, lbl[x \mapsto l] \rangle \rightarrow_{DV} (lbl')
-  }{
-    \langle T \, l \, x, lbl \rangle \rightarrow_{DV} (lbl')
-  }\\
-  & \text{where } l \in \mathbb{L}
-\end{align*}
-\begin{align*}
-  \text{[VAR-DECL-IMP]} \trtspc & \frac{
-    \langle D_V, lbl[x \mapsto \underline{x}] \rangle \rightarrow_{DV} (lbl')
-  }{
-    \langle T \, l \, x, lbl \rangle \rightarrow_{DV} (lbl')
-  }\\
-  & \text{where } l = \epsilon
-\end{align*}
+  \trule{VAR-DECL-EXP}
+        {\langle T \, l \, x, lbl \rangle \rightarrow_{DV} (lbl')}
+        {\langle D_V, lbl[x \mapsto l] \rangle \rightarrow_{DV} (lbl')}
+        {\text{where } l \in \mathbb{L}}
+  \trule{VAR-DECL-IMP}
+        {\langle T \, l \, x, lbl \rangle \rightarrow_{DV} (lbl')}
+        {\langle D_V, lbl[x \mapsto \underline{x}] \rangle \rightarrow_{DV} (lbl')}
+        {\text{where } l = \epsilon}
 \caption{Label semantics for variable declarations}
 \label{dlmi:var_decl}
 \end{table}
@@ -66,9 +64,7 @@ The function environment $\iDecf$ is given as:
 where $p_i \in \iVar \land 1 \leq i \leq n$.
 
 \begin{table}
-\begin{align*}
-  x
-\end{align*}
+\trule{NAME}{bottom}{top}{\text{where stuff}}
 \caption{Label semantics for function declarations}
 \label{dlmi:fun_decl}
 \end{table}
