@@ -49,14 +49,16 @@ where $p_i \in \iVar \land 1 \leq i \leq n$.
 
 \begin{table}
 \trule{FUN-DECL-EXPL}
-      {\langle T \, l \, f(p_1, p_2, \dots, p_n) \{S^*\}, lbl \rangle \rightarrow (lbl')}
-      {\langle D_F, lbl[f \mapsto l] \rangle \rightarrow_{D_F} (lbl')}
-      {\text{where } l \in \mathbb{L}}
+      {\langle T \, l \, f(p_1, p_2, \dots, p_n) \{S^*\}, lbl \rangle \rightarrow lbl'}
+      {lbl \vdash p_i \rightarrow_{D_V} l_{p_i} \rightarrow lbl'' \langle D_F, lbl''[f \mapsto l] \rangle \rightarrow_{D_F} lbl'}
+      {\text{where } l \in \mathbb{L}\\
+        \text{and } p_i \in \iVar \land 1 \leq i \leq n}
 \trule{FUN-DECL-IMPL}
-      {\langle T \, l \, f(p_1, p_2, \dots, p_n) \{S^*\}, lbl \rangle \rightarrow (lbl')}
-      {\langle D_F, lbl[f \mapsto l'] \rangle \rightarrow_{D_F} (lbl')}
+      {\langle T \, l \, f(p_1, p_2, \dots, p_n) \{S^*\}, lbl \rangle \rightarrow lbl'}
+      {lbl \vdash p_i \rightarrow_{D_V} l_{p_i} \rightarrow lbl'' \langle D_F, lbl''[f \mapsto l'] \rangle \rightarrow_{D_F} lbl'}
       {\text{where } l = \epsilon\\
-      \text{and } l' = \sqcupl\limits_{i=1}^{n} lbl \, p_i}
+      \text{and } p_i \in \iVar \land 1 \leq i \leq n\\
+      \text{and } l' = \mathlarger{\mathlarger{\mathlarger\sqcup}} \, l_{p_i}}
 \caption{Label semantics for function declarations}
 \label{dlmi:fun_decl}
 \end{table}
