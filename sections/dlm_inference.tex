@@ -53,12 +53,22 @@ For $\rightarrow_{DV}$ see \cref{dlmi:var_decl}.
 \end{table}
 
 \subsubsection{Function declarations}
-
 $(\Gamma_{DF}, \rightarrow_{DF}, T_{DF})$, with
 \begin{align*}
   \Gamma_{DF} & = (\iDecf \times \iLbl) \cup \iLbl \\
-  T_{DF} & = \iLbl \\
+  T_{DF} & = \iLbl
 \end{align*}
-For $\rightarrow_{DF}$ see \cref{dlmi:func_decl}.
+For $\rightarrow_{DF}$ see \cref{dlmi:fun_decl}.
+The function environment $\iDecf$ is given as:
+\[ \iDecf = \iFun \rightharpoonup (p_1, p_2, \dots, p_n) \]
+where $p_i \in \iVar \land 1 \leq i \leq n$.
+
+\begin{table}
+\begin{align*}
+  x
+\end{align*}
+\caption{Label semantics for function declarations}
+\label{dlmi:fun_decl}
+\end{table}
 
 \input{algorithms/inference.tex}
