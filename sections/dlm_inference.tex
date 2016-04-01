@@ -24,11 +24,11 @@ $(\Gamma_{DV}, \rightarrow_{DV}, T_{DV})$, with
 For $\rightarrow_{DV}$ see \cref{dlmi:var_decl}.
 
 \begin{table}
-  \trule{VAR-DECL-EXP}
+  \trule{VAR-DECL-EXPL}
         {\langle T \, l \, x, lbl \rangle \rightarrow_{DV} (lbl')}
         {\langle D_V, lbl[x \mapsto l] \rangle \rightarrow_{DV} (lbl')}
         {\text{where } l \in \mathbb{L}}
-  \trule{VAR-DECL-IMP}
+  \trule{VAR-DECL-IMPL}
         {\langle T \, l \, x, lbl \rangle \rightarrow_{DV} (lbl')}
         {\langle D_V, lbl[x \mapsto \underline{x}] \rangle \rightarrow_{DV} (lbl')}
         {\text{where } l = \epsilon}
@@ -48,11 +48,11 @@ The function environment $\iDecf$ is given as:
 where $p_i \in \iVar \land 1 \leq i \leq n$.
 
 \begin{table}
-\trule{FUN-DECL-EXP}
+\trule{FUN-DECL-EXPL}
       {\langle T \, l \, f(p_1, p_2, \dots, p_n) \{S^*\}, lbl \rangle \rightarrow (lbl')}
       {\langle D_F, lbl[f \mapsto l] \rangle \rightarrow_{D_F} (lbl')}
       {\text{where } l \in \mathbb{L}}
-\trule{FUN-DECL-IMP}
+\trule{FUN-DECL-IMPL}
       {\langle T \, l \, f(p_1, p_2, \dots, p_n) \{S^*\}, lbl \rangle \rightarrow (lbl')}
       {\langle D_F, lbl[f \mapsto l'] \rangle \rightarrow_{D_F} (lbl')}
       {\text{where } l = \epsilon\\
