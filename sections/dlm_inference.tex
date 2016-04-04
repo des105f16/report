@@ -47,97 +47,68 @@ There are five types of labels:
   \item Join/meet labels -- combinations of the above-mentioned labels
 \end{enumerate}
 
-\subsubsection{Variable declarations}
-$(\Gamma_{DV}, \rightarrow_{DV}, T_{DV})$, with
+\subsubsection{Transision system}
+$(\Gamma_{L}, \rightarrow_{L}, T_{L})$, with
 \begin{align*}
-  \Gamma_{DV} & = (\iDecv \times \iLbl) \cup \iLbl \\
-  T_{DV} & = \iLbl \\
+  \Gamma_{L} & = (\iDecv \times \iLbl) \cup (\iDecf \times \iLbl) \cup (\iDecp \times \iLbl) \cup (\iStmc \times \iLbl) \cup \iLbl \\
+  T_{L} & = \iLbl
 \end{align*}
-For $\rightarrow_{DV}$ see \cref{dlmi:var_decl}.
 
-\begin{table}
-  \trule{VAR-DECL-EXPL}
-        {\langle T \, l \, x, lbl \rangle \rightarrow_{DV} (lbl')}
-        {\langle D_V, lbl[x \mapsto l] \rangle \rightarrow_{DV} (lbl')}
-        {where $l \in \mathbb{L}$}
-  \trule{VAR-DECL-IMPL}
-        {\langle T \, l \, x, lbl \rangle \rightarrow_{DV} (lbl')}
-        {\langle D_V, lbl[x \mapsto \underline{x}] \rangle \rightarrow_{DV} (lbl')}
-        {where $l = \epsilon$}
-\caption{Label semantics for variable declarations}
-\label{dlmi:var_decl}
-\end{table}
+\subsubsection{Variable declarations}
+
+\trule{VAR-DECL-EXPL}
+      {\langle T \, l \, x, lbl \rangle \rightarrow_L (lbl')}
+      {\langle D_V, lbl[x \mapsto l] \rangle \rightarrow_L (lbl')}
+      {where $l \in \mathbb{L}$}
+\trule{VAR-DECL-IMPL}
+      {\langle T \, l \, x, lbl \rangle \rightarrow_L (lbl')}
+      {\langle D_V, lbl[x \mapsto \underline{x}] \rangle \rightarrow_L (lbl')}
+      {where $l = \epsilon$}
 
 \subsubsection{Function declarations}
-The function environment $\iDecf$ is given as:
-\[ \iDecf = \iFun \rightharpoonup \mathbb{L} \]
-The parameter environment $\iDecp$ is given as:
-\[ \iDecp = \iVar \rightharpoonup \mathbb{L} \]
 
-\noindent The transition system for function declarations is given as $(\Gamma_{DF}, \rightarrow_{DF}, T_{DF})$, with
-\begin{align*}
-  \Gamma_{DF} & = (\iDecf \times \iLbl) \cup (\iDecp \times \iLbl) \cup \iLbl \\
-  T_{DF} & = \iLbl
-\end{align*}
-For $\rightarrow_{DF}$ see \cref{dlmi:fun_decl}.
-
-\begin{table}
 \trule{FUN-DECL-EXPL}
-      {\langle T \, l \, f(D_P) \{S^*\}, lbl \rangle \rightarrow_{D_F} lbl'}
-      {\langle D_P, lbl \rangle \rightarrow_{D_F} lbl'' \; \langle D_F, lbl''[f \mapsto l, b \mapsto \bot] \rangle \rightarrow_{D_F} lbl'}
+      {\langle T \, l \, f(D_P) \{S^*\}, lbl \rangle \rightarrow_L lbl'}
+      {\langle D_P, lbl \rangle \rightarrow_{D_F} lbl'' \; \langle D_F, lbl''[f \mapsto l, b \mapsto \bot] \rangle \rightarrow_L lbl'}
       {where $l \in \mathbb{L}$}
 \trule{FUN-DECL-IMPL}
-      {\langle T \, l \, f(D_P) \{S^*\}, lbl \rangle \rightarrow_{D_F} lbl'}
-      {\langle D_P, lbl \rangle \rightarrow_{D_F} lbl'' \; \langle D_F, lbl''[f \mapsto l', b \mapsto \bot] \rangle \rightarrow_{D_F} lbl'}
+      {\langle T \, l \, f(D_P) \{S^*\}, lbl \rangle \rightarrow_L lbl'}
+      {\langle D_P, lbl \rangle \rightarrow_{D_F} lbl'' \; \langle D_F, lbl''[f \mapsto l', b \mapsto \bot] \rangle \rightarrow_L lbl'}
       {where $l = \epsilon$\\
       and $P = D_P \rightarrow (p_1, p_2, \dots, p_n)$\\
       and $l' = \sqcupl\limits_{p \in P} lbl \, p$}
 \trule{PAR-DECL-EXPL}
-      {\langle T \, l \, p, lbl \rangle \rightarrow_{D_F} lbl'}
-      {\langle D_P, lbl[p \mapsto l] \rangle \rightarrow_{D_F} lbl'}
+      {\langle T \, l \, p, lbl \rangle \rightarrow_L lbl'}
+      {\langle D_P, lbl[p \mapsto l] \rangle \rightarrow_L lbl'}
       {where $l \in \mathbb{L}$}
 \trule{PAR-DECL-IMPL}
-      {\langle T \, l \, p, lbl \rangle \rightarrow lbl'}
-      {\langle D_P, lbl[p \mapsto \overline{p}] \rangle \rightarrow_{D_F} lbl'}
+      {\langle T \, l \, p, lbl \rangle \rightarrow_L lbl'}
+      {\langle D_P, lbl[p \mapsto \overline{p}] \rangle \rightarrow_L lbl'}
       {where $l = \epsilon$}
 \trule{EMPTY-PAR-DECL}
-      {\langle \epsilon, lbl \rangle \rightarrow_{D_F} lbl}
+      {\langle \epsilon, lbl \rangle \rightarrow_L lbl}
       {}
       {}
-\caption{Label semantics for function declarations}
-\label{dlmi:fun_decl}
-\end{table}
 
 \subsubsection{Conditional statements}
-The transition system for conditional statements is given as: $(\Gamma_{SC}, \rightarrow_{SC}, T_{SC})$, with
 
-\begin{align*}
-    \Gamma_{SC} & = (\iStmc \times \iLbl) \cup \iLbl \\
-    T_{SC} & = \iLbl
-\end{align*}
-For $\rightarrow_{SC}$ see \cref{dlmi:con_stm}.
-
-\begin{table}
-  \trule{WHILE-STM}
-        {\langle \texttt{while(} e \texttt{)} \texttt{\{} S \texttt{\}}, lbl \rangle \rightarrow_{SC} lbl'}
-        {\langle S_C, lbl[b_i \mapsto l, b \mapsto b'] \rangle \rightarrow_{SC} lbl'' \; \langle S, lbl'' \rangle \rightarrow_S lbl'}
-        {where $lbl \vdash e \rightarrow_E l$\\
-          and $b' = (lbl \, b) \sqcup l$\\
-          and $b_i$ is the next while block label name (e.g. $while_3$)}
-  \trule{IF-STM}
-        {\langle \texttt{if(} e \texttt{)} S, lbl \rangle \rightarrow_{SC} lbl'}
-        {\langle S_C, lbl[b_i \mapsto l, b \mapsto b'] \rangle \rightarrow_{SC} lbl'' \; \langle S, lbl'' \rangle \rightarrow_{S} lbl'}
-        {where $lbl \vdash e \rightarrow_E l$\\
-          and $b' = (lbl \, b) \sqcup l$\\
-          and $b_i$ is the next if block label name (e.g. $if_3$)}
-  \trule{IF-ELSE-STM}
-        {\langle \texttt{if(} e \texttt{)} S_1 \, \texttt{else} \, S_2, lbl \rangle \rightarrow_{SC} lbl'}
-        {\langle S_C, lbl[b_i \mapsto l, b \mapsto b'] \rangle \rightarrow_{SC} lbl'' \; \langle S_1, lbl'' \rangle \rightarrow_S lbl' \; \langle S_2, lbl'' \rangle \rightarrow_S lbl_3}
-        {where $lbl \vdash e \rightarrow_E l$\\
-          and $b' = (lbl \, b) \sqcup l$\\
-          and $b_i$ is the next if block label name (e.g. $if_3$)}
-  \caption{Label semantics for conditional statements}
-  \label{dlmi:con_stm}
-\end{table}
+\trule{WHILE-STM}
+      {\langle \texttt{while(} e \texttt{)} \texttt{\{} S \texttt{\}}, lbl \rangle \rightarrow_L lbl'}
+      {\langle S_C, lbl[b_i \mapsto l, b \mapsto b'] \rangle \rightarrow_L lbl'' \; \langle S, lbl'' \rangle \rightarrow_L lbl'}
+      {where $lbl \vdash e \rightarrow_E l$\\
+        and $b' = (lbl \, b) \sqcup l$\\
+        and $b_i$ is the next while block label name (e.g. $while_3$)}
+\trule{IF-STM}
+      {\langle \texttt{if(} e \texttt{)} S, lbl \rangle \rightarrow_L lbl'}
+      {\langle S_C, lbl[b_i \mapsto l, b \mapsto b'] \rangle \rightarrow_L lbl'' \; \langle S, lbl'' \rangle \rightarrow_L lbl'}
+      {where $lbl \vdash e \rightarrow_E l$\\
+        and $b' = (lbl \, b) \sqcup l$\\
+        and $b_i$ is the next if block label name (e.g. $if_3$)}
+\trule{IF-ELSE-STM}
+      {\langle \texttt{if(} e \texttt{)} S_1 \, \texttt{else} \, S_2, lbl \rangle \rightarrow_L lbl'}
+      {\langle S_C, lbl[b_i \mapsto l, b \mapsto b'] \rangle \rightarrow_L lbl'' \; \langle S_1, lbl'' \rangle \rightarrow_L lbl' \; \langle S_2, lbl'' \rangle \rightarrow_L lbl_3}
+      {where $lbl \vdash e \rightarrow_E l$\\
+        and $b' = (lbl \, b) \sqcup l$\\
+        and $b_i$ is the next if block label name (e.g. $if_3$)}
 
 \input{algorithms/inference.tex}
