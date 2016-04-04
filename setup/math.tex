@@ -34,10 +34,21 @@
 \newcommand{\iStm}{\mathbf{Stm}}
 \newcommand{\iProg}{\mathbf{Prog}}
 
+\newcommand{\truleHelper}[4]{
+	\text{[#1]} \hspace{2em}  & \ifthenelse{\equal{#3}{}}{#2}{\frac{#3}{#2}} \nonumber \\[1em]
+														& \parbox{\textwidth}{#4} \nonumber \\[1em] \nonumber
+}
+
 \newcommand{\trule}[4]{% NAME, CONCLUSION, PREMISES, SIDE CONDITIONS
-\begin{align*}
-  \text{[#1]} \hspace{2em}  & \ifthenelse{\equal{#3}{}}{#2}{\frac{#3}{#2}} \\[1em]
-                            & \parbox{\textwidth}{#4}
-\end{align*}}
+\begin{align}
+  \truleHelper{#1}{#2}{#3}{#4}
+\end{align}}
+
+\newenvironment{trules}{%
+	\renewcommand{\trule}[4]{\truleHelper{##1}{##2}{##3}{##4}}
+  \align%
+}{%
+  \endalign%
+}
 
 \DeclareMathOperator*{\sqcupl}{\mathlarger{\mathlarger\sqcup}}

@@ -53,72 +53,81 @@ $(\Gamma_{L}, \rightarrow_{L}, T_{L})$, with
 
 \subsubsection{Variable declarations}
 
-\trule{VAR-DECL-EXPL}
-      {\argpart {T \, l \, x, lbl} {L} {lbl'} }
-      {\argpart {D_V, lbl[x \mapsto l]} {L} {lbl'} }
-      {where $l \in \mathbb{L}$}
-\trule{VAR-DECL-IMPL}
-      {\argpart {T \, l \, x, lbl} {L} {lbl'} }
-      {\argpart {D_V, lbl[x \mapsto \vlbl{x}]} {L} {lbl'} }
-      {where $l = \epsilon$}
+\begin{trules}
+  \trule{VAR-DECL-EXPL}
+        {\argpart {T \, l \, x, lbl} {L} {lbl'} }
+        {\argpart {D_V, lbl[x \mapsto l]} {L} {lbl'} }
+        {where $l \in \mathbb{L}$}
+  \trule{VAR-DECL-IMPL}
+        {\argpart {T \, l \, x, lbl} {L} {lbl'} }
+        {\argpart {D_V, lbl[x \mapsto \vlbl{x}]} {L} {lbl'} }
+        {where $l = \epsilon$}
+\end{trules}
 
 \subsubsection{Function declarations}
 
-\trule{FUN-DECL-EXPL}
-      {\argpart {T \, l \, f \tk ( D_P \tk ) S, lbl} {L} {lbl'} }
-      {\argpart {D_P, lbl} {L} {lbl''} \;\; \argpart {D_F, lbl''[f \mapsto l, b \mapsto \bot]} {L} {lbl'} }
-      {where $l \in \mathbb{L}$}
-\trule{FUN-DECL-IMPL}
-      {\argpart {T \, l \, f \tk ( D_P \tk ) S, lbl} {L} {lbl'} }
-      {\argpart {D_P, lbl} {L} {lbl''} \; \argpart {D_F, lbl''[f \mapsto l', b \mapsto \bot]} {L} {lbl'} }
-      {where $l = \epsilon$\\
-      and $P = D_P \rightarrow (p_1, p_2, \dots, p_n)$\\
-      and $l' = \sqcupl\limits_{p \in P} lbl \, p$}
-\trule{PAR-DECL-EXPL}
-      {\argpart {T \, l \, p, lbl} {L} {lbl'} }
-      {\argpart {D_P, lbl[p \mapsto l]} {L} {lbl'} }
-      {where $l \in \mathbb{L}$}
-\trule{PAR-DECL-IMPL}
-      {\argpart {T \, l \, p, lbl} {L} {lbl'} }
-      {\argpart {D_P, lbl[p \mapsto \clbl{p}]} {L} {lbl'} }
-      {where $l = \epsilon$}
-\trule{EMPTY-PAR-DECL}
-      {\argpart {\epsilon, lbl} {L} {lbl} }
-      {}
-      {}
+\begin{trules}
+  \trule{FUN-DECL-EXPL}
+        {\argpart {T \, l \, f \tk ( D_P \tk ) S, lbl} {L} {lbl'} }
+        {\argpart {D_P, lbl} {L} {lbl''} \;\; \argpart {D_F, lbl''[f \mapsto l, b \mapsto \bot]} {L} {lbl'} }
+        {where $l \in \mathbb{L}$}
+  \trule{FUN-DECL-IMPL}
+        {\argpart {T \, l \, f \tk ( D_P \tk ) S, lbl} {L} {lbl'} }
+        {\argpart {D_P, lbl} {L} {lbl''} \; \argpart {D_F, lbl''[f \mapsto l', b \mapsto \bot]} {L} {lbl'} }
+        {where $l = \epsilon$\\
+        and $P = D_P \rightarrow (p_1, p_2, \dots, p_n)$\\
+        and $l' = \sqcupl\limits_{p \in P} lbl \, p$}
+  \trule{PAR-DECL-EXPL}
+        {\argpart {T \, l \, p, lbl} {L} {lbl'} }
+        {\argpart {D_P, lbl[p \mapsto l]} {L} {lbl'} }
+        {where $l \in \mathbb{L}$}
+  \trule{PAR-DECL-IMPL}
+        {\argpart {T \, l \, p, lbl} {L} {lbl'} }
+        {\argpart {D_P, lbl[p \mapsto \clbl{p}]} {L} {lbl'} }
+        {where $l = \epsilon$}
+  \trule{EMPTY-PAR-DECL}
+        {\argpart {\epsilon, lbl} {L} {lbl} }
+        {}
+        {}
+\end{trules}
 
 \subsubsection{Conditional statements}
 
-\trule{WHILE-STM}
-      {\argpart {\tk{while} \tk ( e \tk ) S, lbl} {L} {lbl'} }
-      {\argpart {S_C, lbl[while_i \mapsto l, b \mapsto b']} {L} {lbl''} \; \argpart{S, lbl''} {L} {lbl'} }
-      {where $lbl \vdash e \rightarrow_L l$\\
-        and $b' = (lbl \, b) \sqcup l$\\
-        and $while_i$ is the next while block label name}
-\trule{IF-STM}
-      {\argpart {\tk{if} \tk ( e \tk ) S, lbl} {L} {lbl'} }
-      {\argpart {S_C, lbl[if_i \mapsto l, b \mapsto b']} {L} {lbl''} \; \argpart {S, lbl''} {L} {lbl'} }
-      {where $lbl \vdash e \rightarrow_E l$\\
-        and $b' = (lbl \, b) \sqcup l$\\
-        and $if_i$ is the next if block label name}
-\trule{IF-ELSE-STM}
-      {\argpart {\tk{if} \tk ( e \tk ) S_1 \tk{else} S_2, lbl} {L} {lbl'} }
-      {\argpart {S_C, lbl[if_i \mapsto l, b \mapsto b']} {L} {lbl''} \;
-        \argpart {S_1, lbl''} {L} {lbl'} \;
-        \argpart {S_2, lbl''} {L} {lbl_3} }
-      {where $lbl \vdash e \rightarrow_E l$\\
-        and $b' = (lbl \, b) \sqcup l$\\
-        and $if_i$ is the next if block label name}
+\begin{trules}
+  \trule{WHILE-STM}
+        {\argpart {\tk{while} \tk ( e \tk ) S, lbl} {L} {lbl'} }
+        {\argpart {S_C, lbl[while_i \mapsto l, b \mapsto b']} {L} {lbl''} \; \argpart{S, lbl''} {L} {lbl'} }
+        {where $lbl \vdash e \rightarrow_L l$\\
+          and $b' = (lbl \, b) \sqcup l$\\
+          and $while_i$ is the next while block label name}
+  \trule{IF-STM}
+        {\argpart {\tk{if} \tk ( e \tk ) S, lbl} {L} {lbl'} }
+        {\argpart {S_C, lbl[if_i \mapsto l, b \mapsto b']} {L} {lbl''} \; \argpart {S, lbl''} {L} {lbl'} }
+        {where $lbl \vdash e \rightarrow_E l$\\
+          and $b' = (lbl \, b) \sqcup l$\\
+          and $if_i$ is the next if block label name}
+  \trule{IF-ELSE-STM}
+        {\argpart {\tk{if} \tk ( e \tk ) S_1 \tk{else} S_2, lbl} {L} {lbl'} }
+        {\argpart {S_C, lbl[if_i \mapsto l, b \mapsto b']} {L} {lbl''} \;
+          \argpart {S_1, lbl''} {L} {lbl'} \;
+          \argpart {S_2, lbl''} {L} {lbl_3} }
+        {where $lbl \vdash e \rightarrow_E l$\\
+          and $b' = (lbl \, b) \sqcup l$\\
+          and $if_i$ is the next if block label name}
+\end{trules}
 
 \subsubsection{Declassify expression}
 
-\trule{DECLASSIFY-EXPL}
-      {\argpart {\tk{<|} e \tk , l \tk{|>}, lbl} {L} {lbl'} }
-      {\argpart {e_d, lbl[dec_i \mapsto l]} {L} {lbl'} }
-      {where $dec_i$ is the next declassify expression label name}
-\trule{DECLASSIFY-IMPL}
-      {\argpart {\tk{<|} e \tk{|>}, lbl} {L} {lbl'} }
-      {\argpart {e_d, lbl[dec_i \mapsto \vlbl{dec_i}]} {L} {lbl'} }
-      {where $dec_i$ is the next declassify expression label name}
+\begin{trules}
+  \trule{DEC-EXPL}
+        {\argpart {\tk{<|} e \tk , l \tk{|>}, lbl} {L} {lbl'} }
+        {\argpart {e_d, lbl[dec_i \mapsto l]} {L} {lbl'} }
+        {where $dec_i$ is the next declassify expression label name}
+  \trule{DEC-IMPL}
+        {\argpart {\tk{<|} e \tk{|>}, lbl} {L} {lbl'} }
+        {\argpart {e_d, lbl[dec_i \mapsto \vlbl{dec_i}]} {L} {lbl'} }
+        {where $dec_i$ is the next declassify expression label name}
+\end{trules}
+
 
 \input{algorithms/inference.tex}
