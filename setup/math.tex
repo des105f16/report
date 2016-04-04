@@ -16,6 +16,13 @@
     \end{defini}
 }
 
+\newcommand{\gp}{\; | \;} % extra margin grammar pipe
+\newcommand{\tk}[1]{\, \texttt{#1} \,} % token style
+\newcommand{\argpart}[3]{ % IN, ARROW-NAME, OUT
+	\langle #1 \rangle \rightarrow_{#2} #3}
+\newcommand{\vlbl}[1]{\underline{#1}} % variable label
+\newcommand{\clbl}[1]{\overline{#1}} % constant label
+
 \newcommand{\iVar}{\mathbf{Var}}
 \newcommand{\iFun}{\mathbf{Fun}}
 \newcommand{\iDecv}{\mathbf{DecV}}
@@ -27,9 +34,7 @@
 \newcommand{\iStm}{\mathbf{Stm}}
 \newcommand{\iProg}{\mathbf{Prog}}
 
-\newcommand{\trtspc}{\hspace{2em}} %transition relation table space
-
-\newcommand{\trule}[4]{% NAME, BOTTOM, TOP, WHERE
+\newcommand{\trule}[4]{% NAME, CONCLUSION, PREMISES, SIDE CONDITIONS
 \begin{align*}
   \text{[#1]} \hspace{2em}  & \ifthenelse{\equal{#3}{}}{#2}{\frac{#3}{#2}} \\[1em]
                             & \parbox{\textwidth}{#4}
