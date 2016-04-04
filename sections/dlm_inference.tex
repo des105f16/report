@@ -88,6 +88,11 @@ The transition system for conditional statements is given as: $(\Gamma_{SC}, \ri
 For $\rightarrow_{SC}$ see \cref{dlmi:con_stm}.
 
 \begin{table}
+  \trule{WHILE-STM}
+        {\langle \texttt{while(} e \texttt{)} \texttt{\{} S \texttt{\}}, lbl \rangle \rightarrow_{SC} lbl'}
+        {\langle S_C, lbl[b_i \mapsto l] \rangle \rightarrow_{SC} lbl'' \; \langle S, lbl'' \rangle \rightarrow_S lbl'}
+        {where $lbl \vdash e \rightarrow_E l$\\
+          and $b_i$ is the next while block label name (e.g. $while_3$)}
   \caption{Label semantics for conditional statements}
   \label{dlmi:con_stm}
 \end{table}
