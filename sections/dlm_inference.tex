@@ -26,7 +26,9 @@
   D_F     & ::= T \, l \, f \texttt{(} D_P \texttt{)} \, S\\
   D_P     & ::= T \, l \, p \gp D_{P_1} \, \texttt{,} \, D_{P_2} \gp \epsilon\\
   S       & ::= S_C \gp other \, statements \gp S_1 \, \texttt{;} \, S_2\\
-  S_C     & ::= \texttt{while(} e \texttt{)} \, S \gp \texttt{if(} e \texttt{)} S_1 \gp \texttt{if(} e \texttt{)} \, S_1 \, \texttt{else} \, S_2
+  S_C     & ::= \texttt{while(} e \texttt{)} \, S \gp \texttt{if(} e \texttt{)} S_1 \gp \texttt{if(} e \texttt{)} \, S_1 \, \texttt{else} \, S_2\\
+  e       & ::= e_d \gp other \, expressions\\
+  e_d     & ::= \texttt{<|} \, e \, [\texttt{,} \, l] \, \texttt{|>}
 \end{align*}
 
 \subsection{Semantics for determining labels}
