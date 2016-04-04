@@ -39,16 +39,17 @@ For $\rightarrow_{DV}$ see \cref{dlmi:var_decl}.
 \end{table}
 
 \subsubsection{Function declarations}
-$(\Gamma_{DF}, \rightarrow_{DF}, T_{DF})$, with
+The function environment $\iDecf$ is given as:
+\[ \iDecf = \iFun \rightharpoonup \mathbb{L} \]
+The parameter environment $\iDecp$ is given as:
+\[ \iDecp = \iVar \rightharpoonup \mathbb{L} \]
+
+\noindent The transition system for function declarations is given as $(\Gamma_{DF}, \rightarrow_{DF}, T_{DF})$, with
 \begin{align*}
   \Gamma_{DF} & = (\iDecf \times \iLbl) \cup (\iDecp \times \iLbl) \cup \iLbl \\
   T_{DF} & = \iLbl
 \end{align*}
 For $\rightarrow_{DF}$ see \cref{dlmi:fun_decl}.
-The function environment $\iDecf$ is given as:
-\[ \iDecf = \iFun \rightharpoonup \mathbb{L} \]
-The parameter environment $\iDecp$ is given as:
-\[ \iDecp = \iVar \rightharpoonup \mathbb{L} \]
 
 \begin{table}
 \trule{FUN-DECL-EXPL}
