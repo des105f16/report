@@ -2,6 +2,32 @@
 
 \section{Inference Algorithm}
 
+\subsection{Abstract syntax}
+
+\newcommand{\gp}{\; | \;} % extra margin grammar pipe
+
+\begin{table}[h]
+  \begin{gather*}
+    P \in \iProg\\
+    D_F \in \iDecf \\
+    f \in \iFun\\
+    D_P \in \iDecp\\
+    p \in \iVar\\
+    S \in \iStm\\
+    S_C \in \iStmc
+  \end{gather*}
+  \begin{align*}
+    P     & ::= {D_S}^* \; {D_F}^*\\
+    D_S   & ::= struuucts\\
+    D_F   & ::= T \, l \, f \texttt{(} D_P \texttt{)} \, \texttt{\{} S^* \texttt{\}}\\
+    D_P   & ::= T \, l \, p \gp D_{P_1} \texttt{,} D_{P_2} \gp \epsilon\\
+    S     & ::= S_C \gp other \, statements\\
+    S_C   & ::= \texttt{while (} e \texttt{) \{} S^* \texttt{\}}
+  \end{align*}
+  \caption{Abstract syntax}
+  \label{dlmi:abstract_syntax}
+\end{table}
+
 \subsection{Semantics for determining labels}
 The set of label states is called $\iLbl$ and is defined by:
 \[
