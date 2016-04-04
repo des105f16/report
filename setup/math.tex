@@ -16,6 +16,13 @@
     \end{defini}
 }
 
+\newcommand{\gp}{\; | \;} % extra margin grammar pipe
+\newcommand{\tk}[1]{\, \texttt{#1} \,} % token style
+\newcommand{\argpart}[3]{ % IN, ARROW-NAME, OUT
+	\langle #1 \rangle \rightarrow_{#2} #3}
+\newcommand{\vlbl}[1]{\underline{#1}} % variable label
+\newcommand{\clbl}[1]{\overline{#1}} % constant label
+
 \newcommand{\iVar}{\mathbf{Var}}
 \newcommand{\iFun}{\mathbf{Fun}}
 \newcommand{\iDecv}{\mathbf{DecV}}
@@ -24,13 +31,24 @@
 \newcommand{\iStmc}{\mathbf{StmC}}
 \newcommand{\iExpd}{\mathbf{ExpD}}
 \newcommand{\iLbl}{\mathbf{Lbl}}
+\newcommand{\iStm}{\mathbf{Stm}}
+\newcommand{\iProg}{\mathbf{Prog}}
 
-\newcommand{\trtspc}{\hspace{2em}} %transition relation table space
+\newcommand{\truleHelper}[4]{
+	\text{[#1]} \hspace{2em}  & \ifthenelse{\equal{#3}{}}{#2}{\frac{#3}{#2}} \nonumber \\[1em]
+														& \parbox{\textwidth}{#4} \nonumber \\[1em] \nonumber
+}
 
-\newcommand{\trule}[4]{% NAME, BOTTOM, TOP, WHERE
-\begin{align*}
-  \text{[#1]} \hspace{2em}  & \ifthenelse{\equal{#3}{}}{#2}{\frac{#3}{#2}} \\[1em]
-                            & \parbox{\textwidth}{#4}
-\end{align*}}
+\newcommand{\trule}[4]{% NAME, CONCLUSION, PREMISES, SIDE CONDITIONS
+\begin{align}
+  \truleHelper{#1}{#2}{#3}{#4}
+\end{align}}
+
+\newenvironment{trules}{%
+	\renewcommand{\trule}[4]{\truleHelper{##1}{##2}{##3}{##4}}
+  \align%
+}{%
+  \endalign%
+}
 
 \DeclareMathOperator*{\sqcupl}{\mathlarger{\mathlarger\sqcup}}
