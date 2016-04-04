@@ -20,6 +20,7 @@
 \newcommand{\iFun}{\mathbf{Fun}}
 \newcommand{\iDecv}{\mathbf{DecV}}
 \newcommand{\iDecf}{\mathbf{DecF}}
+\newcommand{\iDecp}{\mathbf{DecP}}
 \newcommand{\iStmc}{\mathbf{StmC}}
 \newcommand{\iExpd}{\mathbf{ExpD}}
 \newcommand{\iLbl}{\mathbf{Lbl}}
@@ -29,5 +30,7 @@
 \newcommand{\trule}[4]{% NAME, BOTTOM, TOP, WHERE
 \begin{align*}
   \text{[#1]} \hspace{2em}  & \ifthenelse{\equal{#3}{}}{#2}{\frac{#3}{#2}} \\[1em]
-                            & #4
+                            & \parbox{\textwidth}{#4}
 \end{align*}}
+
+\DeclareMathOperator*{\sqcupl}{\mathlarger{\mathlarger\sqcup}}
