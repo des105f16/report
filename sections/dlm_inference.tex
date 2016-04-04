@@ -54,11 +54,11 @@ For $\rightarrow_{DF}$ see \cref{dlmi:fun_decl}.
 \begin{table}
 \trule{FUN-DECL-EXPL}
       {\langle T \, l \, f(D_P) \{S^*\}, lbl \rangle \rightarrow_{D_F} lbl'}
-      {\langle D_P, lbl \rangle \rightarrow_{D_F} lbl'' \; \langle D_F, lbl''[f \mapsto l] \rangle \rightarrow_{D_F} lbl'}
+      {\langle D_P, lbl \rangle \rightarrow_{D_F} lbl'' \; \langle D_F, lbl''[f \mapsto l, b \mapsto \bot] \rangle \rightarrow_{D_F} lbl'}
       {where $l \in \mathbb{L}$}
 \trule{FUN-DECL-IMPL}
       {\langle T \, l \, f(D_P) \{S^*\}, lbl \rangle \rightarrow_{D_F} lbl'}
-      {\langle D_P, lbl \rangle \rightarrow_{D_F} lbl'' \; \langle D_F, lbl''[f \mapsto l'] \rangle \rightarrow_{D_F} lbl'}
+      {\langle D_P, lbl \rangle \rightarrow_{D_F} lbl'' \; \langle D_F, lbl''[f \mapsto l', b \mapsto \bot] \rangle \rightarrow_{D_F} lbl'}
       {where $l = \epsilon$\\
       and $P = D_P \rightarrow (p_1, p_2, \dots, p_n)$\\
       and $l' = \sqcupl\limits_{p \in P} lbl \, p$}
@@ -90,8 +90,9 @@ For $\rightarrow_{SC}$ see \cref{dlmi:con_stm}.
 \begin{table}
   \trule{WHILE-STM}
         {\langle \texttt{while(} e \texttt{)} \texttt{\{} S \texttt{\}}, lbl \rangle \rightarrow_{SC} lbl'}
-        {\langle S_C, lbl[b_i \mapsto l] \rangle \rightarrow_{SC} lbl'' \; \langle S, lbl'' \rangle \rightarrow_S lbl'}
+        {\langle S_C, lbl[b_i \mapsto l, b \mapsto b'] \rangle \rightarrow_{SC} lbl'' \; \langle S, lbl'' \rangle \rightarrow_S lbl'}
         {where $lbl \vdash e \rightarrow_E l$\\
+          and $b' = (lbl \, b) \sqcup l$\\
           and $b_i$ is the next while block label name (e.g. $while_3$)}
   \caption{Label semantics for conditional statements}
   \label{dlmi:con_stm}
