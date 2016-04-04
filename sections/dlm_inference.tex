@@ -93,32 +93,32 @@ $(\Gamma_{L}, \rightarrow_{L}, T_{L})$, with
 
 \trule{WHILE-STM}
       {\langle \texttt{while(} e \texttt{)} \texttt{\{} S \texttt{\}}, lbl \rangle \rightarrow_L lbl'}
-      {\langle S_C, lbl[b_i \mapsto l, b \mapsto b'] \rangle \rightarrow_L lbl'' \; \langle S, lbl'' \rangle \rightarrow_L lbl'}
+      {\langle S_C, lbl[while_i \mapsto l, b \mapsto b'] \rangle \rightarrow_L lbl'' \; \langle S, lbl'' \rangle \rightarrow_L lbl'}
       {where $lbl \vdash e \rightarrow_E l$\\
         and $b' = (lbl \, b) \sqcup l$\\
-        and $b_i$ is the next while block label name (e.g. $while_3$)}
+        and $while_i$ is the next while block label name}
 \trule{IF-STM}
       {\langle \texttt{if(} e \texttt{)} S, lbl \rangle \rightarrow_L lbl'}
-      {\langle S_C, lbl[b_i \mapsto l, b \mapsto b'] \rangle \rightarrow_L lbl'' \; \langle S, lbl'' \rangle \rightarrow_L lbl'}
+      {\langle S_C, lbl[if_i \mapsto l, b \mapsto b'] \rangle \rightarrow_L lbl'' \; \langle S, lbl'' \rangle \rightarrow_L lbl'}
       {where $lbl \vdash e \rightarrow_E l$\\
         and $b' = (lbl \, b) \sqcup l$\\
-        and $b_i$ is the next if block label name (e.g. $if_3$)}
+        and $if_i$ is the next if block label name}
 \trule{IF-ELSE-STM}
       {\langle \texttt{if(} e \texttt{)} S_1 \, \texttt{else} \, S_2, lbl \rangle \rightarrow_L lbl'}
-      {\langle S_C, lbl[b_i \mapsto l, b \mapsto b'] \rangle \rightarrow_L lbl'' \; \langle S_1, lbl'' \rangle \rightarrow_L lbl' \; \langle S_2, lbl'' \rangle \rightarrow_L lbl_3}
+      {\langle S_C, lbl[if_i \mapsto l, b \mapsto b'] \rangle \rightarrow_L lbl'' \; \langle S_1, lbl'' \rangle \rightarrow_L lbl' \; \langle S_2, lbl'' \rangle \rightarrow_L lbl_3}
       {where $lbl \vdash e \rightarrow_E l$\\
         and $b' = (lbl \, b) \sqcup l$\\
-        and $b_i$ is the next if block label name (e.g. $if_3$)}
+        and $if_i$ is the next if block label name}
 
 \subsubsection{Declassify expression}
 
 \trule{DECLASSIFY-EXPL}
       {\langle \texttt{<|} \, e \texttt{,} \, l \, \texttt{|>}, lbl \rangle \rightarrow_L lbl'}
       {\langle e_d, lbl[dec_i \mapsto l] \rangle \rightarrow_L lbl'}
-      {where $dec_i$ is the next declassify expression label name (e.g. $dec_3$)}
+      {where $dec_i$ is the next declassify expression label name}
 \trule{DECLASSIFY-IMPL}
       {\langle \texttt{<|} \, e \, \texttt{|>}, lbl \rangle \rightarrow_L lbl'}
       {\langle e_d, lbl[dec_i \mapsto \underline{dec_i}] \rangle \rightarrow_L lbl'}
-      {where $dec_i$ is the next declassify expression label name (e.g. $dec_3$)}
+      {where $dec_i$ is the next declassify expression label name}
 
 \input{algorithms/inference.tex}
