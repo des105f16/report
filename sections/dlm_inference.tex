@@ -123,6 +123,18 @@ For $\rightarrow_{SC}$ see \cref{dlmi:con_stm}.
         {where $lbl \vdash e \rightarrow_E l$\\
           and $b' = (lbl \, b) \sqcup l$\\
           and $b_i$ is the next while block label name (e.g. $while_3$)}
+  \trule{IF-STM}
+        {\langle \texttt{if(} e \texttt{)} S, lbl \rangle \rightarrow_{SC} lbl'}
+        {\langle S_C, lbl[b_i \mapsto l, b \mapsto b'] \rangle \rightarrow_{SC} lbl'' \; \langle S, lbl'' \rangle \rightarrow_{S} lbl'}
+        {where $lbl \vdash e \rightarrow_E l$\\
+          and $b' = (lbl \, b) \sqcup l$\\
+          and $b_i$ is the next if block label name (e.g. $if_3$)}
+  \trule{IF-ELSE-STM}
+        {\langle \texttt{if(} e \texttt{)} S_1 \, \texttt{else} \, S_2, lbl \rangle \rightarrow_{SC} lbl'}
+        {\langle S_C, lbl[b_i \mapsto l, b \mapsto b'] \rangle \rightarrow_{SC} lbl'' \; \langle S_1, lbl'' \rangle \rightarrow_S lbl' \; \langle S_2, lbl'' \rangle \rightarrow_S lbl_3}
+        {where $lbl \vdash e \rightarrow_E l$\\
+          and $b' = (lbl \, b) \sqcup l$\\
+          and $b_i$ is the next if block label name (e.g. $if_3$)}
   \caption{Label semantics for conditional statements}
   \label{dlmi:con_stm}
 \end{table}
