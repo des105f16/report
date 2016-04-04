@@ -58,7 +58,9 @@ The parameter environment $\iDecp$ is given as:
 \trule{FUN-DECL-IMPL}
       {\langle T \, l \, f(D_P) \{S^*\}, lbl \rangle \rightarrow_{D_F} lbl'}
       {\langle D_P, lbl \rangle \rightarrow_{D_F} lbl'' \; \langle D_F, lbl''[f \mapsto l'] \rangle \rightarrow_{D_F} lbl'}
-      {where $l = \epsilon$}
+      {where $l = \epsilon$\\
+      and $P = D_P \rightarrow (p_1, p_2, \dots, p_n)$\\
+      and $l' = \sqcupl\limits_{p \in P} lbl \, p$}
 \trule{PAR-DECL-EXPL}
       {\langle T \, l \, p, lbl \rangle \rightarrow_{D_F} lbl'}
       {\langle D_P, lbl[p \mapsto l] \rangle \rightarrow_{D_F} lbl'}
