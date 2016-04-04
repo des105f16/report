@@ -36,7 +36,7 @@
 
 \newcommand{\truleHelper}[4]{
 	\text{[#1]} \hspace{2em}  & \ifthenelse{\equal{#3}{}}{#2}{\frac{#3}{#2}} \nonumber \\[1em]
-														& \parbox{\textwidth}{#4} \nonumber \\[1em] \nonumber
+														& \parbox{\textwidth}{#4} \nonumber
 }
 
 \newcommand{\trule}[4]{% NAME, CONCLUSION, PREMISES, SIDE CONDITIONS
@@ -45,7 +45,7 @@
 \end{align}}
 
 \newenvironment{trules}{%
-	\renewcommand{\trule}[4]{\truleHelper{##1}{##2}{##3}{##4}}
+	\renewcommand{\trule}[4]{\truleHelper{##1}{##2}{##3}{##4} \\[1em] \nonumber}
   \align%
 }{%
   \endalign%
