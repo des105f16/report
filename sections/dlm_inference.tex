@@ -78,4 +78,18 @@ For $\rightarrow_{DF}$ see \cref{dlmi:fun_decl}.
 \label{dlmi:fun_decl}
 \end{table}
 
+\subsubsection{Conditional statements}
+The transition system for conditional statements is given as: $(\Gamma_{SC}, \rightarrow_{SC}, T_{SC})$, with
+
+\begin{align*}
+    \Gamma_{SC} & = (\iStmc \times \iLbl) \cup \iLbl \\
+    T_{SC} & = \iLbl
+\end{align*}
+For $\rightarrow_{SC}$ see \cref{dlmi:con_stm}.
+
+\begin{table}
+  \caption{Label semantics for conditional statements}
+  \label{dlmi:con_stm}
+\end{table}
+
 \input{algorithms/inference.tex}
