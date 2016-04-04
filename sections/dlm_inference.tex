@@ -49,7 +49,7 @@ There are five types of labels:
 \subsubsection{Transision system}
 $(\Gamma_{L}, \rightarrow_{L}, T_{L})$, with
 \begin{align*}
-  \Gamma_{L} & = (\iDecv \times \iLbl) \cup (\iDecf \times \iLbl) \cup (\iDecp \times \iLbl) \cup (\iStmc \times \iLbl) \cup \iLbl \\
+  \Gamma_{L} & = (\iDecv \times \iLbl) \cup (\iDecf \times \iLbl) \cup (\iDecp \times \iLbl) \cup (\iStmc \times \iLbl) \cup (\iExpd \times \iLbl) \cup \iLbl \\
   T_{L} & = \iLbl
 \end{align*}
 
@@ -109,5 +109,16 @@ $(\Gamma_{L}, \rightarrow_{L}, T_{L})$, with
       {where $lbl \vdash e \rightarrow_E l$\\
         and $b' = (lbl \, b) \sqcup l$\\
         and $b_i$ is the next if block label name (e.g. $if_3$)}
+
+\subsubsection{Declassify expression}
+
+\trule{DECLASSIFY-EXPL}
+      {\langle \texttt{<|} \, e \texttt{,} \, l \, \texttt{|>}, lbl \rangle \rightarrow_L lbl'}
+      {\langle e_d, lbl[dec_i \mapsto l] \rangle \rightarrow_L lbl'}
+      {where $dec_i$ is the next declassify expression label name (e.g. $dec_3$)}
+\trule{DECLASSIFY-IMPL}
+      {\langle \texttt{<|} \, e \, \texttt{|>}, lbl \rangle \rightarrow_L lbl'}
+      {\langle e_d, lbl[dec_i \mapsto \underline{dec_i}] \rangle \rightarrow_L lbl'}
+      {where $dec_i$ is the next declassify expression label name (e.g. $dec_3$)}
 
 \input{algorithms/inference.tex}
