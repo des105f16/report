@@ -9,6 +9,8 @@
 \begin{table}[h]
   \begin{gather*}
     P \in \iProg\\
+    D_V \in \iDecv\\
+    x \in \iVar\\
     D_F \in \iDecf \\
     f \in \iFun\\
     D_P \in \iDecp\\
@@ -17,12 +19,13 @@
     S_C \in \iStmc
   \end{gather*}
   \begin{align*}
-    P     & ::= {D_S}^* \; {D_F}^*\\
-    D_S   & ::= struuucts\\
-    D_F   & ::= T \, l \, f \texttt{(} D_P \texttt{)} \, \texttt{\{} S^* \texttt{\}}\\
-    D_P   & ::= T \, l \, p \gp D_{P_1} \texttt{,} D_{P_2} \gp \epsilon\\
-    S     & ::= S_C \gp other \, statements\\
-    S_C   & ::= \texttt{while (} e \texttt{) \{} S^* \texttt{\}}
+    P       & ::= {D_S}^* \; {D_F}^*\\
+    D_S     & ::= struuucts\\
+    D_V     & ::= T \, l \, x \; [\texttt{= } e] \texttt{;}\\
+    D_F     & ::= T \, l \, f \texttt{(} D_P \texttt{)} S\\
+    D_P     & ::= T \, l \, p \gp D_{P_1} \texttt{,} D_{P_2} \gp \epsilon\\
+    S       & ::= S_C \gp other \, statements \gp S_1 \texttt{;} S_2\\
+    S_C     & ::= \texttt{while(} e \texttt{)} S \gp \texttt{if(} e \texttt{)} S_1 \gp \texttt{if (} e \texttt{)} S_1 \texttt{else} S_2
   \end{align*}
   \caption{Abstract syntax}
   \label{dlmi:abstract_syntax}
