@@ -162,7 +162,7 @@ $(\Gamma_{C}, \rightarrow_{C}, T_{C})$, with
 \begin{trules}
   \trule{VAR-DECL-ASS}
         {lbl \vdash \argpart {T \, l \, x \tk = e, cstr} {C} {cstr'} }
-        {lbl \vdash \argpart {D_V, cstr[c]} {C} {cstr'} }
+        {lbl \vdash \argpart {D_V, cstr[\mapsto c]} {C} {cstr'} }
         {where $lbl \vdash e \rightarrow_L l_e$\\
           and $l_x = lbl \, x$\\
           and $l_\ib = lbl \, \ib$\\
@@ -173,7 +173,7 @@ $(\Gamma_{C}, \rightarrow_{C}, T_{C})$, with
         {}
   \trule{ASS}
         {lbl \vdash \argpart {x \tk = e, cstr} {C} {cstr}}
-        {lbl \vdash \argpart {S_A, cstr[c]} {C} {cstr'}}
+        {lbl \vdash \argpart {S_A, cstr[\mapsto c]} {C} {cstr'}}
         {where $lbl \vdash e \rightarrow_L l_e$\\
           and $l_x = lbl \, x$\\
           and $l_\ib = lbl \, \ib$\\
