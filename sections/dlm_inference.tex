@@ -129,4 +129,22 @@ $(\Gamma_{L}, \rightarrow_{L}, T_{L})$, with
         {where $dec_i$ is the next declassify expression label name}
 \end{trules}
 
+\subsection{Semantics for determining labels}
+The constraint environment is called $\iCstr$ and is defined by:
+\[
+  \iCstr = \iExpa \cup \iExpr \cup \iStmc \cup \iExpd \rightharpoonup \mathbb{C}
+\]
+Where $\mathbb{C}$ is the set of constraints, where $\forall c \in \mathbb{C} . c = l_1 \sqsubseteq l_2 | l_1, l_2 \in \mathbb{L}$.
+
+\subsubsection{Transision system}
+$(\Gamma_{C}, \rightarrow_{C}, T_{C})$, with
+\begin{align*}
+  \Gamma_{C} =  & \;  (\iExpa \times \iLbl \times \iCstr) \\
+                & \;  \cup (\iExpr \times \iLbl \times \iCstr) \\
+                & \;  \cup (\iStmc \times \iLbl \times \iCstr) \\
+                & \;  \cup (\iExpd \times \iLbl \times \iCstr) \\
+                & \;  \cup \iCstr \\
+  T_{C} =       & \;  \iCstr
+\end{align*}
+
 \input{algorithms/inference.tex}
