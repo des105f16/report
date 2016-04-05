@@ -100,24 +100,24 @@ $(\Gamma_{L}, \rightarrow_{L}, T_{L})$, with
 \begin{trules}
   \trule{WHILE-STM}
         {\argpart {\tk{while} \tk ( e \tk ) S, lbl} {L} {lbl'} }
-        {\argpart {S_C, lbl[while_i \mapsto l, \ib \mapsto \ib']} {L} {lbl''} \; \argpart{S, lbl''} {L} {lbl'} }
-        {where $lbl \vdash e \rightarrow_L l$\\
-          and $\ib' = (lbl \, \ib) \sqcup l$\\
-          and $while_i$ is the next while block label name}
+        {\argpart {S_C, lbl[while_i \mapsto b_i, \ib \mapsto \ib']} {L} {lbl''} \; \argpart{S, lbl''} {L} {lbl'} }
+        {where $while_i$ is the next while block label name\\
+          and $l_b = \vlbl{while_i}$\\
+          and $\ib' = (lbl \, \ib) \sqcup l$}
   \trule{IF-STM}
         {\argpart {\tk{if} \tk ( e \tk ) S, lbl} {L} {lbl'} }
-        {\argpart {S_C, lbl[if_i \mapsto l, \ib \mapsto \ib']} {L} {lbl''} \; \argpart {S, lbl''} {L} {lbl'} }
-        {where $lbl \vdash e \rightarrow_E l$\\
-          and $\ib' = (lbl \, \ib) \sqcup l$\\
-          and $if_i$ is the next if block label name}
+        {\argpart {S_C, lbl[if_i \mapsto l_b, \ib \mapsto \ib']} {L} {lbl''} \; \argpart {S, lbl''} {L} {lbl'} }
+        {where $if_i$ is the next if block label name\\
+          and $l_b = \vlbl{if_i}$\\
+          and $\ib' = (lbl \, \ib) \sqcup l_b$}
   \trule{IF-ELSE-STM}
         {\argpart {\tk{if} \tk ( e \tk ) S_1 \tk{else} S_2, lbl} {L} {lbl'} }
-        {\argpart {S_C, lbl[if_i \mapsto l, \ib \mapsto \ib']} {L} {lbl''} \;
+        {\argpart {S_C, lbl[if_i \mapsto l_b, \ib \mapsto \ib']} {L} {lbl''} \;
           \argpart {S_1, lbl''} {L} {lbl'} \;
           \argpart {S_2, lbl''} {L} {lbl_3} }
-        {where $lbl \vdash e \rightarrow_E l$\\
-          and $\ib' = (lbl \, \ib) \sqcup l$\\
-          and $if_i$ is the next if block label name}
+        {where $if_i$ is the next if block label name\\
+          and $l_b = \vlbl{if_i}$\\
+          and $\ib' = (lbl \, \ib) \sqcup l_b$\\}
 \end{trules}
 
 \subsubsection{Declassify expression}
