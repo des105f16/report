@@ -51,7 +51,7 @@ There are five types of labels:
 \subsubsection{Transision system}
 $(\Gamma_{L}, \rightarrow_{L}, T_{L})$, with
 \begin{align*}
-  \Gamma_{L} & = (\iDecv \times \iLbl) \cup (\iDecf \times \iLbl) \cup (\iDecp \times \iLbl) \cup (\iStmc \times \iLbl) \cup (\iExpd \times \iLbl) \cup \iLbl \\
+  \Gamma_{L} & = (\iDecv \times \iLbl) \cup (\iDecf \times \iLbl) \cup (\iDecp \times \iLbl) \cup \iLbl \\
   T_{L} & = \iLbl
 \end{align*}
 
@@ -93,44 +93,6 @@ $(\Gamma_{L}, \rightarrow_{L}, T_{L})$, with
         {\argpart {\epsilon, lbl} {L} {lbl} }
         {}
         {}
-\end{trules}
-
-\subsubsection{Conditional statements}
-
-\begin{trules}
-  \trule{WHILE-STM}
-        {\argpart {\tk{while} \tk ( e \tk ) S, lbl} {L} {lbl'} }
-        {\argpart {S_C, lbl[while_i \mapsto b_i, \ib \mapsto \ib']} {L} {lbl''} \; \argpart{S, lbl''} {L} {lbl'} }
-        {where $while_i$ is the next while block label name\\
-          and $l_b = \vlbl{while_i}$\\
-          and $\ib' = (lbl \, \ib) \sqcup l$}
-  \trule{IF-STM}
-        {\argpart {\tk{if} \tk ( e \tk ) S, lbl} {L} {lbl'} }
-        {\argpart {S_C, lbl[if_i \mapsto l_b, \ib \mapsto \ib']} {L} {lbl''} \; \argpart {S, lbl''} {L} {lbl'} }
-        {where $if_i$ is the next if block label name\\
-          and $l_b = \vlbl{if_i}$\\
-          and $\ib' = (lbl \, \ib) \sqcup l_b$}
-  \trule{IF-ELSE-STM}
-        {\argpart {\tk{if} \tk ( e \tk ) S_1 \tk{else} S_2, lbl} {L} {lbl'} }
-        {\argpart {S_C, lbl[if_i \mapsto l_b, \ib \mapsto \ib']} {L} {lbl''} \;
-          \argpart {S_1, lbl''} {L} {lbl'} \;
-          \argpart {S_2, lbl''} {L} {lbl_3} }
-        {where $if_i$ is the next if block label name\\
-          and $l_b = \vlbl{if_i}$\\
-          and $\ib' = (lbl \, \ib) \sqcup l_b$\\}
-\end{trules}
-
-\subsubsection{Declassify expression}
-
-\begin{trules}
-  \trule{DEC-EXPL}
-        {\argpart {\tk{<|} e \tk , l \tk{|>}, lbl} {L} {lbl'} }
-        {\argpart {e_d, lbl[dec_i \mapsto l]} {L} {lbl'} }
-        {where $dec_i$ is the next declassify expression label name}
-  \trule{DEC-IMPL}
-        {\argpart {\tk{<|} e \tk{|>}, lbl} {L} {lbl'} }
-        {\argpart {e_d, lbl[dec_i \mapsto \vlbl{dec_i}]} {L} {lbl'} }
-        {where $dec_i$ is the next declassify expression label name}
 \end{trules}
 
 \subsection{Semantics for determining labels}
