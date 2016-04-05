@@ -51,7 +51,7 @@ There are five types of labels:
 \subsubsection{Transision system}
 $(\Gamma_{L}, \rightarrow_{L}, T_{L})$, with
 \begin{align*}
-  \Gamma_{L} & = (\iDecv \times \iLbl) \cup (\iDecf \times \iLbl) \cup (\iDecp \times \iLbl) \cup (\iStmc \times \iLbl) \cup (\iExpd \times \iLbl) \cup \iLbl \\
+  \Gamma_{L} & = (\iDecv \times \iLbl) \cup (\iDecf \times \iLbl) \cup (\iDecp \times \iLbl) \cup \iLbl \\
   T_{L} & = \iLbl
 \end{align*}
 
@@ -73,11 +73,11 @@ $(\Gamma_{L}, \rightarrow_{L}, T_{L})$, with
 \begin{trules}
   \trule{FUN-DECL-EXPL}
         {\argpart {T \, l \, f \tk ( D_P \tk ) S, lbl} {L} {lbl'} }
-        {\argpart {D_P, lbl} {L} {lbl''} \;\; \argpart {D_F, lbl''[f \mapsto l, \ifb \mapsto l, \ib \mapsto \bot]} {L} {lbl'} }
+        {\argpart {D_P, lbl} {L} {lbl''} \;\; \argpart {D_F, lbl''[f \mapsto l, \ifb \mapsto l, \ib \mapsto \bot, \ia \mapsto \bot]} {L} {lbl'} }
         {where $l \in \mathbb{L}$}
   \trule{FUN-DECL-IMPL}
         {\argpart {T \, l \, f \tk ( D_P \tk ) S, lbl} {L} {lbl'} }
-        {\argpart {D_P, lbl} {L} {lbl''} \; \argpart {D_F, lbl''[f \mapsto l', \ifb \mapsto l, \ib \mapsto \bot]} {L} {lbl'} }
+        {\argpart {D_P, lbl} {L} {lbl''} \; \argpart {D_F, lbl''[f \mapsto l', \ifb \mapsto l', \ib \mapsto \bot, \ia \mapsto \bot]} {L} {lbl'} }
         {where $l = \epsilon$\\
         and $P = D_P \rightarrow (p_1, p_2, \dots, p_n)$\\
         and $l' = \sqcupl\limits_{p \in P} lbl \, p$}
@@ -95,44 +95,6 @@ $(\Gamma_{L}, \rightarrow_{L}, T_{L})$, with
         {}
 \end{trules}
 
-\subsubsection{Conditional statements}
-
-\begin{trules}
-  \trule{WHILE-STM}
-        {\argpart {\tk{while} \tk ( e \tk ) S, lbl} {L} {lbl'} }
-        {\argpart {S_C, lbl[while_i \mapsto b_i, \ib \mapsto \ib']} {L} {lbl''} \; \argpart{S, lbl''} {L} {lbl'} }
-        {where $while_i$ is the next while block label name\\
-          and $l_b = \vlbl{while_i}$\\
-          and $\ib' = (lbl \, \ib) \sqcup l$}
-  \trule{IF-STM}
-        {\argpart {\tk{if} \tk ( e \tk ) S, lbl} {L} {lbl'} }
-        {\argpart {S_C, lbl[if_i \mapsto l_b, \ib \mapsto \ib']} {L} {lbl''} \; \argpart {S, lbl''} {L} {lbl'} }
-        {where $if_i$ is the next if block label name\\
-          and $l_b = \vlbl{if_i}$\\
-          and $\ib' = (lbl \, \ib) \sqcup l_b$}
-  \trule{IF-ELSE-STM}
-        {\argpart {\tk{if} \tk ( e \tk ) S_1 \tk{else} S_2, lbl} {L} {lbl'} }
-        {\argpart {S_C, lbl[if_i \mapsto l_b, \ib \mapsto \ib']} {L} {lbl''} \;
-          \argpart {S_1, lbl''} {L} {lbl'} \;
-          \argpart {S_2, lbl''} {L} {lbl_3} }
-        {where $if_i$ is the next if block label name\\
-          and $l_b = \vlbl{if_i}$\\
-          and $\ib' = (lbl \, \ib) \sqcup l_b$\\}
-\end{trules}
-
-\subsubsection{Declassify expression}
-
-\begin{trules}
-  \trule{DEC-EXPL}
-        {\argpart {\tk{<|} e \tk , l \tk{|>}, lbl} {L} {lbl'} }
-        {\argpart {e_d, lbl[dec_i \mapsto l]} {L} {lbl'} }
-        {where $dec_i$ is the next declassify expression label name}
-  \trule{DEC-IMPL}
-        {\argpart {\tk{<|} e \tk{|>}, lbl} {L} {lbl'} }
-        {\argpart {e_d, lbl[dec_i \mapsto \vlbl{dec_i}]} {L} {lbl'} }
-        {where $dec_i$ is the next declassify expression label name}
-\end{trules}
-
 \subsection{Semantics for determining labels}
 The constraint environment is called $\iCstr$ and is defined by:
 \[
@@ -146,7 +108,8 @@ $(\Gamma_{C}, \rightarrow_{C}, T_{C})$, with
   \Gamma_{C} =  & \;        (\iDecv \times \iCstr) \\
                 & \;  \cup  (\iStma \times \iCstr) \\
                 & \;  \cup  (\iStmr \times \iCstr) \\
-                & \;  \cup  (\iStmc \times \iCstr) \\
+                & \;  \cup  (\iStmc \times \iCstr \times \iLbl) \\
+                & \;  \cup  (\iStmi \times \iCstr \times \iLbl) \\
                 & \;  \cup  (\iExpd \times \iCstr) \\
                 & \;  \cup   \iCstr \\
   T_{C} =       & \;  \iCstr
@@ -201,13 +164,16 @@ $(\Gamma_{C}, \rightarrow_{C}, T_{C})$, with
 
 \begin{trules}
   \trule{WHILE}
-        {lbl \vdash \argpart {\tk{while} \tk ( e \tk ) S, cstr} {C} {cstr'} }
-        {lbl \vdash \argpart {S_C, cstr[\mapsto c]} {C} {cstr'} }
-        {where $while_i$ is the next while block label name\\
-          and $lbl \vdash e \rightarrow_L l_e$\\
-          and $l_b = lbl \, while_i$\\
+        {\argpart {\tk{while} \tk ( e \tk ) S, lbl, cstr} {C} {(lbl', cstr')} }
+        {\argpart {S_C, lbl'', cstr[\mapsto c]} {C} {(lbl^3, cstr'')} \;
+         \argpart {S, lbl^3, cstr''} {C} {(lbl', cstr')} }
+        {while $while_i$ is the next while block label name\\
+          and $l_w = \vlbl{while_i}$\\
           and $l_\ib = lbl \, \ib$\\
-          and $c = l_\ib \sqcup l_e \sqsubseteq l_b$}
+          and $l_\ib' = l_\ib \sqcup l_w$\\
+          and $lbl'' = lbl[\ib \mapsto l_\ib']$\\
+          and $lbl'' \vdash e \rightarrow_L l_e$\\
+          and $c = l_\ib \sqcup l_e \sqsubseteq l_w$}
 \end{trules}
 
 \input{algorithms/inference.tex}
