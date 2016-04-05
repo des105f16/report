@@ -73,11 +73,11 @@ $(\Gamma_{L}, \rightarrow_{L}, T_{L})$, with
 \begin{trules}
   \trule{FUN-DECL-EXPL}
         {\argpart {T \, l \, f \tk ( D_P \tk ) S, lbl} {L} {lbl'} }
-        {\argpart {D_P, lbl} {L} {lbl''} \;\; \argpart {D_F, lbl''[f \mapsto l, b \mapsto \bot]} {L} {lbl'} }
+        {\argpart {D_P, lbl} {L} {lbl''} \;\; \argpart {D_F, lbl''[f \mapsto l, \ib \mapsto \bot]} {L} {lbl'} }
         {where $l \in \mathbb{L}$}
   \trule{FUN-DECL-IMPL}
         {\argpart {T \, l \, f \tk ( D_P \tk ) S, lbl} {L} {lbl'} }
-        {\argpart {D_P, lbl} {L} {lbl''} \; \argpart {D_F, lbl''[f \mapsto l', b \mapsto \bot]} {L} {lbl'} }
+        {\argpart {D_P, lbl} {L} {lbl''} \; \argpart {D_F, lbl''[f \mapsto l', \ib \mapsto \bot]} {L} {lbl'} }
         {where $l = \epsilon$\\
         and $P = D_P \rightarrow (p_1, p_2, \dots, p_n)$\\
         and $l' = \sqcupl\limits_{p \in P} lbl \, p$}
@@ -100,23 +100,23 @@ $(\Gamma_{L}, \rightarrow_{L}, T_{L})$, with
 \begin{trules}
   \trule{WHILE-STM}
         {\argpart {\tk{while} \tk ( e \tk ) S, lbl} {L} {lbl'} }
-        {\argpart {S_C, lbl[while_i \mapsto l, b \mapsto b']} {L} {lbl''} \; \argpart{S, lbl''} {L} {lbl'} }
+        {\argpart {S_C, lbl[while_i \mapsto l, \ib \mapsto \ib']} {L} {lbl''} \; \argpart{S, lbl''} {L} {lbl'} }
         {where $lbl \vdash e \rightarrow_L l$\\
-          and $b' = (lbl \, b) \sqcup l$\\
+          and $\ib' = (lbl \, \ib) \sqcup l$\\
           and $while_i$ is the next while block label name}
   \trule{IF-STM}
         {\argpart {\tk{if} \tk ( e \tk ) S, lbl} {L} {lbl'} }
-        {\argpart {S_C, lbl[if_i \mapsto l, b \mapsto b']} {L} {lbl''} \; \argpart {S, lbl''} {L} {lbl'} }
+        {\argpart {S_C, lbl[if_i \mapsto l, \ib \mapsto \ib']} {L} {lbl''} \; \argpart {S, lbl''} {L} {lbl'} }
         {where $lbl \vdash e \rightarrow_E l$\\
-          and $b' = (lbl \, b) \sqcup l$\\
+          and $\ib' = (lbl \, \ib) \sqcup l$\\
           and $if_i$ is the next if block label name}
   \trule{IF-ELSE-STM}
         {\argpart {\tk{if} \tk ( e \tk ) S_1 \tk{else} S_2, lbl} {L} {lbl'} }
-        {\argpart {S_C, lbl[if_i \mapsto l, b \mapsto b']} {L} {lbl''} \;
+        {\argpart {S_C, lbl[if_i \mapsto l, \ib \mapsto \ib']} {L} {lbl''} \;
           \argpart {S_1, lbl''} {L} {lbl'} \;
           \argpart {S_2, lbl''} {L} {lbl_3} }
         {where $lbl \vdash e \rightarrow_E l$\\
-          and $b' = (lbl \, b) \sqcup l$\\
+          and $\ib' = (lbl \, \ib) \sqcup l$\\
           and $if_i$ is the next if block label name}
 \end{trules}
 
@@ -165,8 +165,8 @@ $(\Gamma_{C}, \rightarrow_{C}, T_{C})$, with
         {lbl \vdash \argpart {D_V, cstr[c]} {C} {cstr'} }
         {where $lbl \vdash e \rightarrow_L l_e$\\
           and $l_x = lbl \, x$\\
-          and $l_b = lbl \, b$\\
-          and $c = l_b \sqcup l_e \sqsubseteq l_x$}
+          and $l_\ib = lbl \, \ib $\\
+          and $c = l_\ib \sqcup l_e \sqsubseteq l_x$}
   \trule{VAR-DECL-NO-ASS}
         {lbl \vdash \argpart {T \, l \, x, cstr} {C} {cstr}}
         {}
