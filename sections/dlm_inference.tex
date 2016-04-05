@@ -165,12 +165,19 @@ $(\Gamma_{C}, \rightarrow_{C}, T_{C})$, with
         {lbl \vdash \argpart {D_V, cstr[c]} {C} {cstr'} }
         {where $lbl \vdash e \rightarrow_L l_e$\\
           and $l_x = lbl \, x$\\
-          and $l_\ib = lbl \, \ib $\\
+          and $l_\ib = lbl \, \ib$\\
           and $c = l_\ib \sqcup l_e \sqsubseteq l_x$}
   \trule{VAR-DECL-NO-ASS}
         {lbl \vdash \argpart {T \, l \, x, cstr} {C} {cstr}}
         {}
         {}
+  \trule{ASS}
+        {lbl \vdash \argpart {x \tk = e, cstr} {C} {cstr}}
+        {lbl \vdash \argpart {S_A, cstr[c]} {C} {cstr'}}
+        {where $lbl \vdash e \rightarrow_L l_e$\\
+          and $l_x = lbl \, x$\\
+          and $l_\ib = lbl \, \ib$\\
+          and $c = l_\ib \sqcup l_e \sqsubseteq l_x$}
 \end{trules}
 
 \input{algorithms/inference.tex}
