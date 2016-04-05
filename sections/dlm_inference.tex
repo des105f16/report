@@ -180,4 +180,22 @@ $(\Gamma_{C}, \rightarrow_{C}, T_{C})$, with
           and $c = l_\ib \sqcup l_e \sqsubseteq l_x$}
 \end{trules}
 
+\subsubsection{Return statement}
+
+\begin{trules}
+  \trule{RET}
+        {lbl \vdash \argpart {\tk{return} e, cstr} {C} {cstr'} }
+        {lbl \vdash \argpart {S_R, cstr[c]} {C} {cstr'} }
+        {where $f = \text{the name of the surrounding function}$\\
+          and $lbl \vdash e \rightarrow_L l_e$\\
+          and $l_f = lbl \, f$\\
+          and $l_\ib = lbl \, \ib$\\
+          and $c = l_\ib \sqcup l_e \sqsubseteq l_f$}
+  \trule{RET-EMPTY}
+        {lbl \vdash \argpart {\tk{return}, cstr} {C} {cstr} }
+        {}
+        {}
+        {}
+\end{trules}
+
 \input{algorithms/inference.tex}
