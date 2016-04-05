@@ -162,10 +162,13 @@ $(\Gamma_{C}, \rightarrow_{C}, T_{C})$, with
 \begin{trules}
   \trule{VAR-DECL-ASS}
         {lbl \vdash \argpart {T \, l \, x \tk = e, cstr} {C} {cstr'} }
-        {}
-        {}
+        {lbl \vdash \argpart {D_V, cstr[c]} {C} {cstr'} }
+        {where $lbl \vdash e \rightarrow_L l_e$\\
+          and $l_x = lbl \, x$\\
+          and $l_b = lbl \, b$\\
+          and $c = l_b \sqcup l_e \sqsubseteq l_x$}
   \trule{VAR-DECL-NO-ASS}
-        {}
+        {lbl \vdash \argpart {T \, l \, x, cstr} {C} {cstr}}
         {}
         {}
 \end{trules}
