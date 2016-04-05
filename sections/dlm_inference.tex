@@ -143,13 +143,31 @@ Where $\mathbb{C}$ is the set of constraints, where $\forall c \in \mathbb{C} . 
 \subsubsection{Transision system}
 $(\Gamma_{C}, \rightarrow_{C}, T_{C})$, with
 \begin{align*}
-  \Gamma_{C} =  & \;        (\iDecv \times \iLbl \times \iCstr) \\
-                & \;  \cup  (\iStma \times \iLbl \times \iCstr) \\
-                & \;  \cup  (\iStmr \times \iLbl \times \iCstr) \\
-                & \;  \cup  (\iStmc \times \iLbl \times \iCstr) \\
-                & \;  \cup  (\iExpd \times \iLbl \times \iCstr) \\
+  \Gamma_{C} =  & \;        (\iDecv \times \iCstr) \\
+                & \;  \cup  (\iStma \times \iCstr) \\
+                & \;  \cup  (\iStmr \times \iCstr) \\
+                & \;  \cup  (\iStmc \times \iCstr) \\
+                & \;  \cup  (\iExpd \times \iCstr) \\
                 & \;  \cup   \iCstr \\
   T_{C} =       & \;  \iCstr
 \end{align*}
+
+\noindent Where transitions are of the form
+  \[ lbl \vdash \argpart{X, cstr}{C}{cstr'} \]
+  and
+  \[ X \in (\iDecv \cup \iStma \cup \iStmr \cup \iStmc \cup \iExpd) \]
+
+\subsubsection{Variable declaration and assignment}
+
+\begin{trules}
+  \trule{VAR-DECL-ASS}
+        {lbl \vdash \argpart {T \, l \, x \tk = e, cstr} {C} {cstr'} }
+        {}
+        {}
+  \trule{VAR-DECL-NO-ASS}
+        {}
+        {}
+        {}
+\end{trules}
 
 \input{algorithms/inference.tex}
