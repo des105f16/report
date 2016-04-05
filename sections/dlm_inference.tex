@@ -14,17 +14,21 @@
   p \in \iVar\\
   S \in \iStm\\
   S_C \in \iStmc\\
+  S_A \in \iStma\\
+  S_R \in \iStmr\\
   l \in \mathbb{L}\\
 \end{gather*}
 \begin{align*}
-  P       & ::= D_S \gp D_V \gp D_F \gp P \; P\\
+  P       & ::= D_S \gp D_V \gp D_F \gp P \; P \\
   D_S     & ::= struuucts\\
-  D_V     & ::= T \, l \, x \, [\tk = e] \tk ;\\
-  D_F     & ::= T \, l \, f \tk ( D_P \tk ) S\\
-  D_P     & ::= T \, l \, p \gp D_{P_1} \tk , D_{P_2} \gp \epsilon\\
-  S       & ::= S_C \gp S_1 \tk ; S_2 \gp other \; statements\\
-  S_C     & ::= \tk{while} \tk ( e \tk ) S \gp \tk{if} \tk ( e \tk ) S \gp \tk{if} \tk ( e \tk ) S_1 \tk{else} S_2\\
-  e       & ::= e_d \gp other \; expressions\\
+  D_V     & ::= T \, l \, x \, [\tk = e] \tk ; \\
+  D_F     & ::= T \, l \, f \tk ( D_P \tk ) S \\
+  D_P     & ::= T \, l \, p \gp D_{P_1} \tk , D_{P_2} \gp \epsilon \\
+  S       & ::= S_C \gp S_A \gp S_R \gp S_1 \tk ; S_2 \gp other \; statements \\
+  S_C     & ::= \tk{while} \tk ( e \tk ) S \gp \tk{if} \tk ( e \tk ) S \gp \tk{if} \tk ( e \tk ) S_1 \tk{else} S_2 \\
+  S_A     & ::= x \tk = e \\
+  S_R     & ::= \tk{return} [e] \\
+  e       & ::= e_d \gp other \; expressions \\
   e_d     & ::= \tk{<|} e \, [\tk , l] \tk{|>}
 \end{align*}
 
@@ -132,18 +136,19 @@ $(\Gamma_{L}, \rightarrow_{L}, T_{L})$, with
 \subsection{Semantics for determining labels}
 The constraint environment is called $\iCstr$ and is defined by:
 \[
-  \iCstr = \iExpa \cup \iExpr \cup \iStmc \cup \iExpd \rightharpoonup \mathbb{C}
+  \iCstr = \iDecv \cup \iStma \cup \iStmr \cup \iStmc \cup \iExpd \rightharpoonup \mathbb{C}
 \]
 Where $\mathbb{C}$ is the set of constraints, where $\forall c \in \mathbb{C} . c = l_1 \sqsubseteq l_2 | l_1, l_2 \in \mathbb{L}$.
 
 \subsubsection{Transision system}
 $(\Gamma_{C}, \rightarrow_{C}, T_{C})$, with
 \begin{align*}
-  \Gamma_{C} =  & \;  (\iExpa \times \iLbl \times \iCstr) \\
-                & \;  \cup (\iExpr \times \iLbl \times \iCstr) \\
-                & \;  \cup (\iStmc \times \iLbl \times \iCstr) \\
-                & \;  \cup (\iExpd \times \iLbl \times \iCstr) \\
-                & \;  \cup \iCstr \\
+  \Gamma_{C} =  & \;        (\iDecv \times \iLbl \times \iCstr) \\
+                & \;  \cup  (\iStma \times \iLbl \times \iCstr) \\
+                & \;  \cup  (\iStmr \times \iLbl \times \iCstr) \\
+                & \;  \cup  (\iStmc \times \iLbl \times \iCstr) \\
+                & \;  \cup  (\iExpd \times \iLbl \times \iCstr) \\
+                & \;  \cup   \iCstr \\
   T_{C} =       & \;  \iCstr
 \end{align*}
 
