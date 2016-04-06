@@ -5,18 +5,18 @@
 \subsection{Abstract syntax}
 
 \begin{gather*}
-  P \in \iProg\\
+  P   \in \iProg\\
   D_V \in \iDecv\\
-  x \in \iVar\\
+  x   \in \iVar\\
   D_F \in \iDecf \\
-  f \in \iFun\\
+  f   \in \iFun\\
   D_P \in \iDecp\\
-  p \in \iVar\\
-  S \in \iStm\\
-  S_C \in \iStmc\\
-  S_A \in \iStma\\
-  S_R \in \iStmr\\
-  l \in \mathbb{L}\\
+  p   \in \iVar\\
+  S   \in \iStm\\
+  S_L \in \iStml\\
+  e   \in \iExp\\
+  e_d \in \iExpd\\
+  l   \in \mathbb{L}\\
 \end{gather*}
 \begin{align*}
   P       & ::= D_S \gp D_V \gp D_F \gp P \; P \\
@@ -24,10 +24,10 @@
   D_V     & ::= T \, l \, x \, [\tk = e] \\
   D_F     & ::= T \, l \, f \tk ( D_P \tk ) S \\
   D_P     & ::= T \, l \, p \gp D_{P_1} \tk , D_{P_2} \gp \epsilon \\
-  S       & ::= S_C \gp S_A \gp S_R \gp S_1 \tk ; S_2 \gp other \; statements \\
-  S_C     & ::= \tk{while} \tk ( e \tk ) S \gp \tk{if} \tk ( e \tk ) S \gp \tk{if} \tk ( e \tk ) S_1 \tk{else} S_2 \\
-  S_A     & ::= x \tk = e \\
-  S_R     & ::= \tk{return} [e] \\
+  S       & ::= S_L \gp S_1 \tk ; S_2 \gp other \; statements \\
+  S_L     & ::= \tk{while} \tk ( e \tk ) S \gp \tk{if} \tk ( e \tk ) S \gp \tk{if} \tk ( e \tk ) S_1 \tk{else} S_2 \\
+          & \gp x \tk = e \\
+          & \gp \tk{return} [e] \\
   e       & ::= e_d \gp other \; expressions \\
   e_d     & ::= \tk{<|} e \, [\tk , l] \tk{|>}
 \end{align*}
@@ -35,18 +35,25 @@
 \subsection{Semantics for determining labels}
 The label environment is called $\iLbl$ and is defined by:
 \[
-  \iLbl = \iVar \cup \iFun \cup \iStmc \cup \iExpd \rightharpoonup \mathbb{L}
+  \iLbl = \iVar \cup \iFun \cup \ia \cup \ib \cup \ifb \rightharpoonup \mathbb{L}
 \]
-Where $\mathbb{L}$ is the set of labels.
-There are five types of labels:
-\begin{enumerate}
-  \item Policy labels -- like those described earlier
-  \item Variable labels -- denoted $\vlbl{x}$
-  \item Constant labels -- denoted $\clbl{p}$
-  \item Lower bound -- denoted $\bot$
-  \item Upper bound -- denoted $\top$
-  \item Join/meet labels -- combinations of the above-mentioned labels
-\end{enumerate}
+where $\mathbb{L}$ is the set of all possible labels, with the six types of labels:
+\begin{description}
+  \item[Policy labels] Like those described earlier
+  \item[Variable labels] Denoted $\vlbl{x}$
+  \item[Constant labels] Denoted $\clbl{p}$
+  \item[Lower bound] Denoted $\bot$
+  \item[Upper bound] Denoted $\top$
+  \item[Join/meet labels] Combinations of the above-mentioned labels
+\end{description}
+
+and
+
+\begin{description}
+  \item[$\ia$] The authority label
+  \item[$\ib$] The block Label
+  \item[$\ifb$] The function block label
+\end{description}
 
 \subsubsection{Transision system}
 $(\Gamma_{L}, \rightarrow_{L}, T_{L})$, with
@@ -98,27 +105,19 @@ $(\Gamma_{L}, \rightarrow_{L}, T_{L})$, with
 \subsection{Semantics for determining labels}
 The constraint environment is called $\iCstr$ and is defined by:
 \[
-  \iCstr = \iDecv \cup \iStma \cup \iStmr \cup \iStmc \cup \iExpd \rightharpoonup \mathbb{C}
+  \iCstr = \iDecv \cup \iStml \cup \iExpd \rightharpoonup \mathbb{C}
 \]
-Where $\mathbb{C}$ is the set of constraints, where $\forall c \in \mathbb{C} . c = l_1 \sqsubseteq l_2 | l_1, l_2 \in \mathbb{L}$.
+Where $\mathbb{C}$ is the set of constraints, with $\forall c \in \mathbb{C} . c = l_1 \sqsubseteq l_2 | l_1, l_2 \in \mathbb{L}$.
 
 \subsubsection{Transision system}
 $(\Gamma_{C}, \rightarrow_{C}, T_{C})$, with
 \begin{align*}
-  \Gamma_{C} =  & \;        (\iDecv \times \iCstr) \\
-                & \;  \cup  (\iStma \times \iCstr) \\
-                & \;  \cup  (\iStmr \times \iCstr) \\
-                & \;  \cup  (\iStmc \times \iCstr \times \iLbl) \\
-                & \;  \cup  (\iStmi \times \iCstr \times \iLbl) \\
-                & \;  \cup  (\iExpd \times \iCstr) \\
-                & \;  \cup   \iCstr \\
-  T_{C} =       & \;  \iCstr
+  \Gamma_{C} =  & \;        (\iDecv \times \iLbl \times \iCstr) \\
+                & \;  \cup  (\iStml \times \iLbl \times \iCstr) \\
+                & \;  \cup  (\iExpd \times \iLbl \times \iCstr) \\
+                & \;  \cup  (\iLbl \times \iCstr)               \\
+  T_{C} =       & \;  (\iLbl \cup \iCstr)
 \end{align*}
-
-\noindent Where transitions are of the form
-  \[ lbl \vdash \argpart{X, cstr}{C}{cstr'} \]
-  and
-  \[ X \in (\iDecv \cup \iStma \cup \iStmr \cup \iStmc \cup \iExpd) \]
 
 \subsubsection{Variable declaration and assignment}
 
