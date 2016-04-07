@@ -27,7 +27,7 @@ and
 \subsubsection{Transision system}
 $(\Gamma_{L}, \rightarrow_{L}, T_{L})$, with
 \begin{align*}
-  \Gamma_{L} & = (\iDecv \times \iLbl) \cup (\iDecf \times \iLbl) \cup (\iDecp \times \iLbl) \cup \iLbl \\
+  \Gamma_{L} & = (\iDecv \times \iLbl) \cup (\iDecf \times \iLbl) \cup (\iDecpar \times \iLbl) \cup \iLbl \\
   T_{L} & = \iLbl
 \end{align*}
 
@@ -48,22 +48,22 @@ $(\Gamma_{L}, \rightarrow_{L}, T_{L})$, with
 
 \begin{trules}
   \trule{FUN-DECL-EXPL}
-        {\argpart {T \, l \, f \tk ( D_P \tk ) S, lbl} {L} {lbl'} }
-        {\argpart {D_P, lbl} {L} {lbl''} \;\; \argpart {D_F, lbl''[f \mapsto l, \ifb \mapsto l, \ib \mapsto \bot, \ia \mapsto \bot]} {L} {lbl'} }
+        {\argpart {T \, l \, f \tk ( D_{Par} \tk ) S, lbl} {L} {lbl'} }
+        {\argpart {D_{Par}, lbl} {L} {lbl''} \;\; \argpart {D_F, lbl''[f \mapsto l, \ifb \mapsto l, \ib \mapsto \bot, \ia \mapsto \bot]} {L} {lbl'} }
         {where $l \in \mathbb{L}$}
   \trule{FUN-DECL-IMPL}
-        {\argpart {T \, l \, f \tk ( D_P \tk ) S, lbl} {L} {lbl'} }
-        {\argpart {D_P, lbl} {L} {lbl''} \; \argpart {D_F, lbl''[f \mapsto l', \ifb \mapsto l', \ib \mapsto \bot, \ia \mapsto \bot]} {L} {lbl'} }
+        {\argpart {T \, l \, f \tk ( D_{Par} \tk ) S, lbl} {L} {lbl'} }
+        {\argpart {D_{Par}, lbl} {L} {lbl''} \; \argpart {D_F, lbl''[f \mapsto l', \ifb \mapsto l', \ib \mapsto \bot, \ia \mapsto \bot]} {L} {lbl'} }
         {where $l = \epsilon$\\
-        and $D_P \rightarrow (x_1, x_2, \dots, x_n)$\\
+        and $D_{Par} \rightarrow (x_1, x_2, \dots, x_n)$\\
         and $l' = \sqcupl\limits_1^n lbl \, x_i$}
   \trule{PAR-DECL-EXPL}
         {\argpart {T \, l \, x, lbl} {L} {lbl'} }
-        {\argpart {D_P, lbl[x \mapsto l]} {L} {lbl'} }
+        {\argpart {D_{Par}, lbl[x \mapsto l]} {L} {lbl'} }
         {where $l \in \mathbb{L}$}
   \trule{PAR-DECL-IMPL}
         {\argpart {T \, l \, x, lbl} {L} {lbl'} }
-        {\argpart {D_P, lbl[x \mapsto \clbl{x}]} {L} {lbl'} }
+        {\argpart {D_{Par}, lbl[x \mapsto \clbl{x}]} {L} {lbl'} }
         {where $l = \epsilon$}
   \trule{EMPTY-PAR-DECL}
         {\argpart {\epsilon, lbl} {L} {lbl} }
@@ -104,7 +104,7 @@ $(\Gamma_{C}, \rightarrow_{C}, T_{C})$, with
         {}
   \trule{ASS}
         {\argpart {x \tk = e, lbl, cstr} {C} {(lbl, cstr')}}
-        {\argpart {S_A, lbl, cstr[\mapsto c]} {C} {(lbl, cstr')}}
+        {\argpart {S_L, lbl, cstr[\mapsto c]} {C} {(lbl, cstr')}}
         {where $lbl \vdash e \rightarrow_L l_e$\\
           and $l_x = lbl \, x$\\
           and $l_\ib = lbl \, \ib$\\
@@ -116,7 +116,7 @@ $(\Gamma_{C}, \rightarrow_{C}, T_{C})$, with
 \begin{trules}
   \trule{RET}
         {\argpart {\tk{return} e, lbl, cstr} {C} {(lbl, cstr')} }
-        {\argpart {S_R, lbl, cstr[\mapsto c]} {C} {(lbl, cstr')} }
+        {\argpart {S_L, lbl, cstr[\mapsto c]} {C} {(lbl, cstr')} }
         {where $lbl \vdash e \rightarrow_L l_e$\\
           and $l_\ifb = lbl \, \ifb$\\
           and $l_\ib = lbl \, \ib$\\

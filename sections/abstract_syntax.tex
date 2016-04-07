@@ -2,32 +2,35 @@
 \section{Abstract syntax}
 
 \begin{gather*}
-  P   \in \iProg\\
-  D_V \in \iDecv\\
-  x   \in \iVar\\
-  D_F \in \iDecf \\
-  f   \in \iFun\\
-  D_P \in \iDecp\\
-  p   \in \iPrin\\
-  S   \in \iStm\\
-  S_L \in \iStml\\
-  e   \in \iExp\\
-  e_L \in \iExpl\\
-  l   \in \mathbb{L} \cup \epsilon\\
+  P       \in \iProg\\
+  D_P     \in \iDecp\\
+  D_V     \in \iDecv\\
+  x       \in \iVar\\
+  D_F     \in \iDecf \\
+  f       \in \iFun\\
+  D_{Par} \in \iDecpar\\
+  p       \in \iPrin\\
+  S       \in \iStm\\
+  S_L     \in \iStml\\
+  e       \in \iExp\\
+  e_L     \in \iExpl\\
+  l       \in \mathbb{L} \cup \epsilon\\
 \end{gather*}
 \begin{align*}
-  P       & ::= D_S \gp D_V \gp D_F \gp P \; P \\
-  D_V     & ::= T \, l \, x \, [\tk = e] \\
-  D_F     & ::= T \, l \, f \tk ( D_P \tk ) S \\
-  D_P     & ::= T \, l \, x \gp D_{P_1} \tk , D_{P_2} \gp \epsilon \\
-  S       & ::= e \gp S_L \gp S_1 \tk ; S_2 \gp other \; statements \\
-  S_L     & ::= \tk{while} \tk ( e \tk ) S \gp \tk{if} \tk ( e \tk ) S \gp \tk{if} \tk ( e \tk ) S_1 \tk{else} S_2 \\
-          & \gp x \tk = e \\
-          & \gp \tk{return} [e] \\
-          & \gp \tk{this} \tk{-{}->?} p_l \; S \gp \tk{caller} \tk{-{}->?} p_l \; S \\
-  e       & ::= e_L \gp other \; expressions \\
-  e_L     & ::= \tk{<|} e \tk , l \tk{|>} \\
-          & \gp f \; [\tk{<{}<{}<} p_l \tk{>{}>{}>}] \tk ( [a_l] \tk ) \\
-  p_l     & ::= p \gp {p_l}_1 \tk , {p_l}_2 \\
-  a_l     & ::= e \gp {a_l}_1 \tk , {a_l}_2
+  P         & ::= D_P \gp A \gp D_V \gp D_F \gp P \; P \\
+  D_P       & ::= \tk{principal} p_l \\
+  A         & ::= p \tk{-{}->} p_l \\
+  D_V       & ::= T \, l \, x \, [\tk = e] \\
+  D_F       & ::= T \, l \, f \tk ( D_{Par} \tk ) S \\
+  D_{Par}   & ::= T \, l \, x \gp D_{Par_1} \tk , D_{Par_2} \gp \epsilon \\
+  S         & ::= e \gp S_L \gp S_1 \tk ; S_2 \gp other \; statements \\
+  S_L       & ::= \tk{while} \tk ( e \tk ) S \gp \tk{if} \tk ( e \tk ) S \gp \tk{if} \tk ( e \tk ) S_1 \tk{else} S_2 \\
+            & \gp x \tk = e \\
+            & \gp \tk{return} [e] \\
+            & \gp \tk{this} \tk{-{}->?} p_l \; S \gp \tk{caller} \tk{-{}->?} p_l \; S \\
+  e         & ::= e_L \gp other \; expressions \\
+  e_L       & ::= \tk{<|} e \tk , l \tk{|>} \\
+            & \gp f \; [\tk{<{}<{}<} p_l \tk{>{}>{}>}] \tk ( [a_l] \tk ) \\
+  p_l       & ::= p \gp {p_l}_1 \tk , {p_l}_2 \\
+  a_l       & ::= e \gp {a_l}_1 \tk , {a_l}_2
 \end{align*}
