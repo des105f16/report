@@ -55,15 +55,15 @@ $(\Gamma_{L}, \rightarrow_{L}, T_{L})$, with
         {\argpart {T \, l \, f \tk ( D_P \tk ) S, lbl} {L} {lbl'} }
         {\argpart {D_P, lbl} {L} {lbl''} \; \argpart {D_F, lbl''[f \mapsto l', \ifb \mapsto l', \ib \mapsto \bot, \ia \mapsto \bot]} {L} {lbl'} }
         {where $l = \epsilon$\\
-        and $P = D_P \rightarrow (p_1, p_2, \dots, p_n)$\\
-        and $l' = \sqcupl\limits_{p \in P} lbl \, p$}
+        and $D_P \rightarrow (x_1, x_2, \dots, x_n)$\\
+        and $l' = \sqcupl\limits_1^n lbl \, x_i$}
   \trule{PAR-DECL-EXPL}
-        {\argpart {T \, l \, p, lbl} {L} {lbl'} }
-        {\argpart {D_P, lbl[p \mapsto l]} {L} {lbl'} }
+        {\argpart {T \, l \, x, lbl} {L} {lbl'} }
+        {\argpart {D_P, lbl[x \mapsto l]} {L} {lbl'} }
         {where $l \in \mathbb{L}$}
   \trule{PAR-DECL-IMPL}
-        {\argpart {T \, l \, p, lbl} {L} {lbl'} }
-        {\argpart {D_P, lbl[p \mapsto \clbl{p}]} {L} {lbl'} }
+        {\argpart {T \, l \, x, lbl} {L} {lbl'} }
+        {\argpart {D_P, lbl[x \mapsto \clbl{x}]} {L} {lbl'} }
         {where $l = \epsilon$}
   \trule{EMPTY-PAR-DECL}
         {\argpart {\epsilon, lbl} {L} {lbl} }
