@@ -3,7 +3,6 @@
 
 \begin{gather*}
   P       \in \iProg\\
-  D_P     \in \iDecp\\
   D_V     \in \iDecv\\
   x       \in \iVar\\
   D_F     \in \iDecf \\
@@ -17,9 +16,7 @@
   l       \in \mathbb{L} \cup \epsilon\\
 \end{gather*}
 \begin{align*}
-  P         & ::= D_P \gp A \gp D_V \gp D_F \gp P \; P \\
-  D_P       & ::= \tk{principal} p_l \\
-  A         & ::= p \tk{-{}->} p_l \\
+  P         & ::= D_V \gp D_F \gp P \; P \\
   D_V       & ::= T \, l \, x \, [\tk = e] \\
   D_F       & ::= T \, l \, f \tk ( D_{Par} \tk ) S \\
   D_{Par}   & ::= T \, l \, x \gp D_{Par_1} \tk , D_{Par_2} \gp \epsilon \\
