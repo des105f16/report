@@ -49,11 +49,15 @@ $(\Gamma_{L}, \rightarrow_{L}, T_{L})$, with
 \begin{trules}
   \ctrule{FUN-DECL-EXPL}
         {\argpart {T \, l \, f \tk ( D_{Par} \tk ) S, lbl} {L} {lbl'} }
-        {\argpart {D_{Par}, lbl} {L} {lbl''} \;\; \argpart {D_F, lbl''[f \mapsto l, \ifb \mapsto l, \ib \mapsto \bot, \ia \mapsto \bot]} {L} {lbl'} }
+        {\splitfrac{\splitfrac{\argpart {D_{Par}, lbl} {L} {lbl''} }
+          {\argpart {D_F, lbl''[f \mapsto l, \ifb \mapsto l, \ib \mapsto \bot, \ia \mapsto \bot]} {L} {lbl^3} }}
+          {\argpart {S, lbl^3} {C} {lbl'} }}
         {where $l \in \mathbb{L}$}
   \ctrule{FUN-DECL-IMPL}
         {\argpart {T \, l \, f \tk ( D_{Par} \tk ) S, lbl} {L} {lbl'} }
-        {\argpart {D_{Par}, lbl} {L} {lbl''} \; \argpart {D_F, lbl''[f \mapsto l', \ifb \mapsto l', \ib \mapsto \bot, \ia \mapsto \bot]} {L} {lbl'} }
+        {\splitfrac{\splitfrac{\argpart {D_{Par}, lbl} {L} {lbl''} }
+          {\argpart {D_F, lbl''[f \mapsto l', \ifb \mapsto l', \ib \mapsto \bot, \ia \mapsto \bot]} {L} {lbl^3} }}
+          {\argpart {S, lbl^3} {C} {lbl'} }}
         {where $l = \epsilon$\\
         and $D_{Par} \rightarrow (x_1, x_2, \dots, x_n)$\\[0.25em]
         and $l' = \bot \sqcup (\mathlarger\sqcupl\limits_1^n lbl \, x_i)$}
