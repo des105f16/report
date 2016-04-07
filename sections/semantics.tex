@@ -1,3 +1,4 @@
+% !TEX root = ../master.tex
 \section{Semantics}
 
 \subsection{Semantics for determining labels}
@@ -26,7 +27,7 @@ and
 \subsubsection{Transision system}
 $(\Gamma_{L}, \rightarrow_{L}, T_{L})$, with
 \begin{align*}
-  \Gamma_{L} & = (\iDecv \times \iLbl) \cup (\iDecf \times \iLbl) \cup (\iDecp \times \iLbl) \cup \iLbl \\
+  \Gamma_{L} & = (\iDecv \times \iLbl) \cup (\iDecf \times \iLbl) \cup (\iDecpar \times \iLbl) \cup \iLbl \\
   T_{L} & = \iLbl
 \end{align*}
 
@@ -47,22 +48,22 @@ $(\Gamma_{L}, \rightarrow_{L}, T_{L})$, with
 
 \begin{trules}
   \trule{FUN-DECL-EXPL}
-        {\argpart {T \, l \, f \tk ( D_P \tk ) S, lbl} {L} {lbl'} }
-        {\argpart {D_P, lbl} {L} {lbl''} \;\; \argpart {D_F, lbl''[f \mapsto l, \ifb \mapsto l, \ib \mapsto \bot, \ia \mapsto \bot]} {L} {lbl'} }
+        {\argpart {T \, l \, f \tk ( D_{Par} \tk ) S, lbl} {L} {lbl'} }
+        {\argpart {D_{Par}, lbl} {L} {lbl''} \;\; \argpart {D_F, lbl''[f \mapsto l, \ifb \mapsto l, \ib \mapsto \bot, \ia \mapsto \bot]} {L} {lbl'} }
         {where $l \in \mathbb{L}$}
   \trule{FUN-DECL-IMPL}
-        {\argpart {T \, l \, f \tk ( D_P \tk ) S, lbl} {L} {lbl'} }
-        {\argpart {D_P, lbl} {L} {lbl''} \; \argpart {D_F, lbl''[f \mapsto l', \ifb \mapsto l', \ib \mapsto \bot, \ia \mapsto \bot]} {L} {lbl'} }
+        {\argpart {T \, l \, f \tk ( D_{Par} \tk ) S, lbl} {L} {lbl'} }
+        {\argpart {D_{Par}, lbl} {L} {lbl''} \; \argpart {D_F, lbl''[f \mapsto l', \ifb \mapsto l', \ib \mapsto \bot, \ia \mapsto \bot]} {L} {lbl'} }
         {where $l = \epsilon$\\
-        and $P = D_P \rightarrow (p_1, p_2, \dots, p_n)$\\
-        and $l' = \sqcupl\limits_{p \in P} lbl \, p$}
+        and $D_{Par} \rightarrow (x_1, x_2, \dots, x_n)$\\[0.25em]
+        and $l' = \bot \sqcup (\mathlarger\sqcupl\limits_1^n lbl \, x_i)$}
   \trule{PAR-DECL-EXPL}
-        {\argpart {T \, l \, p, lbl} {L} {lbl'} }
-        {\argpart {D_P, lbl[p \mapsto l]} {L} {lbl'} }
+        {\argpart {T \, l \, x, lbl} {L} {lbl'} }
+        {\argpart {D_{Par}, lbl[x \mapsto l]} {L} {lbl'} }
         {where $l \in \mathbb{L}$}
   \trule{PAR-DECL-IMPL}
-        {\argpart {T \, l \, p, lbl} {L} {lbl'} }
-        {\argpart {D_P, lbl[p \mapsto \clbl{p}]} {L} {lbl'} }
+        {\argpart {T \, l \, x, lbl} {L} {lbl'} }
+        {\argpart {D_{Par}, lbl[x \mapsto \clbl{x}]} {L} {lbl'} }
         {where $l = \epsilon$}
   \trule{EMPTY-PAR-DECL}
         {\argpart {\epsilon, lbl} {L} {lbl} }
@@ -73,7 +74,7 @@ $(\Gamma_{L}, \rightarrow_{L}, T_{L})$, with
 \subsection{Semantics for determining constraints}
 The constraint environment is called $\iCstr$ and is defined by:
 \[
-  \iCstr = \iDecv \cup \iStml \cup \iExpd \rightharpoonup \mathbb{C}
+  \iCstr = \iDecv \cup \iStml \cup \iExpl \rightharpoonup \mathbb{C}
 \]
 Where $\mathbb{C}$ is the set of constraints, with $\forall c \in \mathbb{C} . c = l_1 \sqsubseteq l_2 | l_1, l_2 \in \mathbb{L}$.
 
@@ -82,7 +83,7 @@ $(\Gamma_{C}, \rightarrow_{C}, T_{C})$, with
 \begin{align*}
   \Gamma_{C} =  & \;        (\iDecv \times \iLbl \times \iCstr) \\
                 & \;  \cup  (\iStml \times \iLbl \times \iCstr) \\
-                & \;  \cup  (\iExpd \times \iLbl \times \iCstr) \\
+                & \;  \cup  (\iExpl \times \iLbl \times \iCstr) \\
                 & \;  \cup  (\iLbl \times \iCstr)               \\
   T_{C} =       & \;  (\iLbl \cup \iCstr)
 \end{align*}
@@ -93,7 +94,8 @@ $(\Gamma_{C}, \rightarrow_{C}, T_{C})$, with
   \trule{VAR-DECL-ASS}
         {\argpart {T \, l \, x \tk = e, lbl, cstr} {C} {(lbl, cstr')} }
         {\argpart {D_V, lbl, cstr[\mapsto c]} {C} {(lbl, cstr')} }
-        {where $lbl \vdash e \rightarrow_L l_e$\\
+        {where $l = \epsilon$\\
+          and $lbl \vdash e \rightarrow_L l_e$\\
           and $l_x = lbl \, x$\\
           and $l_\ib = lbl \, \ib$\\
           and $c = l_\ib \sqcup l_e \sqsubseteq l_x$}
@@ -103,7 +105,7 @@ $(\Gamma_{C}, \rightarrow_{C}, T_{C})$, with
         {}
   \trule{ASS}
         {\argpart {x \tk = e, lbl, cstr} {C} {(lbl, cstr')}}
-        {\argpart {S_A, lbl, cstr[\mapsto c]} {C} {(lbl, cstr')}}
+        {\argpart {S_L, lbl, cstr[\mapsto c]} {C} {(lbl, cstr')}}
         {where $lbl \vdash e \rightarrow_L l_e$\\
           and $l_x = lbl \, x$\\
           and $l_\ib = lbl \, \ib$\\
@@ -115,7 +117,7 @@ $(\Gamma_{C}, \rightarrow_{C}, T_{C})$, with
 \begin{trules}
   \trule{RET}
         {\argpart {\tk{return} e, lbl, cstr} {C} {(lbl, cstr')} }
-        {\argpart {S_R, lbl, cstr[\mapsto c]} {C} {(lbl, cstr')} }
+        {\argpart {S_L, lbl, cstr[\mapsto c]} {C} {(lbl, cstr')} }
         {where $lbl \vdash e \rightarrow_L l_e$\\
           and $l_\ifb = lbl \, \ifb$\\
           and $l_\ib = lbl \, \ib$\\
@@ -127,18 +129,63 @@ $(\Gamma_{C}, \rightarrow_{C}, T_{C})$, with
         {}
 \end{trules}
 
-\subsubsection{Conditional statements}
+\subsubsection{Conditional statements}\mikaelin{Fix IF-ELSE $S_1$ and $S_2$ derivations (line-breaks in math...)}
 
 \begin{trules}
   \trule{WHILE}
         {\argpart {\tk{while} \tk ( e \tk ) S, lbl, cstr} {C} {(lbl', cstr')} }
-        {\argpart {S_C, lbl'', cstr[\mapsto c]} {C} {(lbl^3, cstr'')} \;
+        {\argpart {S_L, lbl'', cstr[\mapsto c]} {C} {(lbl^3, cstr'')} \;
          \argpart {S, lbl^3, cstr''} {C} {(lbl', cstr')} }
-        {while $while_i$ is the next while block label name\\
+        {where $while_i$ is the next while block label name\\
           and $l_w = \vlbl{while_i}$\\
           and $l_\ib = lbl \, \ib$\\
           and $l_\ib' = l_\ib \sqcup l_w$\\
           and $lbl'' = lbl[\ib \mapsto l_\ib']$\\
           and $lbl'' \vdash e \rightarrow_L l_e$\\
           and $c = l_\ib \sqcup l_e \sqsubseteq l_w$}
+  \trule{IF}
+        {\argpart {\tk{if} \tk ( e \tk ) S, lbl, cstr} {C} {(lbl', cstr')}}
+        {\argpart {S_L, lbl[\ib \mapsto \ib'], cstr[\mapsto c]} {C} {(lbl'', cstr'')} \;
+         \argpart {S, lbl'', cstr''} {C} {(lbl', cstr')} }
+        {where $if_i$ is the next if block label name\\
+          and $l_i = \vlbl{if_i}$\\
+          and $l_\ib = lbl \, \ib$\\
+          and $l_\ib' = l_\ib \sqcup l_i$\\
+          and $lbl \vdash e \rightarrow_L l_e$\\
+          and $c = l_\ib \sqcup l_e \sqsubseteq l_i$}
+  \trule{IF-ELSE}
+        {\argpart {\tk{if} \tk ( e \tk ) S_1 \tk{else} S_2, lbl, cstr} {C} {(lbl', cstr')}}
+        {\argpart {S_L, lbl[\ib \mapsto \ib'], cstr[\mapsto c]} {C} {(lbl'', cstr'')}
+         \argpart {S_1+S_2, lbl'', cstr''} {C} {(lbl', cstr')}}
+        {where $if_i$ is the next if block label name\\
+          and $l_i = \vlbl{if_i}$\\
+          and $l_\ib = lbl \, \ib$\\
+          and $l_\ib' = l_\ib \sqcup l_i$\\
+          and $lbl \vdash e \rightarrow_L l_e$\\
+          and $c = l_\ib \sqcup l_e \sqsubseteq l_i$}
+\end{trules}
+
+\subsubsection{If-acts-for statement}
+
+\begin{trules}
+  \trule{IF-ACTS-FOR-THIS}
+        {\argpart {\tk{this} \tk{-{}->?} p_l \; S, lbl, cstr} {C} {(lbl', cstr')} }
+        {\argpart {S_L, lbl[\ia \mapsto \ia'], cstr} {C} {(lbl'', cstr)} \;
+         \argpart {S, lbl'', cstr} {C} {(lbl', cstr')} }
+        {where $p_l \rightarrow (p_1, p_2, \dots, p_n)$\\
+          and $\ia' = \ia \sqcup (\mathlarger\sqcupl\limits_1^n \{ p_i \rightarrow \emptyset \}$) }
+\end{trules}
+
+\subsubsection{Declassification}
+
+\begin{trules}
+  \trule{DEC-IMPL}
+        {\argpart {\tk{<|} e \tk , l \tk{|>}, lbl, cstr} {C} {(lbl, cstr')} }
+        {\argpart {e_d, lbl, cstr[\mapsto c]} {C} {(lbl, cstr')} }
+        {where $l = \epsilon$\\
+          and $dec_i$ is the next declassify label name\\
+          and $l_d = \vlbl{dec_i}$\\
+          and $a = lbl \; \ia$\\
+          and $l_e = lbl \vdash e \rightarrow_L l_e$\\
+          and $c = l_e \sqsubseteq l_d \sqcup a$}
 \end{trules}
