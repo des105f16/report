@@ -1,40 +1,4 @@
-% !TEX root = ../master.tex
-
-\section{Inference Algorithm}
-
-\subsection{Abstract syntax}
-
-\begin{gather*}
-  P   \in \iProg\\
-  D_V \in \iDecv\\
-  x   \in \iVar\\
-  D_F \in \iDecf \\
-  f   \in \iFun\\
-  D_P \in \iDecp\\
-  p   \in \iPrin\\
-  S   \in \iStm\\
-  S_L \in \iStml\\
-  e   \in \iExp\\
-  e_d \in \iExpd\\
-  l   \in \mathbb{L}\\
-\end{gather*}
-\begin{align*}
-  P       & ::= D_S \gp D_V \gp D_F \gp P \; P \\
-  D_V     & ::= T \, l \, x \, [\tk = e] \\
-  D_F     & ::= T \, l \, f \tk ( D_P \tk ) S \\
-  D_P     & ::= T \, l \, x \gp D_{P_1} \tk , D_{P_2} \gp \epsilon \\
-  S       & ::= S_L \gp S_1 \tk ; S_2 \gp other \; statements \\
-  S_L     & ::= \tk{while} \tk ( e \tk ) S \gp \tk{if} \tk ( e \tk ) S \gp \tk{if} \tk ( e \tk ) S_1 \tk{else} S_2 \\
-          & \gp x \tk = e \\
-          & \gp \tk{return} [e] \\
-          & \gp c \tk{-{}->?} p_l \; S \\
-          & \gp f \; [\tk{<{}<{}<} p_l \tk{>{}>{}>}] \tk ( [a_l] \tk ) \\
-  e       & ::= e_d \gp other \; expressions \\
-  e_d     & ::= \tk{<|} e \, [\tk , l] \tk{|>} \\
-  p_l     & ::= p \gp {p_l}_1 \tk , {p_l}_2 \\
-  c       & ::= \tk{this} \gp \tk{caller} \\
-  a_l     & ::= e \gp {a_l}_1 \tk , {a_l}_2
-\end{align*}
+\section{Semantics}
 
 \subsection{Semantics for determining labels}
 The label environment is called $\iLbl$ and is defined by:
@@ -106,7 +70,7 @@ $(\Gamma_{L}, \rightarrow_{L}, T_{L})$, with
         {}
 \end{trules}
 
-\subsection{Semantics for determining labels}
+\subsection{Semantics for determining constraints}
 The constraint environment is called $\iCstr$ and is defined by:
 \[
   \iCstr = \iDecv \cup \iStml \cup \iExpd \rightharpoonup \mathbb{C}
@@ -178,5 +142,3 @@ $(\Gamma_{C}, \rightarrow_{C}, T_{C})$, with
           and $lbl'' \vdash e \rightarrow_L l_e$\\
           and $c = l_\ib \sqcup l_e \sqsubseteq l_w$}
 \end{trules}
-
-\input{algorithms/inference.tex}
