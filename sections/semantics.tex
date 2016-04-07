@@ -34,11 +34,11 @@ $(\Gamma_{L}, \rightarrow_{L}, T_{L})$, with
 \subsubsection{Variable declarations}
 
 \begin{trules}
-  \trule{VAR-DECL-EXPL}
+  \ctrule{VAR-DECL-EXPL}
         {\argpart {T \, l \, x, lbl} {L} {lbl'} }
         {\argpart {D_V, lbl[x \mapsto l]} {L} {lbl'} }
         {where $l \in \mathbb{L}$}
-  \trule{VAR-DECL-IMPL}
+  \ctrule{VAR-DECL-IMPL}
         {\argpart {T \, l \, x, lbl} {L} {lbl'} }
         {\argpart {D_V, lbl[x \mapsto \vlbl{x}]} {L} {lbl'} }
         {where $l = \epsilon$}
@@ -47,27 +47,30 @@ $(\Gamma_{L}, \rightarrow_{L}, T_{L})$, with
 \subsubsection{Function declarations}
 
 \begin{trules}
-  \trule{FUN-DECL-EXPL}
+  \ctrule{FUN-DECL-EXPL}
         {\argpart {T \, l \, f \tk ( D_{Par} \tk ) S, lbl} {L} {lbl'} }
-        {\argpart {D_{Par}, lbl} {L} {lbl''} \;\; \argpart {D_F, lbl''[f \mapsto l, \ifb \mapsto l, \ib \mapsto \bot, \ia \mapsto \bot]} {L} {lbl'} }
+        {\splitfrac{\splitfrac{\argpart {D_{Par}, lbl} {L} {lbl''} }
+          {\argpart {D_F, lbl''[f \mapsto l, \ifb \mapsto l, \ib \mapsto \bot, \ia \mapsto \bot]} {L} {lbl^3} }}
+          {\argpart {S, lbl^3} {C} {lbl'} }}
         {where $l \in \mathbb{L}$}
-  \trule{FUN-DECL-IMPL}
+  \ctrule{FUN-DECL-IMPL}
         {\argpart {T \, l \, f \tk ( D_{Par} \tk ) S, lbl} {L} {lbl'} }
-        {\argpart {D_{Par}, lbl} {L} {lbl''} \; \argpart {D_F, lbl''[f \mapsto l', \ifb \mapsto l', \ib \mapsto \bot, \ia \mapsto \bot]} {L} {lbl'} }
+        {\splitfrac{\splitfrac{\argpart {D_{Par}, lbl} {L} {lbl''} }
+          {\argpart {D_F, lbl''[f \mapsto l', \ifb \mapsto l', \ib \mapsto \bot, \ia \mapsto \bot]} {L} {lbl^3} }}
+          {\argpart {S, lbl^3} {C} {lbl'} }}
         {where $l = \epsilon$\\
         and $D_{Par} \rightarrow (x_1, x_2, \dots, x_n)$\\[0.25em]
         and $l' = \bot \sqcup (\mathlarger\sqcupl\limits_1^n lbl \, x_i)$}
-  \trule{PAR-DECL-EXPL}
+  \ctrule{PAR-DECL-EXPL}
         {\argpart {T \, l \, x, lbl} {L} {lbl'} }
         {\argpart {D_{Par}, lbl[x \mapsto l]} {L} {lbl'} }
         {where $l \in \mathbb{L}$}
-  \trule{PAR-DECL-IMPL}
+  \ctrule{PAR-DECL-IMPL}
         {\argpart {T \, l \, x, lbl} {L} {lbl'} }
         {\argpart {D_{Par}, lbl[x \mapsto \clbl{x}]} {L} {lbl'} }
         {where $l = \epsilon$}
   \trule{EMPTY-PAR-DECL}
         {\argpart {\epsilon, lbl} {L} {lbl} }
-        {}
         {}
 \end{trules}
 
@@ -91,7 +94,7 @@ $(\Gamma_{C}, \rightarrow_{C}, T_{C})$, with
 \subsubsection{Variable declaration and assignment}
 
 \begin{trules}
-  \trule{VAR-DECL-ASS}
+  \ctrule{VAR-DECL-ASS}
         {\argpart {T \, l \, x \tk = e, lbl, cstr} {C} {(lbl, cstr')} }
         {\argpart {D_V, lbl, cstr[\mapsto c]} {C} {(lbl, cstr')} }
         {where $l = \epsilon$\\
@@ -102,8 +105,7 @@ $(\Gamma_{C}, \rightarrow_{C}, T_{C})$, with
   \trule{VAR-DECL-NO-ASS}
         {\argpart {T \, l \, x, lbl, cstr} {C} {(lbl, cstr)}}
         {}
-        {}
-  \trule{ASS}
+  \ctrule{ASS}
         {\argpart {x \tk = e, lbl, cstr} {C} {(lbl, cstr')}}
         {\argpart {S_L, lbl, cstr[\mapsto c]} {C} {(lbl, cstr')}}
         {where $lbl \vdash e \rightarrow_L l_e$\\
@@ -115,24 +117,24 @@ $(\Gamma_{C}, \rightarrow_{C}, T_{C})$, with
 \subsubsection{Return statement}
 
 \begin{trules}
-  \trule{RET}
+  \ctrule{RET}
         {\argpart {\tk{return} e, lbl, cstr} {C} {(lbl, cstr')} }
         {\argpart {S_L, lbl, cstr[\mapsto c]} {C} {(lbl, cstr')} }
         {where $lbl \vdash e \rightarrow_L l_e$\\
           and $l_\ifb = lbl \, \ifb$\\
           and $l_\ib = lbl \, \ib$\\
           and $c = l_\ib \sqcup l_e \sqsubseteq l_\ifb$}
-  \trule{RET-EMPTY}
+  \ctrule{RET-EMPTY}
         {\argpart {\tk{return}, lbl, cstr} {C} {(lbl, cstr)} }
         {}
         {}
         {}
 \end{trules}
 
-\subsubsection{Conditional statements}\mikaelin{Fix IF-ELSE $S_1$ and $S_2$ derivations (line-breaks in math...)}
+\subsubsection{Conditional statements}
 
 \begin{trules}
-  \trule{WHILE}
+  \ctrule{WHILE}
         {\argpart {\tk{while} \tk ( e \tk ) S, lbl, cstr} {C} {(lbl', cstr')} }
         {\argpart {S_L, lbl'', cstr[\mapsto c]} {C} {(lbl^3, cstr'')} \;
          \argpart {S, lbl^3, cstr''} {C} {(lbl', cstr')} }
@@ -143,7 +145,7 @@ $(\Gamma_{C}, \rightarrow_{C}, T_{C})$, with
           and $lbl'' = lbl[\ib \mapsto l_\ib']$\\
           and $lbl'' \vdash e \rightarrow_L l_e$\\
           and $c = l_\ib \sqcup l_e \sqsubseteq l_w$}
-  \trule{IF}
+  \ctrule{IF}
         {\argpart {\tk{if} \tk ( e \tk ) S, lbl, cstr} {C} {(lbl', cstr')}}
         {\argpart {S_L, lbl[\ib \mapsto \ib'], cstr[\mapsto c]} {C} {(lbl'', cstr'')} \;
          \argpart {S, lbl'', cstr''} {C} {(lbl', cstr')} }
@@ -153,10 +155,11 @@ $(\Gamma_{C}, \rightarrow_{C}, T_{C})$, with
           and $l_\ib' = l_\ib \sqcup l_i$\\
           and $lbl \vdash e \rightarrow_L l_e$\\
           and $c = l_\ib \sqcup l_e \sqsubseteq l_i$}
-  \trule{IF-ELSE}
+  \ctrule{IF-ELSE}
         {\argpart {\tk{if} \tk ( e \tk ) S_1 \tk{else} S_2, lbl, cstr} {C} {(lbl', cstr')}}
-        {\argpart {S_L, lbl[\ib \mapsto \ib'], cstr[\mapsto c]} {C} {(lbl'', cstr'')}
-         \argpart {S_1+S_2, lbl'', cstr''} {C} {(lbl', cstr')}}
+        {\splitfrac{\splitfrac{\argpart {S_L, lbl[\ib \mapsto \ib'], cstr[\mapsto c]} {C} {(lbl'', cstr'')}}
+         {\argpart {S_1, lbl'', cstr''} {C} {(lbl^3, cstr^3)} }}
+         {\argpart {S_2, lbl^3, cstr^3} {C} {(lbl', cstr')} }}
         {where $if_i$ is the next if block label name\\
           and $l_i = \vlbl{if_i}$\\
           and $l_\ib = lbl \, \ib$\\
@@ -168,7 +171,7 @@ $(\Gamma_{C}, \rightarrow_{C}, T_{C})$, with
 \subsubsection{If-acts-for statement}
 
 \begin{trules}
-  \trule{IF-ACTS-FOR-THIS}
+  \ctrule{IF-ACTS-FOR-THIS}
         {\argpart {\tk{this} \tk{-{}->?} p_l \; S, lbl, cstr} {C} {(lbl', cstr')} }
         {\argpart {S_L, lbl[\ia \mapsto \ia'], cstr} {C} {(lbl'', cstr)} \;
          \argpart {S, lbl'', cstr} {C} {(lbl', cstr')} }
@@ -179,7 +182,7 @@ $(\Gamma_{C}, \rightarrow_{C}, T_{C})$, with
 \subsubsection{Declassification}
 
 \begin{trules}
-  \trule{DEC-IMPL}
+  \ctrule{DEC-IMPL}
         {\argpart {\tk{<|} e \tk , l \tk{|>}, lbl, cstr} {C} {(lbl, cstr')} }
         {\argpart {e_d, lbl, cstr[\mapsto c]} {C} {(lbl, cstr')} }
         {where $l = \epsilon$\\
