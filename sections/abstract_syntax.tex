@@ -24,7 +24,7 @@
   S_L     & ::= \tk{while} \tk ( e \tk ) S \gp \tk{if} \tk ( e \tk ) S \gp \tk{if} \tk ( e \tk ) S_1 \tk{else} S_2 \\
           & \gp x \tk = e \\
           & \gp \tk{return} [e] \\
-          & \gp c \tk{-{}->?} p_l \; S \\
+          & \gp \tk{this} \tk{-{}->?} p_l \; S \gp \tk{caller} \tk{-{}->?} p_l \; S \\
           & \gp f \; [\tk{<{}<{}<} p_l \tk{>{}>{}>}] \tk ( [a_l] \tk ) \\
   e       & ::= e_d \gp other \; expressions \\
   e_d     & ::= \tk{<|} e \, [\tk , l] \tk{|>} \\
