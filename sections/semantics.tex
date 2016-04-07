@@ -163,3 +163,17 @@ $(\Gamma_{C}, \rightarrow_{C}, T_{C})$, with
           and $lbl \vdash e \rightarrow_L l_e$\\
           and $c = l_\ib \sqcup l_e \sqsubseteq l_i$}
 \end{trules}
+
+\subsubsection{Declassification}
+
+\begin{trules}
+  \trule{DEC-IMPL}
+        {\argpart {\tk{<|} e \tk{|>}, lbl, cstr} {C} {(lbl, cstr')} }
+        {\argpart {e_d, lbl, cstr[\mapsto c]} {C} {(lbl, cstr')} }
+        {where $l = \epsilon$\\
+          and $dec_i$ is the next declassify label name\\
+          and $l_d = \vlbl{dec_i}$\\
+          and $a_e = lbl \; \ia$\\
+          and $l_e = lbl \vdash e \rightarrow_L l_e$\\
+          and $c = l_e \sqsubseteq l_d \sqcup a_e$}
+\end{trules}
