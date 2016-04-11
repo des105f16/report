@@ -70,6 +70,14 @@ $(\Gamma_{L}, \rightarrow_{L}, T_{L})$, with
         {}
 \end{trules}
 
+\subsection{Semantics for deriving labels for expressions}
+$(\Gamma_e, \rightarrow_e, T_e)$, with
+\begin{align*}
+  \Gamma_e =  & \;      \iExp \cup \iExpl \cup \mathbb{L} \\
+  T_e =       & \; \mathbb{L}
+\end{align*}
+Where transitions are of the form $lbl \vdash e \rightarrow_e l \; | \; l \in \mathbb{L}$.
+
 \subsection{Semantics for determining constraints}
 The constraint environment is called $\iCstr$ and is defined by:
 \[
