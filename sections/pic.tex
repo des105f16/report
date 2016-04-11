@@ -1,0 +1,55 @@
+% !TEX root = ../master.tex
+
+\section{\textbf{P}eriod, \textbf{I}nterval, \textbf{C}ount}
+We expand on the concept of labels using a set of properties that describe rules for when, and how often, data can be read.
+When representing these new types of constraints we have chosen a representation similar to that of labels in DLM.
+This allows for the expansion to be easily understood by anyone familiar with DLM.
+This is, in part, due to the fact that the operations we perform on labels (join, meet and testing for restrictiveness) have a similar definition for time.
+
+The expansion is divided into three components:
+\begin{itemize}
+  \item \textbf{Period} represents a period in time, such as 08:00-09:00.
+  Formally we represent this as the pair $(p_s, p_e)$ describing when a period starts and ends.
+  A period cannot specify rules for particular dates or days of the week.
+
+  \item \textbf{Interval} represents how often data can be read.
+  The interval can be described as a combination of milliseconds, seconds, minutes, hours and days.
+  For instance $10m30s$ represents a 10 minutes and 30 seconds long interval.
+
+  \item \textbf{Count} represents the number of times data can be read.
+\end{itemize}
+
+\begin{definition}{Time policy}
+  A set of a period, an interval and a count is called a \textit{time policy}.
+  A time policy has the following formal representation: $$(p_s, p_e, i, c)$$
+
+  Data can only be accessed in the timespan $[p_s; p_e[$.
+  Data can only be accessed $c$ times per interval $i$.
+  A label can contain 0 or more time policies.
+\end{definition}
+
+Syntactically it is not required that each component of a time policy is specified.
+\Cref{time:implicit} describes definitions for all time policies in which one or more components have not been defined.
+In these definitions the period 00:00$\rightarrow$24:00 is meant to represent the full 24 hours of a day.
+\begin{align}
+  () &= (\text{00:00}, \text{24:00}, 1\texttt{d}, \infty) \nonumber \\
+  (p_s, p_e) &= (p_s, p_e, 1\texttt{d}, \infty) \nonumber \\
+  (i) &= (\text{00:00}, \text{24:00}, i, 1) \nonumber \\
+  (c) &= (\text{00:00}, \text{24:00}, 1\text{d}, c) \label{time:implicit} \\
+  (p_s, p_e, i) &= (p_s, p_e, i, 1) \nonumber \\
+  (p_s, p_e, c) &= (p_s, p_e, 1\texttt{d}, c) \nonumber \\
+  (i, c) &= (\text{00:00}, \text{24:00}, i, c) \nonumber
+\end{align}
+
+Below we provide a definition for the join and meet operations in terms of their application to time policies.
+The definitions ensure that the join of two labels time policies generates the least restrictive set of time policies that is as restrictive as both labels time policies.
+A similar inverse definition is applied to the meet operation.
+
+least restrictive that is as restrictive as both operands
+
+\begin{definition}{Time join}
+  \begin{align*}
+    periods(L1 \sqcup L2) = periods(L1) \cap periods(L2)\\
+    \forall p \in periods(L1 \sqcup L2), interval(L1 \sqcup L2, p) = \max(interval(L1, p), interval(L2, p))
+  \end{align*}
+\end{definition}
