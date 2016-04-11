@@ -78,6 +78,15 @@ $(\Gamma_e, \rightarrow_e, T_e)$, with
 \end{align*}
 Where transitions are of the form $lbl \vdash e \rightarrow_e l \; | \; l \in \mathbb{L}$.
 
+\begin{trules}
+  \ctrule{DEC-EXPL}
+        {lbl \vdash \tk{<|} e \tk , l \tk{|>} \rightarrow_e l }
+        {lbl \vdash e \rightarrow_e l_e}
+        {where $l \in \mathbb{L}$ \\
+          and $l_\ia = lbl \, \ia$ \\
+          and $l_e \sqcup l_\ia \sqsubseteq l$}
+\end{trules}
+
 \subsection{Semantics for determining constraints}
 The constraint environment is called $\iCstr$ and is defined by:
 \[
