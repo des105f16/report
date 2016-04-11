@@ -6,23 +6,19 @@ The label environment is called $\iLbl$ and is defined by:
 \[
   \iLbl = \iVar \cup \iFun \cup \ia \cup \ib \cup \ifb \rightharpoonup \mathbb{L}
 \]
-where $\mathbb{L}$ is the set of all possible labels, with the six types of labels:
-\begin{description}
-  \item[Policy labels] Like those described earlier
-  \item[Variable labels] Denoted $\vlbl{x}$
-  \item[Constant labels] Denoted $\clbl{p}$
-  \item[Lower bound] Denoted $\bot$
-  \item[Upper bound] Denoted $\top$
-  \item[Join/meet labels] Combinations of the above-mentioned labels
-\end{description}
 
-and
+\noindent where $\ia$ is the authority label, $\ib$ the block label, and $\ifb$ the function block label.
 
-\begin{description}
-  \item[$\ia$] The authority label
-  \item[$\ib$] The block Label
-  \item[$\ifb$] The function block label
-\end{description}
+\noindent $\mathbb{L}$ is the set of all possible labels, with the six types of labels: \\
+
+\begin{tabular}{rl}
+  \textbf{Policy labels}    & Like those described earlier \\
+  \textbf{Variable labels}  & Denoted $\vlbl{x}$ \\
+  \textbf{Constant labels}  & Denoted $\clbl{p}$ \\
+  \textbf{Lower bound}      & Denoted $\bot$ \\
+  \textbf{Upper bound}      & Denoted $\top$ \\
+  \textbf{Join/meet labels} & Combinations of the above-mentioned labels
+\end{tabular}
 
 \subsubsection{Transision system}
 $(\Gamma_{L}, \rightarrow_{L}, T_{L})$, with

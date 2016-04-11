@@ -1,20 +1,20 @@
 % !TEX root = ../master.tex
 \section{Abstract syntax}
 
-\begin{gather*}
-  P       \in \iProg\\
-  D_V     \in \iDecv\\
-  x       \in \iVar\\
-  D_F     \in \iDecf \\
-  f       \in \iFun\\
-  D_{Par} \in \iDecpar\\
-  p       \in \iPrin\\
-  S       \in \iStm\\
-  S_L     \in \iStml\\
-  e       \in \iExp\\
-  e_L     \in \iExpl\\
-  l       \in \mathbb{L} \cup \epsilon\\
-\end{gather*}
+\begin{align*}
+  P       & \in \iProg \text{ -- Programs}\\
+  D_V     & \in \iDecv \text{ -- Variable declarations}\\
+  x       & \in \iVar \text{ -- Variables}\\
+  D_F     & \in \iDecf \text{ -- Function declarations}\\
+  f       & \in \iFun \text{ -- Functions}\\
+  D_{Par} & \in \iDecpar \text{ -- Parameter declarations}\\
+  p       & \in \iPrin \text{ -- Principals}\\
+  S       & \in \iStm \text{ -- Statements}\\
+  S_L     & \in \iStml \text{ -- Label statements}\\
+  e       & \in \iExp \text{ -- Expressions}\\
+  e_L     & \in \iExpl \text{ -- Label expressions}\\
+  l       & \in \mathbb{L} \cup \epsilon \text{ -- Labels}\\
+\end{align*}
 \begin{align*}
   P         & ::= D_V \gp D_F \gp P \; P \\
   D_V       & ::= T \, l \, x \, [\tk = e] \\
