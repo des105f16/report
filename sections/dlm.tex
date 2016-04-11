@@ -10,7 +10,7 @@
 \section{The Decentralized Label Model}
 The Decentralized Label Model \cite{myers1997, myers1998, myers2000} is a model for ensuring information flow control in a system.
 This is done by annotating source code with security policies, in the form of labels attached to data-holding constructs.
-This section will present the necessary information needed to understand the first implementation of \thetool. \mikkel{Why the \textit{first} implementation?}
+This section will present the necessary information needed to understand the implementation of \thetool.
 The descriptions and definitions in this section are based on \cite{myers1997, myers1998, myers2000}.
 Throughout the examples, we will use the same grammar as that used by \thetool. \mikkel{Remember to write something about the grammar/parser...}
 
@@ -24,7 +24,7 @@ The same concept applies to more complex language constructs, such as functions 
 Each slot is associated with a label, that describes how the data in the slot can be handled.
 We denote the label of slot $s$ as $\underline{s}$.
 Referring to labels in this fashion serves the same purpose as letters in algebra; it allows for handling labels without knowledge about their actual value.
-This proves useful as it allows for label inference and label polymorphism (see \cref{dlm:implicit_labels} and ??). \mikkel{Insert reference when written.}
+This proves useful as it allows for label inference and label polymorphism (see \cref{dlm:implicit_labels} and ??). \mikkel{Insert reference when written.}\mikael{Are we going to write about label polymorphism?}
 
 For a given label it is possible to define both read (\emph{privacy}) and write (\emph{integrity}) policies.
 The first represents information flow out of a system and the latter information flow into a system.
@@ -46,7 +46,7 @@ A label can be described as a set of policies, where a policy consists of an own
 Formally we provide the following, equivalent definition:
 \begin{definition}{Labels}
 A label $L$ is a set of owners $owners(L)$, and a function $readers(L, o)$ that retrieves the set of reader principals that $o$ allows to read.
-Note that given this definition we have that $$o \notin owners(L) \;|\; readers(L, o) = *$$
+Note that given this definition we have that $$o \notin owners(L) \Rightarrow readers(L, o) = *$$
 \end{definition}
 
 Owners are allowed to change their own policies within a label.
@@ -57,7 +57,9 @@ He is however still allowed to change his policy.
 \subsubsection{The effective reader set}
 To ensure that the policies of all owners in a label are enforced, only readers that the all ``agree'' on can read from the slot associated with the label.
 This is known as the \emph{effective reader set}, which is the intersection of \emph{all} reader sets of a label:
-$$readers(L) = \bigcap_{o \in *} readers(L, o)$$
+\begin{definition}{The effective reader set}
+  $$readers(L) = \bigcap_{o \in *} readers(L, o)$$
+\end{definition}
 
 \begin{example}{A label with two policies}\label{dlm:ex:simple_label}
   Below is an example of a label with two policies using the notation from above;
@@ -80,7 +82,7 @@ To do this we introduce the ``at most as restrictive as''-relation ($\sqsubseteq
   \begin{align}
     \text{For } & L_1 \sqsubseteq L_2 \text{ we have that} \nonumber \\
     & owners(L_1) \subseteq owners(L_2) \text{ and} \nonumber \\
-    & \forall o \in owners(L_1), readers(L_1, o) \supseteq readers(L_2, o) \nonumber
+    & \forall o \in owners(L_1) . readers(L_1, o) \supseteq readers(L_2, o) \nonumber
   \end{align}
 \end{definition}
 
@@ -156,15 +158,21 @@ This is done by calling the \dlmdeclassify\dlmc{(v, l)} function, with a slot $v
 The relabeling by declassification rule (the inference rule) is defined as follows:
 
 \begin{definition}{Relabeling by declassification}
-  If we have $P$ denoting the set of principals in the current authority.
+  Let $P$ denote the set of principals in the current authority, then
   \[
-  \frac{
-  \begin{array}{c}
-    L_A = \mathlarger{\mathlarger\sqcup}_{(p \in P)} \{p \rightarrow \} \\
-    L_1 \sqsubseteq L_2 \sqcup L_A
-  \end{array}
+  \frac
+  {
+    \splitfrac
+    {
+      L_A = \mathlarger\sqcupl_{p \in P} \{p \rightarrow \}
+    }
+    {
+      L_1 \sqsubseteq L_2 \sqcup L_A
+    }
   }
-  {L_1 \text{ may be declassified to } L_2}
+  {
+    L_1 \text{ may be declassified to } L_2
+  }
   \]
 \end{definition}
 
@@ -184,7 +192,7 @@ if_acts_for(this, a) {
 }
 return -1;
   \end{lstlisting}
-  While we still leak some information about \dlmc{cond}, we do it explicitly.
+  While we still leak some information about \dlmc{cond}, we now do it explicitly.
 \end{example}
 
 \subsection{Label-checking and inference}
