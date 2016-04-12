@@ -27,7 +27,6 @@
             & \gp \tk{this} \tk{-{}->?} p_l \; S \gp \tk{caller} \tk{-{}->?} p_l \; S \\
   e         & ::= e_L \gp other \; expressions \\
   e_L       & ::= \tk{<|} e \tk , l \tk{|>} \\
-            & \gp f \; [\tk{<{}<{}<} p_l \tk{>{}>{}>}] \tk ( [a_l] \tk ) \\
-  p_l       & ::= p \gp {p_l}_1 \tk , {p_l}_2 \\
-  a_l       & ::= e \gp {a_l}_1 \tk , {a_l}_2
+            & \gp f \; [\tk{<{}<{}<} p_l \tk{>{}>{}>}] \tk ( e_1 \tk , e_2 \tk , \dots \tk , e_n \tk ) \\
+  p       & ::= p \gp {p_l}_1 \tk , {p_l}_2 \\
 \end{align*}
