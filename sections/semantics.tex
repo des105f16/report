@@ -101,6 +101,28 @@ Where transitions are of the form $lbl \vdash e \rightarrow_e l \; | \; l \in \m
             and $l = \mathlarger\sqcupl_1^n l_{e_i} \; | \; 0 \leq i \leq n$}
 \end{trules}
 
+\subsubsection{Arithmetics}
+\begin{trules}
+  \trule  {VAR}
+          {lbl \vdash x \rightarrow_e l}
+          {if $lbl \, x = l$}
+  \trule  {CONST}
+          {lbl \vdash c \rightarrow \bot}
+          {}
+  \ctrule {BINARY-OP}
+          {lbl \vdash e_1 \; op_b \; e_2 \rightarrow_e l}
+          {lbl \vdash e_1 \rightarrow_e l_1 \;\; lbl \vdash e_2 \rightarrow_e l_2}
+          {where $l = l_1 \sqcup l_2$}
+  \ctrule {UNARY-OP}
+          {lbl \vdash op_u \; e \rightarrow_e l}
+          {lbl \vdash e \rightarrow_e l}
+          {}
+  \ctrule {PAREN}
+          {lbl \vdash \tk ( e \tk ) \rightarrow_e l}
+          {lbl \vdash e \rightarrow_e l}
+          {}
+\end{trules}
+
 \subsection{Semantics for determining constraints}
 The constraint environment is called $\iCstr$ and is defined by:
 \[
