@@ -14,6 +14,8 @@
   e       & \in \iExp \text{ -- Expressions}\\
   e_L     & \in \iExpl \text{ -- Label expressions}\\
   l       & \in \mathbb{L} \cup \epsilon \text{ -- Labels}\\
+  op_b    & \in \{ \tk + ,  \tk - ,  \tk * ,  \tk / ,  \tk \% ,  \tk{||} ,  \tk{\&\&} ,  \tk < ,  \tk > ,  \tk{==} ,  \tk{<=} ,  \tk{>=} \} \\
+  op_u    & \in \{ \tk ! ,  \tk - \}
 \end{align*}
 \begin{align*}
   P         & ::= D_V \gp D_F \gp P \; P \\
@@ -28,8 +30,5 @@
   e         & ::= e_L \gp x \gp c \gp e_1 \; op_b \; e_2 \gp op_u \; e \gp \tk ( e \tk ) \\
   e_L       & ::= \tk{<|} e \tk , l \tk{|>} \\
             & \gp f \; [\tk{<{}<{}<} p_l \tk{>{}>{}>}] \tk ( e_1 \tk , e_2 \tk , \dots \tk , e_n \tk ) \\
-  p         & ::= p \gp {p_l}_1 \tk , {p_l}_2 \\
-  op_b      & ::= \tk + \gp \tk - \gp \tk * \gp \tk / \gp \tk \% \gp \tk{||} \gp \tk{\&\&} \gp \tk < \gp \tk > \gp \tk{==} \gp \tk{<=} \gp \tk{>=} \\
-  op_u      & ::= \tk ! \gp \tk - \\
-  c         & ::= constants
+  p         & ::= p \gp {p_l}_1 \tk , {p_l}_2
 \end{align*}
