@@ -25,8 +25,11 @@
             & \gp x \tk = e \\
             & \gp \tk{return} [e] \\
             & \gp \tk{this} \tk{-{}->?} p_l \; S \gp \tk{caller} \tk{-{}->?} p_l \; S \\
-  e         & ::= e_L \gp other \; expressions \\
+  e         & ::= e_L \gp x \gp c \gp e_1 \; op_b \; e_2 \gp op_u \; e \gp \tk ( e \tk ) \\
   e_L       & ::= \tk{<|} e \tk , l \tk{|>} \\
             & \gp f \; [\tk{<{}<{}<} p_l \tk{>{}>{}>}] \tk ( e_1 \tk , e_2 \tk , \dots \tk , e_n \tk ) \\
-  p       & ::= p \gp {p_l}_1 \tk , {p_l}_2 \\
+  p         & ::= p \gp {p_l}_1 \tk , {p_l}_2 \\
+  op_b      & ::= \tk + \gp \tk - \gp \tk * \gp \tk / \gp \tk \% \gp \tk{||} \gp \tk{\&\&} \gp \tk < \gp \tk > \gp \tk{==} \gp \tk{<=} \gp \tk{>=} \\
+  op_u      & ::= \tk ! \gp \tk - \\
+  c         & ::= constants
 \end{align*}
