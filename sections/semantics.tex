@@ -70,6 +70,59 @@ $(\Gamma_{L}, \rightarrow_{L}, T_{L})$, with
         {}
 \end{trules}
 
+\subsection{Semantics for deriving labels for expressions}
+$(\Gamma_e, \rightarrow_e, T_e)$, with
+\begin{align*}
+  \Gamma_e =  & \;      \iExp \cup \iExpl \cup \mathbb{L} \\
+  T_e =       & \; \mathbb{L}
+\end{align*}
+Where transitions are of the form $lbl \vdash e \rightarrow_e l \; | \; l \in \mathbb{L}$.
+
+\subsubsection{Declassification}
+\begin{trules}
+  \ctrule{DEC-EXPL}
+        {lbl \vdash \tk{<|} e \tk , l \tk{|>} \rightarrow_e l }
+        {lbl \vdash e \rightarrow_e l_e}
+        {where $l \in \mathbb{L}$ \\
+          and $l_\ia = lbl \, \ia$ \\
+          and $l_e \sqcup l_\ia \sqsubseteq l$}
+\end{trules}
+
+\subsubsection{Function call}
+\begin{trules}
+  \trule  {FUN-CALL-NO-ARGS}
+          {lbl \vdash f \tk ( e_1 \tk , e_2 \tk , \dots \tk , e_n \tk ) \rightarrow \bot}
+          {where $n = 0$}
+  \ctrule {FUN-CALL-LIB}
+          {lbl \vdash f \tk ( e_1 \tk , e_2 \tk , \dots \tk , e_n \tk ) \rightarrow_e l}
+          {lbl \vdash (e_1, e_2, \dots, e_n) \rightarrow_e (l_{e_1}, l_{e_2}, \dots,  l_{e_n})}
+          {where $lbl \, f = \emptyset$ \\
+            and $n > 0$ \\[0.2em]
+            and $l = \mathlarger\sqcupl_1^n l_{e_i} \; | \; 0 \leq i \leq n$}
+\end{trules}
+
+\subsubsection{Arithmetics}
+\begin{trules}
+  \trule  {VAR}
+          {lbl \vdash x \rightarrow_e l}
+          {if $lbl \, x = l$}
+  \trule  {CONST}
+          {lbl \vdash c \rightarrow \bot}
+          {}
+  \ctrule {BINARY-OP}
+          {lbl \vdash e_1 \; op_b \; e_2 \rightarrow_e l}
+          {lbl \vdash e_1 \rightarrow_e l_1 \;\; lbl \vdash e_2 \rightarrow_e l_2}
+          {where $l = l_1 \sqcup l_2$}
+  \ctrule {UNARY-OP}
+          {lbl \vdash op_u \; e \rightarrow_e l}
+          {lbl \vdash e \rightarrow_e l}
+          {}
+  \ctrule {PAREN}
+          {lbl \vdash \tk ( e \tk ) \rightarrow_e l}
+          {lbl \vdash e \rightarrow_e l}
+          {}
+\end{trules}
+
 \subsection{Semantics for determining constraints}
 The constraint environment is called $\iCstr$ and is defined by:
 \[
@@ -180,7 +233,7 @@ $(\Gamma_{C}, \rightarrow_{C}, T_{C})$, with
 \begin{trules}
   \ctrule{DEC-IMPL}
         {\argpart {\tk{<|} e \tk , l \tk{|>}, lbl, cstr} {C} {(lbl, cstr')} }
-        {\argpart {e_d, lbl, cstr[\mapsto c]} {C} {(lbl, cstr')} }
+        {\argpart {e_L, lbl, cstr[\mapsto c]} {C} {(lbl, cstr')} }
         {where $l = \epsilon$\\
           and $dec_i$ is the next declassify label name\\
           and $l_d = \vlbl{dec_i}$\\
