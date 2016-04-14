@@ -126,6 +126,15 @@ $(\Gamma, \rightarrow, T)$, with
         {lbl \vdash e \rightarrow_e (cstr, l_e)}
         {where $l_\ib = lbl \, \ib$ \\
           and $c = " \, l_e \sqcup l_\ib \sqsubseteq l_x \, "$ }
+  \ctrule{STM-RET-EXPR}
+        {\argpart{\tk{return} e, lbl}{}{(lbl, cstr \cup \{ c \})}}
+        {lbl \vdash e \rightarrow_e (cstr, l_e)}
+        {where $l_\ib = lbl \, \ib$ \\
+          and $l_\ifb = lbl \, \ifb$ \\
+          and $c = " \, l_e \sqcup l_\ib \sqsubseteq l_\ifb \, "$}
+  \trule{STM-RET}
+        {\argpart{\tk{return}, lbl}{}{(lbl, \emptyset)}}
+        {}
 \end{trules}
 
 \subsection{Semantics for deriving labels for expressions}
