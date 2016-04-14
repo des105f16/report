@@ -99,20 +99,19 @@ $(\Gamma, \rightarrow, T)$, with
         {}
   \ctrule{STM-WHILE}
         {\argpart{\tk{while} \tk ( e \tk ) S}{}{(lbl, cstr_1 \cup cstr_2 \cup \{ c \})}}
-        {lbl[\ib \mapsto l_\ib'] \vdash e \rightarrow_e (cstr_1, l_e) \quad
-          \argpart{S, lbl[\ib \mapsto l_\ib']}{}{lbl_1, cstr_2}}
+        {lbl_1 \vdash e \rightarrow_e (cstr_1, l_e) \quad
+          \argpart{S, lbl_1}{}{(lbl_2, cstr_2)}}
         {where $l_\ib = lbl \, \ib$ \\
           and $l_w = next$ \\
-          and $l_\ib' = l_\ib \sqcup l_w$ \\
-          and $c = " \, l_e \sqsubseteq l_w \, "$}
+          and $lbl_1 = lbl[\ib \mapsto l_w]$ \\
+          and $c = " \, l_e \sqcup l_\ib \sqsubseteq l_w \, "$}
   \ctrule{STM-IF}
-        {\argpart{\tk{if} \tk ( e \tk ) S, lbl}{}{(lbl, cstr)}}
+        {\argpart{\tk{if} \tk ( e \tk ) S, lbl}{}{(lbl, cstr_1 \cup cstr_2 \cup \{ c \})}}
         {lbl \vdash e \rightarrow_e (cstr_1, l_e) \quad
-          \argpart{S, lbl[\ib \mapsto l_\ib']}{}{(lbl_1, cstr_2)}}
+          \argpart{S, lbl[\ib \mapsto l_{if}]}{}{(lbl_1, cstr_2)}}
         {where $l_\ib = lbl \, \ib$ \\
           and $l_{if} = next$ \\
-          and $l_\ib' = l_\ib \sqcup l_{if}$ \\
-          and $c = " \, l_e \sqsubseteq l_{if} \, "$}
+          and $c = " \, l_e \sqcup l_\ib \sqsubseteq l_{if} \, "$}
 \end{trules}
 
 \subsection{Semantics for deriving labels for expressions}
