@@ -171,15 +171,13 @@ Where transitions are of the form $lbl \vdash e \rightarrow_e (cstr, l)$.
 
 \subsubsection{Function call}
 \begin{trules}
-  \trule  {FUN-CALL-NO-ARGS}
-          {lbl \vdash f \tk ( e_1 \tk , e_2 \tk , \dots \tk , e_n \tk ) \rightarrow \bot}
-          {where $n = 0$}
   \ctrule {FUN-CALL-LIB}
-          {lbl \vdash f \tk ( e_1 \tk , e_2 \tk , \dots \tk , e_n \tk ) \rightarrow_e l}
-          {lbl \vdash (e_1, e_2, \dots, e_n) \rightarrow_e (l_{e_1}, l_{e_2}, \dots,  l_{e_n})}
-          {where $lbl \, f = \emptyset$ \\
-            and $n > 0$ \\[0.2em]
-            and $l = \mathlarger\sqcupl_1^n l_{e_i} \; | \; 0 \leq i \leq n$}
+          {lbl \vdash f \tk ( e_1 \tk , e_2 \tk , \dots \tk , e_n \tk ) \rightarrow_e (cstr', l')}
+          {lbl \vdash e_1 \rightarrow_e (cstr_1, l_{e_1}) \quad e_2 \rightarrow_e (cstr_2, l_{e_2}) \quad
+            \dots \quad e_n \rightarrow_e (cstr_n, l_{e_n})}
+          {if $lbl \, f = \emptyset$ \\
+            and $l' = \mathlarger\sqcupl_{i=1}^n l_{e_i}$ \\
+            and $cstr' = \bigcup\limits_{i=1}^n cstr_i$}
 \end{trules}
 
 \subsubsection{Arithmetics}
