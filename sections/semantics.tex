@@ -25,16 +25,26 @@ $\iCstr$ is a set of constraints where each $c \in \iCstr$ is on the form:
 \[ l_1 \sqsubseteq l_2 \; | \; l_1, l_2 \in \mathbb{L} \]
 
 
-\subsubsection{Transision system}
+\subsubsection{Transision systems}
+$(\Gamma_P, \rightarrow_P, T_P)$, with
+\begin{align*}
+  \Gamma_P  & = (\iProg \times \iLbl \times \iFun) \\
+            & \cup (\iDecv \times \iLbl \times \iFun) \\
+            & \cup (\iDecf \times \iLbl \times \iFun) \\
+            & \cup (\iLbl \times \iCstr \times \iFun) \\
+  T_P       & = (\iLbl \times \iCstr \times \iFun)
+\end{align*}
+
+\paragraph{}\noindent
 $(\Gamma, \rightarrow, T)$, with
 \begin{align*}
-  \Gamma & = (\iProg \times \iLbl)
-                  \cup (\iDecv \times \iLbl)
-                  \cup (\iDecf \times \iLbl)
-                  \cup (\iStm \times \iLbl)
-                  \cup (\iLbl \times \iCstr) \\
+  \Gamma & = (\iStm \times \iLbl) \cup (\iLbl \times \iCstr) \\
   T & = (\iLbl \times \iCstr)
 \end{align*}
+
+\noindent
+Where rules are on the form:
+\[ fun \vdash \argpart{S, lbl}{}{(lbl, cstr)} \]
 
 \subsubsection{Program}
 
