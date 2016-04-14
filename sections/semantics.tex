@@ -63,33 +63,19 @@ $(\Gamma, \rightarrow, T)$, with
 
 \subsubsection{Function declarations}
 
-\begin{trules}
-  \ctrule{FUN-DECL-EXPL}
-        {\argpart {T \, l \, f \tk ( D_{Par} \tk ) S, lbl} {L} {lbl'} }
-        {\splitfrac{\splitfrac{\argpart {D_{Par}, lbl} {L} {lbl''} }
-          {\argpart {D_F, lbl''[f \mapsto l, \ifb \mapsto l, \ib \mapsto \bot, \ia \mapsto \bot]} {L} {lbl^3} }}
-          {\argpart {S, lbl^3} {C} {lbl'} }}
-        {where $l \in \mathbb{L}$}
-  \ctrule{FUN-DECL-IMPL}
-        {\argpart {T \, l \, f \tk ( D_{Par} \tk ) S, lbl} {L} {lbl'} }
-        {\splitfrac{\splitfrac{\argpart {D_{Par}, lbl} {L} {lbl''} }
-          {\argpart {D_F, lbl''[f \mapsto l', \ifb \mapsto l', \ib \mapsto \bot, \ia \mapsto \bot]} {L} {lbl^3} }}
-          {\argpart {S, lbl^3} {C} {lbl'} }}
-        {where $l = \epsilon$\\
-        and $D_{Par} \rightarrow (x_1, x_2, \dots, x_n)$\\[0.25em]
-        and $l' = \bot \sqcup (\mathlarger\sqcupl\limits_1^n lbl \, x_i)$}
-  \ctrule{PAR-DECL-EXPL}
-        {\argpart {T \, l \, x, lbl} {L} {lbl'} }
-        {\argpart {D_{Par}, lbl[x \mapsto l]} {L} {lbl'} }
-        {where $l \in \mathbb{L}$}
-  \ctrule{PAR-DECL-IMPL}
-        {\argpart {T \, l \, x, lbl} {L} {lbl'} }
-        {\argpart {D_{Par}, lbl[x \mapsto \clbl{x}]} {L} {lbl'} }
-        {where $l = \epsilon$}
-  \trule{EMPTY-PAR-DECL}
-        {\argpart {\epsilon, lbl} {L} {lbl} }
-        {}
-\end{trules}
+\ctrule {FUNC-DECL}
+        {\argpart{T_f \, l_f \, f \tk ( T_1 \, l_1 \, x_1 \tk , T_2 \, l_2 \, x_2 \tk , \dots \tk , T_n \, l_n \, x_n \tk ) S, lbl}{}{(lbl_1, cstr)}}
+        {\argpart{S, lbl_2}{}{(lbl_3, cstr)}}
+        {where $l_{x_i} = \begin{cases}
+          \clbl{x_i} & \quad \text{if } l_i = \varepsilon \\
+          l_i & \quad otherwise
+        \end{cases}\quad \text{for } 1 \leq i \leq n$ \\
+          and $l_f' = \begin{cases}
+            \mathlarger\sqcupl_{i = 1}^n l_{x_i} & \quad \text{if } l_f = \varepsilon \\
+            l_f & \quad \text{otherwise}
+        \end{cases}$ \\
+          and $lbl_1 = lbl[f \mapsto l_f']$ \\
+          and $lbl_2 = lbl_1[x_1 \mapsto l_{x_1}, x_2 \mapsto l_{x_2}, \dots, x_n \mapsto l_{x_n}, \ifb \mapsto l_f']$}
 
 \subsection{Semantics for deriving labels for expressions}
 $(\Gamma_e, \rightarrow_e, T_e)$, with
