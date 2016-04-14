@@ -155,12 +155,18 @@ Where transitions are of the form $lbl \vdash e \rightarrow_e (cstr, l)$.
 
 \subsubsection{Declassification}
 \begin{trules}
+  \ctrule{DEC}
+        {lbl \vdash \tk{<|} e \tk{|>} \rightarrow_e (cstr \cup \{ c \}, l_d)}
+        {lbl \vdash e \rightarrow_e (cstr, l_e)}
+        {where $l_\ia = lbl \, \ia$ \\
+          and $l_{d} = next$ \\
+          and $c = " \, l_e \sqsubseteq l_d \sqcup l_\ia \, "$}
   \ctrule{DEC-EXPL}
-        {lbl \vdash \tk{<|} e \tk , l \tk{|>} \rightarrow_e l }
-        {lbl \vdash e \rightarrow_e l_e}
-        {where $l \in \mathbb{L}$ \\
-          and $l_\ia = lbl \, \ia$ \\
-          and $l_e \sqcup l_\ia \sqsubseteq l$}
+        {lbl \vdash \tk{<|} e \tk , l \tk{|>} \rightarrow_e (cstr \cup \{ c \}, l)}
+        {lbl \vdash e \rightarrow_e (cstr, l_e)}
+        {where $l_\ia = lbl \, \ia$ \\
+          and $l_d = next$ \\
+          and $c = " \, l_e \sqsubseteq l \sqcup l_\ia \, "$}
 \end{trules}
 
 \subsubsection{Function call}
