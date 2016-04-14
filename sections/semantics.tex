@@ -21,10 +21,14 @@ The label environment is called $\iLbl$ and is defined by:
 \end{tabular}
 
 \subsubsection{Transision system}
-$(\Gamma_{L}, \rightarrow_{L}, T_{L})$, with
+$(\Gamma, \rightarrow, T)$, with
 \begin{align*}
-  \Gamma_{L} & = (\iDecv \times \iLbl) \cup (\iDecf \times \iLbl) \cup (\iDecpar \times \iLbl) \cup \iLbl \\
-  T_{L} & = \iLbl
+  \Gamma & = (\iProg \times \iLbl)
+                  \cup (\iDecv \times \iLbl)
+                  \cup (\iDecf \times \iLbl)
+                  \cup (\iStm \times \iLbl)
+                  \cup (\iLbl \times \iCstr) \\
+  T & = (\iLbl \times \iCstr)
 \end{align*}
 
 \subsubsection{Variable declarations}
@@ -73,10 +77,10 @@ $(\Gamma_{L}, \rightarrow_{L}, T_{L})$, with
 \subsection{Semantics for deriving labels for expressions}
 $(\Gamma_e, \rightarrow_e, T_e)$, with
 \begin{align*}
-  \Gamma_e =  & \;      \iExp \cup \iExpl \cup \mathbb{L} \\
-  T_e =       & \; \mathbb{L}
+  \Gamma_e =  & \;      \iExp \cup (\iCstr \times \mathbb{L}) \\
+  T_e =       & \; (\iCstr \times \mathbb{L})
 \end{align*}
-Where transitions are of the form $lbl \vdash e \rightarrow_e l \; | \; l \in \mathbb{L}$.
+Where transitions are of the form $lbl \vdash e \rightarrow_e (cstr, l)$.
 
 \subsubsection{Declassification}
 \begin{trules}
