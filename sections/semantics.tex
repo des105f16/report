@@ -105,6 +105,14 @@ $(\Gamma, \rightarrow, T)$, with
           and $l_w = next$ \\
           and $l_\ib' = l_\ib \sqcup l_w$ \\
           and $c = " \, l_e \sqsubseteq l_w \, "$}
+  \ctrule{STM-IF}
+        {\argpart{\tk{if} \tk ( e \tk ) S, lbl}{}{(lbl, cstr)}}
+        {lbl \vdash e \rightarrow_e (cstr_1, l_e) \quad
+          \argpart{S, lbl[\ib \mapsto l_\ib']}{}{(lbl_1, cstr_2)}}
+        {where $l_\ib = lbl \, \ib$ \\
+          and $l_{if} = next$ \\
+          and $l_\ib' = l_\ib \sqcup l_{if}$ \\
+          and $c = " \, l_e \sqsubseteq l_{if} \, "$}
 \end{trules}
 
 \subsection{Semantics for deriving labels for expressions}
