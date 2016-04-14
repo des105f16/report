@@ -49,10 +49,36 @@ Where rules are on the form:
 \subsubsection{Program}
 
 \ctrule {PROG-COMP}
-        {\argpart{P_1 \; P_2, lbl, fun}{}{(lbl_2, cstr_1 \cup cstr_2, fun_2)}}
+        {\argpart{P_1 \; P_2, lbl, fun}{P}{(lbl_2, cstr_1 \cup cstr_2, fun_2)}}
         {\argpart{P_1, lbl, fun}{P}{(lbl_1, cstr_1, fun_1)} \quad
           \argpart{P_2, lbl_1, fun_1}{P}{(lbl_2, cstr_2, fun_2)}}
         {}
+\begin{trules}
+\ctrule {PROG-VAR-DECL-EXPR}
+        {\argpart {T \, l \, x \tk = e, lbl, fun} {P} {(lbl_1, cstr, fun)} }
+        {fun \vdash \argpart{T \, l \, x \tk = e, lbl}{}{(lbl_1, cstr)}}
+        {}
+\ctrule {PROG-VAR-DECL}
+        {\argpart {T \, l \, x, lbl, fun} {P} {(lbl_1, cstr, fun)} }
+        {fun \vdash \argpart{T \, l \, x, lbl}{}{(lbl_1, cstr)}}
+        {}
+\end{trules}
+
+\subsubsection{Function declarations}
+
+\ctrule {FUNC-DECL}
+        {\argpart{T_f \, l_f \, f \tk ( T_1 \, l_1 \, x_1 \tk , T_2 \, l_2 \, x_2 \tk , \dots \tk , T_n \, l_n \, x_n \tk ) S, lbl}{}{(lbl_1, cstr)}}
+        {\argpart{S, lbl_2}{}{(lbl_3, cstr)}}
+        {where $l_{x_i} = \begin{cases}
+          \clbl{x_i} & \quad \text{if } l_i = \varepsilon \\
+          l_i & \quad otherwise
+        \end{cases}\quad \text{for } 1 \leq i \leq n$ \\
+          and $l_f' = \begin{cases}
+            \mathlarger\sqcupl_{i = 1}^n l_{x_i} & \quad \text{if } l_f = \varepsilon \\
+            l_f & \quad \text{otherwise}
+        \end{cases}$ \\
+          and $lbl_1 = lbl[f \mapsto l_f']$ \\
+          and $lbl_2 = lbl_1[x_1 \mapsto l_{x_1}, x_2 \mapsto l_{x_2}, \dots, x_n \mapsto l_{x_n}, \ifb \mapsto l_f']$}
 
 \subsubsection{Variable declarations}
 
@@ -75,22 +101,6 @@ Where rules are on the form:
           and $l_\ib = lbl \, \ib$ \\
           and $c = "\bot \sqcup l_\ib \sqsubseteq l_x"$ }
 \end{trules}
-
-\subsubsection{Function declarations}
-
-\ctrule {FUNC-DECL}
-        {\argpart{T_f \, l_f \, f \tk ( T_1 \, l_1 \, x_1 \tk , T_2 \, l_2 \, x_2 \tk , \dots \tk , T_n \, l_n \, x_n \tk ) S, lbl}{}{(lbl_1, cstr)}}
-        {\argpart{S, lbl_2}{}{(lbl_3, cstr)}}
-        {where $l_{x_i} = \begin{cases}
-          \clbl{x_i} & \quad \text{if } l_i = \varepsilon \\
-          l_i & \quad otherwise
-        \end{cases}\quad \text{for } 1 \leq i \leq n$ \\
-          and $l_f' = \begin{cases}
-            \mathlarger\sqcupl_{i = 1}^n l_{x_i} & \quad \text{if } l_f = \varepsilon \\
-            l_f & \quad \text{otherwise}
-        \end{cases}$ \\
-          and $lbl_1 = lbl[f \mapsto l_f']$ \\
-          and $lbl_2 = lbl_1[x_1 \mapsto l_{x_1}, x_2 \mapsto l_{x_2}, \dots, x_n \mapsto l_{x_n}, \ifb \mapsto l_f']$}
 
 \subsubsection{Statements}
 
