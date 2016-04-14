@@ -61,13 +61,9 @@ Where rules are on the form:
           \argpart{P_2, lbl_1, fun_1}{P}{(lbl_2, cstr_2, fun_2)}}
         {}
 \begin{trules}
-\ctrule {PROG-VAR-DECL-EXPR}
-        {\argpart {T \, l \, x \tk = e, lbl, fun} {P} {(lbl_1, cstr, fun)} }
-        {fun \vdash \argpart{T \, l \, x \tk = e, lbl}{S}{(lbl_1, cstr)}}
-        {}
 \ctrule {PROG-VAR-DECL}
-        {\argpart {T \, l \, x, lbl, fun} {P} {(lbl_1, cstr, fun)} }
-        {fun \vdash \argpart{T \, l \, x, lbl}{S}{(lbl_1, cstr)}}
+        {\argpart {D_V} {P} {(lbl_1, cstr, fun)} }
+        {fun \vdash \argpart{D_V, lbl}{S}{(lbl_1, cstr)}}
         {}
 \end{trules}
 
@@ -92,7 +88,7 @@ Where rules are on the form:
 
 \begin{trules}
   \ctrule{VAR-DECL-EXPR}
-        {\argpart {T \, l \, x \tk = e, lbl} {S} {(lbl[x \mapsto l_x], cstr \cup \{ c \})} }
+        {fun \vdash \argpart {T \, l \, x \tk = e, lbl} {S} {(lbl[x \mapsto l_x], cstr \cup \{ c \})} }
         {lbl \vdash e \rightarrow_e (cstr, l_e)}
         {where $l_x = \begin{cases}
             \vlbl x & \quad \text{if } l = \varepsilon \\
