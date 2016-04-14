@@ -139,6 +139,11 @@ $(\Gamma, \rightarrow, T)$, with
         {\argpart{S, lbl[\ia \mapsto l_\ia']}{}{(lbl_1, cstr)}}
         {where $l_\ia = lbl \, \ia$ \\
           and $l_\ia' = l_\ia \sqcup \mathlarger\sqcupl_{i=1}^n \, \{ p_i \rightarrow \emptyset \}$}
+    \ctrule{STM-ACTS-CALLER}
+        {\argpart{\tk{caller} \tk{-->?} p_1 \tk , p_2 \tk , \dots \tk , p_n \; S, lbl}{}{(lbl, cstr)}}
+        {\argpart{S, lbl[\ia \mapsto l_\ia']}{}{(lbl_1, cstr)}}
+        {where $l_\ia = lbl \, \ia$ \\
+          and $l_\ia' = l_\ia \sqcup \mathlarger\sqcupl_{i=1}^n \, \{ p_i \rightarrow \emptyset \}$}
 
 \subsection{Semantics for deriving labels for expressions}
 $(\Gamma_e, \rightarrow_e, T_e)$, with
