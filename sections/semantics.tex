@@ -112,6 +112,15 @@ $(\Gamma, \rightarrow, T)$, with
         {where $l_\ib = lbl \, \ib$ \\
           and $l_{if} = next$ \\
           and $c = " \, l_e \sqcup l_\ib \sqsubseteq l_{if} \, "$}
+  \ctrule{STM-IF-ELSE}
+        {\argpart{\tk{if} \tk ( e \tk ) S_1 \tk{else} S_2, lbl}{}{(lbl, cstr_1 \cup cstr_2 \cup cstr_3 \cup \{ c \})}}
+        {lbl \vdash e \rightarrow_e (cstr_1, l_e) \quad
+          \argpart{S_1, lbl_1}{}{(lbl_2, cstr_2)} \quad
+          \argpart{S_2, lbl_1}{}{(lbl_3, cstr_3)}}
+          {where $l_\ib = lbl \, \ib$ \\
+            and $l_{if} = next$ \\
+            and $lbl_1 = lbl[\ib \mapsto l_{if}]$ \\
+            and $c = " \, l_e \sqcup l_\ib \sqsubseteq l_{if} \, "$}
 \end{trules}
 
 \subsection{Semantics for deriving labels for expressions}
