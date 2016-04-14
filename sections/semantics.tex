@@ -42,14 +42,23 @@ $(\Gamma, \rightarrow, T)$, with
 \subsubsection{Variable declarations}
 
 \begin{trules}
-  \ctrule{VAR-DECL-EXPL}
-        {\argpart {T \, l \, x, lbl} {L} {lbl'} }
-        {\argpart {D_V, lbl[x \mapsto l]} {L} {lbl'} }
-        {where $l \in \mathbb{L}$}
-  \ctrule{VAR-DECL-IMPL}
-        {\argpart {T \, l \, x, lbl} {L} {lbl'} }
-        {\argpart {D_V, lbl[x \mapsto \vlbl{x}]} {L} {lbl'} }
-        {where $l = \epsilon$}
+  \ctrule{VAR-DECL-EXPR}
+        {\argpart {T \, l \, x \tk = e, lbl} {} {(lbl[x \mapsto l_x], cstr \cup \{ c \})} }
+        {lbl \vdash e \rightarrow_e (cstr, l_e)}
+        {where $l_x = \begin{cases}
+            \vlbl x & \quad \text{if } l = \varepsilon \\
+            l & \quad \text{otherwise}
+          \end{cases}$ \\
+          and $l_\ib = lbl \, \ib$ \\
+          and $c = "l_e \sqcup l_\ib \sqsubseteq l_x"$ }
+  \trule{VAR-DECL}
+        {\argpart {T \, l \, x, lbl} {} {(lbl[x \mapsto l_x], cstr \cup \{ c \})} }
+        {where $l_x = \begin{cases}
+            \vlbl x & \quad \text{if } l = \varepsilon \\
+            l & \quad \text{otherwise}
+          \end{cases}$ \\
+          and $l_\ib = lbl \, \ib$ \\
+          and $c = "\bot \sqcup l_\ib \sqsubseteq l_x"$ }
 \end{trules}
 
 \subsubsection{Function declarations}
