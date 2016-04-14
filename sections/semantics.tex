@@ -49,9 +49,9 @@ Where rules are on the form:
 \subsubsection{Program}
 
 \ctrule {PROG-COMP}
-        {\argpart{P_1 \; P_2, lbl}{}{(lbl_2, cstr_1 \cup cstr_2)}}
-        {\argpart{P_1, lbl}{}{(lbl_1, cstr_1)} \quad
-          \argpart{P_2, lbl_1}{}{(lbl_2, cstr_2)}}
+        {\argpart{P_1 \; P_2, lbl, fun}{}{(lbl_2, cstr_1 \cup cstr_2, fun_2)}}
+        {\argpart{P_1, lbl, fun}{P}{(lbl_1, cstr_1, fun_1)} \quad
+          \argpart{P_2, lbl_1, fun_1}{P}{(lbl_2, cstr_2, fun_2)}}
         {}
 
 \subsubsection{Variable declarations}
