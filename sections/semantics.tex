@@ -121,6 +121,11 @@ $(\Gamma, \rightarrow, T)$, with
             and $l_{if} = next$ \\
             and $lbl_1 = lbl[\ib \mapsto l_{if}]$ \\
             and $c = " \, l_e \sqcup l_\ib \sqsubseteq l_{if} \, "$}
+  \ctrule{STM-ASS}
+        {\argpart{x \tk = e, lbl}{}{(lbl, cstr \cup \{ c \})}}
+        {lbl \vdash e \rightarrow_e (cstr, l_e)}
+        {where $l_\ib = lbl \, \ib$ \\
+          and $c = " \, l_e \sqcup l_\ib \sqsubseteq l_x \, "$ }
 \end{trules}
 
 \subsection{Semantics for deriving labels for expressions}
