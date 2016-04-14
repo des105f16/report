@@ -7,28 +7,24 @@
   x       & \in \iVar \text{ -- Variables}\\
   D_F     & \in \iDecf \text{ -- Function declarations}\\
   f       & \in \iFun \text{ -- Functions}\\
-  D_{Par} & \in \iDecpar \text{ -- Parameter declarations}\\
   p       & \in \iPrin \text{ -- Principals}\\
   S       & \in \iStm \text{ -- Statements}\\
-  S_L     & \in \iStml \text{ -- Label statements}\\
   e       & \in \iExp \text{ -- Expressions}\\
-  e_L     & \in \iExpl \text{ -- Label expressions}\\
   l       & \in \mathbb{L} \cup \epsilon \text{ -- Labels}\\
   op_b    & \in \{ \tk + ,  \tk - ,  \tk * ,  \tk / ,  \tk \% ,  \tk{||} ,  \tk{\&\&} ,  \tk < ,  \tk > ,  \tk{==} ,  \tk{<=} ,  \tk{>=} \} \\
   op_u    & \in \{ \tk ! ,  \tk - \}
 \end{align*}
 \begin{align*}
-  P         & ::= D_V \gp D_F \gp P \; P \\
-  D_V       & ::= T \, l \, x \, [\tk = e] \\
-  D_F       & ::= T \, l \, f \tk ( D_{Par} \tk ) S \\
-  D_{Par}   & ::= T \, l \, x \gp D_{Par_1} \tk , D_{Par_2} \gp \epsilon \\
-  S         & ::= e \gp S_L \gp S_1 \tk ; S_2 \gp other \; statements \\
-  S_L       & ::= \tk{while} \tk ( e \tk ) S \gp \tk{if} \tk ( e \tk ) S \gp \tk{if} \tk ( e \tk ) S_1 \tk{else} S_2 \\
+  P         & ::= D_V \gp D_F \gp P_1 \; P_2 \\
+  D_V       & ::= T \, l \, x \tk = e \gp T \, l x \\
+  D_F       & ::= T_f \, l_f \, f \tk ( T_1 \, l_1 \, x_1 \tk , T_2 \, l_2 \, x_2 \tk , \dots \tk , T_n \, l_n \, x_n \tk ) S \\
+  S         & ::= e \gp S_1 \; S_2 \gp \varepsilon \\
+            & \gp D_V \\
+            & \gp \tk{while} \tk ( e \tk ) S \gp \tk{if} \tk ( e \tk ) S \gp \tk{if} \tk ( e \tk ) S_1 \tk{else} S_2 \\
             & \gp x \tk = e \\
-            & \gp \tk{return} [e] \\
-            & \gp \tk{this} \tk{-{}->?} p_l \; S \gp \tk{caller} \tk{-{}->?} p_l \; S \\
-  e         & ::= e_L \gp x \gp c \gp e_1 \; op_b \; e_2 \gp op_u \; e \gp \tk ( e \tk ) \\
-  e_L       & ::= \tk{<|} e \tk , l \tk{|>} \\
-            & \gp f \; [\tk{<{}<{}<} p_l \tk{>{}>{}>}] \tk ( e_1 \tk , e_2 \tk , \dots \tk , e_n \tk ) \\
-  p         & ::= p \gp {p_l}_1 \tk , {p_l}_2
+            & \gp \tk{return} e \gp \tk{return} \\
+            & \gp \tk{this} \tk{-{}->?} p_1 \tk , p_2 \tk , \dots \tk , p_n \; S \gp \tk{caller} \tk{-{}->?} p_1 \tk , p_2 \tk , \dots \tk , p_n \; S \\
+  e         & ::= x \gp c \gp e_1 \; op_b \; e_2 \gp op_u \; e \gp \tk ( e \tk ) \\
+            & \gp \tk{<|} e \tk , l \tk{|>} \gp \tk{<|} e \tk{|>} \\
+            & \gp f \tk{<{}<{}<} p_1 \tk , p_2 \tk , \dots \tk , p_n \tk{>{}>{}>} \tk ( e_1 \tk , e_2 \tk , \dots \tk , e_n \tk )
 \end{align*}
