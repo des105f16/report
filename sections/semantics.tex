@@ -92,6 +92,11 @@ $(\Gamma, \rightarrow, T)$, with
         {\argpart{e, lbl}{}{(lbl, cstr)}}
         {lbl \vdash e \rightarrow_e (cstr, l_e)}
         {}
+  \ctrule{STM-COMP}
+        {\argpart{S_1 \; S_2, lbl}{}{(lbl_2, cstr_1 \cup cstr_2)}}
+        {\argpart{S_1, lbl}{}{(lbl_1, cstr_1)} \quad
+          \argpart{S_2, lbl_1}{}{(lbl_2, cstr_2)}}
+        {}
 \end{trules}
 
 \subsection{Semantics for deriving labels for expressions}
