@@ -84,7 +84,7 @@ Where rules are on the form:
           and $lbl_2 = lbl_1[x_1 \mapsto l_{x_1}, x_2 \mapsto l_{x_2}, \dots, x_n \mapsto l_{x_n}, \ifb \mapsto l_f']$ \\
           and $fun_1 = fun[f \mapsto ((l_1, x_1), (l_2, x_2), \dots, (l_n, x_n))]$}
 
-\subsubsection{Variable declarations}
+\subsubsection{Statements}
 
 \begin{trules}
   \ctrule{VAR-DECL-EXPR}
@@ -106,21 +106,19 @@ Where rules are on the form:
           and $c = "\bot \sqcup l_\ib \sqsubseteq l_x"$ }
 \end{trules}
 
-\subsubsection{Statements}
-
-  \trule{STM-EMPTY}
+  \trule{EMPTY}
         {\argpart{\varepsilon, lbl}{S}{(lbl, \emptyset)}}
         {}
-  \ctrule{STM-EXPR}
+  \ctrule{EXPR}
         {\argpart{e, lbl}{S}{(lbl, cstr)}}
         {lbl \vdash e \rightarrow_e (cstr, l_e)}
         {}
-  \ctrule{STM-COMP}
+  \ctrule{COMP}
         {\argpart{S_1 \; S_2, lbl}{S}{(lbl_2, cstr_1 \cup cstr_2)}}
         {\argpart{S_1, lbl}{S}{(lbl_1, cstr_1)} \quad
           \argpart{S_2, lbl_1}{S}{(lbl_2, cstr_2)}}
         {}
-  \ctrule{STM-WHILE}
+  \ctrule{WHILE}
         {\argpart{\tk{while} \tk ( e \tk ) S}{S}{(lbl, cstr_1 \cup cstr_2 \cup \{ c \})}}
         {lbl_1 \vdash e \rightarrow_e (cstr_1, l_e) \quad
           \argpart{S, lbl_1}{S}{(lbl_2, cstr_2)}}
@@ -128,14 +126,14 @@ Where rules are on the form:
           and $l_w = next$ \\
           and $lbl_1 = lbl[\ib \mapsto l_w]$ \\
           and $c = " \, l_e \sqcup l_\ib \sqsubseteq l_w \, "$}
-  \ctrule{STM-IF}
+  \ctrule{IF}
         {\argpart{\tk{if} \tk ( e \tk ) S, lbl}{S}{(lbl, cstr_1 \cup cstr_2 \cup \{ c \})}}
         {lbl \vdash e \rightarrow_e (cstr_1, l_e) \quad
           \argpart{S, lbl[\ib \mapsto l_{if}]}{S}{(lbl_1, cstr_2)}}
         {where $l_\ib = lbl \, \ib$ \\
           and $l_{if} = next$ \\
           and $c = " \, l_e \sqcup l_\ib \sqsubseteq l_{if} \, "$}
-  \ctrule{STM-IF-ELSE}
+  \ctrule{IF-ELSE}
         {\argpart{\tk{if} \tk ( e \tk ) S_1 \tk{else} S_2, lbl}{S}{(lbl, cstr_1 \cup cstr_2 \cup cstr_3 \cup \{ c \})}}
         {lbl \vdash e \rightarrow_e (cstr_1, l_e) \quad
           \argpart{S_1, lbl_1}{S}{(lbl_2, cstr_2)} \quad
@@ -144,26 +142,26 @@ Where rules are on the form:
             and $l_{if} = next$ \\
             and $lbl_1 = lbl[\ib \mapsto l_{if}]$ \\
             and $c = " \, l_e \sqcup l_\ib \sqsubseteq l_{if} \, "$}
-  \ctrule{STM-ASS}
+  \ctrule{ASS}
         {\argpart{x \tk = e, lbl}{S}{(lbl, cstr \cup \{ c \})}}
         {lbl \vdash e \rightarrow_e (cstr, l_e)}
         {where $l_\ib = lbl \, \ib$ \\
           and $c = " \, l_e \sqcup l_\ib \sqsubseteq l_x \, "$ }
-  \ctrule{STM-RET-EXPR}
+  \ctrule{RET-EXPR}
         {\argpart{\tk{return} e, lbl}{S}{(lbl, cstr \cup \{ c \})}}
         {lbl \vdash e \rightarrow_e (cstr, l_e)}
         {where $l_\ib = lbl \, \ib$ \\
           and $l_\ifb = lbl \, \ifb$ \\
           and $c = " \, l_e \sqcup l_\ib \sqsubseteq l_\ifb \, "$}
-  \trule{STM-RET}
+  \trule{RET}
         {\argpart{\tk{return}, lbl}{S}{(lbl, \emptyset)}}
         {}
-  \ctrule{STM-ACTS-THIS}
+  \ctrule{ACTS-THIS}
         {\argpart{\tk{this} \tk{-->?} p_1 \tk , p_2 \tk , \dots \tk , p_n \; S, lbl}{S}{(lbl, cstr)}}
         {\argpart{S, lbl[\ia \mapsto l_\ia']}{S}{(lbl_1, cstr)}}
         {where $l_\ia = lbl \, \ia$ \\
           and $l_\ia' = l_\ia \sqcup \mathlarger\sqcupl_{i=1}^n \, \{ p_i \rightarrow \emptyset \}$}
-    \ctrule{STM-ACTS-CALLER}
+    \ctrule{ACTS-CALLER}
         {\argpart{\tk{caller} \tk{-->?} p_1 \tk , p_2 \tk , \dots \tk , p_n \; S, lbl}{S}{(lbl, cstr)}}
         {\argpart{S, lbl[\ia \mapsto l_\ia']}{S}{(lbl_1, cstr)}}
         {where $l_\ia = lbl \, \ia$ \\
