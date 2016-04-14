@@ -82,6 +82,18 @@ $(\Gamma, \rightarrow, T)$, with
           and $lbl_1 = lbl[f \mapsto l_f']$ \\
           and $lbl_2 = lbl_1[x_1 \mapsto l_{x_1}, x_2 \mapsto l_{x_2}, \dots, x_n \mapsto l_{x_n}, \ifb \mapsto l_f']$}
 
+\subsubsection{Statements}
+
+\begin{trules}
+  \trule{STM-EMPTY}
+        {\argpart{\varepsilon, lbl}{}{(lbl, \emptyset)}}
+        {}
+  \ctrule{STM-EXPR}
+        {\argpart{e, lbl}{}{(lbl, cstr)}}
+        {lbl \vdash e \rightarrow_e (cstr, l_e)}
+        {}
+\end{trules}
+
 \subsection{Semantics for deriving labels for expressions}
 $(\Gamma_e, \rightarrow_e, T_e)$, with
 \begin{align*}
