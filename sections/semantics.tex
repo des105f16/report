@@ -173,19 +173,19 @@ $(\Gamma_e, \rightarrow_e, T_e)$, with
   \Gamma_e =  & \;      \iExp \cup (\iCstr \times \mathbb{L}) \\
   T_e =       & \; (\iCstr \times \mathbb{L})
 \end{align*}
-Where transitions are of the form $lbl \vdash e \rightarrow_e (cstr, l)$.
+Where transitions are of the form $lbl, fun \vdash e \rightarrow_e (cstr, l)$.
 
 \subsubsection{Declassification}
 \begin{trules}
   \ctrule{DEC}
-        {lbl \vdash \tk{<|} e \tk{|>} \rightarrow_e (cstr \cup \{ c \}, l_d)}
-        {lbl \vdash e \rightarrow_e (cstr, l_e)}
+        {lbl, fun \vdash \tk{<|} e \tk{|>} \rightarrow_e (cstr \cup \{ c \}, l_d)}
+        {lbl, fun \vdash e \rightarrow_e (cstr, l_e)}
         {where $l_\ia = lbl \, \ia$ \\
           and $l_{d} = next$ \\
           and $c = " \, l_e \sqsubseteq l_d \sqcup l_\ia \, "$}
   \ctrule{DEC-EXPL}
-        {lbl \vdash \tk{<|} e \tk , l \tk{|>} \rightarrow_e (cstr \cup \{ c \}, l)}
-        {lbl \vdash e \rightarrow_e (cstr, l_e)}
+        {lbl, fun \vdash \tk{<|} e \tk , l \tk{|>} \rightarrow_e (cstr \cup \{ c \}, l)}
+        {lbl, fun \vdash e \rightarrow_e (cstr, l_e)}
         {where $l_\ia = lbl \, \ia$ \\
           and $l_d = next$ \\
           and $c = " \, l_e \sqsubseteq l \sqcup l_\ia \, "$}
@@ -194,8 +194,8 @@ Where transitions are of the form $lbl \vdash e \rightarrow_e (cstr, l)$.
 \subsubsection{Function call}
 \begin{trules}
   \ctrule {FUN-CALL-LIB}
-          {lbl \vdash f \tk ( e_1 \tk , e_2 \tk , \dots \tk , e_n \tk ) \rightarrow_e (cstr', l')}
-          {lbl \vdash e_1 \rightarrow_e (cstr_1, l_{e_1}) \quad e_2 \rightarrow_e (cstr_2, l_{e_2}) \quad
+          {lbl, fun \vdash f \tk ( e_1 \tk , e_2 \tk , \dots \tk , e_n \tk ) \rightarrow_e (cstr', l')}
+          {lbl, fun \vdash e_1 \rightarrow_e (cstr_1, l_{e_1}) \quad e_2 \rightarrow_e (cstr_2, l_{e_2}) \quad
             \dots \quad e_n \rightarrow_e (cstr_n, l_{e_n})}
           {if $lbl \, f = \emptyset$ \\
             and $l' = \mathlarger\sqcupl_{i=1}^n l_{e_i}$ \\
@@ -205,21 +205,21 @@ Where transitions are of the form $lbl \vdash e \rightarrow_e (cstr, l)$.
 \subsubsection{Arithmetics}
 \begin{trules}
   \trule  {VAR}
-          {lbl \vdash x \rightarrow_e (\emptyset, l)}
+          {lbl, fun \vdash x \rightarrow_e (\emptyset, l)}
           {where $lbl \, x = l$}
   \trule  {CONST}
-          {lbl \vdash c \rightarrow_e (\emptyset, \bot)}
+          {lbl, fun \vdash c \rightarrow_e (\emptyset, \bot)}
           {}
   \ctrule {BINARY-OP}
-          {lbl \vdash e_1 \; op_b \; e_2 \rightarrow_e (cstr_1 \cup cstr_2, l_1 \sqcup l_2)}
-          {lbl \vdash e_1 \rightarrow_e (cstr_1, l_1) \;\; lbl \vdash e_2 \rightarrow_e (cstr_2, l_2)}
+          {lbl, fun \vdash e_1 \; op_b \; e_2 \rightarrow_e (cstr_1 \cup cstr_2, l_1 \sqcup l_2)}
+          {lbl, fun \vdash e_1 \rightarrow_e (cstr_1, l_1) \;\; lbl, fun \vdash e_2 \rightarrow_e (cstr_2, l_2)}
           {}
   \ctrule {UNARY-OP}
-          {lbl \vdash op_u \; e \rightarrow_e (cstr, l)}
-          {lbl \vdash e \rightarrow_e (cstr, l)}
+          {lbl, fun \vdash op_u \; e \rightarrow_e (cstr, l)}
+          {lbl, fun \vdash e \rightarrow_e (cstr, l)}
           {}
   \ctrule {PAREN}
-          {lbl \vdash \tk ( e \tk ) \rightarrow_e (cstr, l)}
-          {lbl \vdash e \rightarrow_e (cstr, l)}
+          {lbl, fun \vdash \tk ( e \tk ) \rightarrow_e (cstr, l)}
+          {lbl, fun \vdash e \rightarrow_e (cstr, l)}
           {}
 \end{trules}
