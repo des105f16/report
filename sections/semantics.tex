@@ -20,6 +20,11 @@ The label environment is called $\iLbl$ and is defined by:
   \textbf{Join/meet labels} & Combinations of the above-mentioned labels
 \end{tabular}
 
+\paragraph{}\noindent
+$\iCstr$ is a set of constraints where each $c \in \iCstr$ is on the form:
+\[ l_1 \sqsubseteq l_2 \; | \; l_1, l_2 \in \mathbb{L} \]
+
+
 \subsubsection{Transision system}
 $(\Gamma, \rightarrow, T)$, with
 \begin{align*}
@@ -129,23 +134,6 @@ Where transitions are of the form $lbl \vdash e \rightarrow_e (cstr, l)$.
           {lbl \vdash e \rightarrow_e l}
           {}
 \end{trules}
-
-\subsection{Semantics for determining constraints}
-The constraint environment is called $\iCstr$ and is defined by:
-\[
-  \iCstr = \iDecv \cup \iStml \cup \iExpl \rightharpoonup \mathbb{C}
-\]
-Where $\mathbb{C}$ is the set of constraints, with $\forall c \in \mathbb{C} . c = l_1 \sqsubseteq l_2 | l_1, l_2 \in \mathbb{L}$.
-
-\subsubsection{Transision system}
-$(\Gamma_{C}, \rightarrow_{C}, T_{C})$, with
-\begin{align*}
-  \Gamma_{C} =  & \;        (\iDecv \times \iLbl \times \iCstr) \\
-                & \;  \cup  (\iStml \times \iLbl \times \iCstr) \\
-                & \;  \cup  (\iExpl \times \iLbl \times \iCstr) \\
-                & \;  \cup  (\iLbl \times \iCstr)               \\
-  T_{C} =       & \;  (\iLbl \cup \iCstr)
-\end{align*}
 
 \subsubsection{Variable declaration and assignment}
 
