@@ -20,7 +20,7 @@ The label environment is called $\iLbl$ and is defined by:
   \textbf{Join/meet labels} & Combinations of the above-mentioned labels
 \end{tabular}
 
-\paragraph{}\noident
+\paragraph{}\noindent
 The function parameters environment is called $\iFunPar$ and is defined by:
 \[
   %\iFunPar = \iFun \rightharpoonup \mathbf{P}(\iVar \times \mathbb{L})
@@ -43,15 +43,15 @@ $(\Gamma_P, \rightarrow_P, T_P)$, with
 \end{align*}
 
 \paragraph{}\noindent
-$(\Gamma, \rightarrow, T)$, with
+$(\Gamma_S, \rightarrow_S, T_S)$, with
 \begin{align*}
-  \Gamma & = (\iStm \times \iLbl) \cup (\iLbl \times \iCstr) \\
-  T & = (\iLbl \times \iCstr)
+  \Gamma_S & = (\iStm \times \iLbl) \cup (\iLbl \times \iCstr) \\
+  T_S & = (\iLbl \times \iCstr)
 \end{align*}
 
 \noindent
 Where rules are on the form:
-\[ fun \vdash \argpart{S, lbl}{}{(lbl, cstr)} \]
+\[ fun \vdash \argpart{S, lbl}{S}{(lbl, cstr)} \]
 
 \subsubsection{Program}
 
@@ -63,11 +63,11 @@ Where rules are on the form:
 \begin{trules}
 \ctrule {PROG-VAR-DECL-EXPR}
         {\argpart {T \, l \, x \tk = e, lbl, fun} {P} {(lbl_1, cstr, fun)} }
-        {fun \vdash \argpart{T \, l \, x \tk = e, lbl}{}{(lbl_1, cstr)}}
+        {fun \vdash \argpart{T \, l \, x \tk = e, lbl}{S}{(lbl_1, cstr)}}
         {}
 \ctrule {PROG-VAR-DECL}
         {\argpart {T \, l \, x, lbl, fun} {P} {(lbl_1, cstr, fun)} }
-        {fun \vdash \argpart{T \, l \, x, lbl}{}{(lbl_1, cstr)}}
+        {fun \vdash \argpart{T \, l \, x, lbl}{S}{(lbl_1, cstr)}}
         {}
 \end{trules}
 
@@ -75,7 +75,7 @@ Where rules are on the form:
 
 \ctrule {FUNC-DECL}
         {\argpart{T_f \, l_f \, f \tk ( T_1 \, l_1 \, x_1 \tk , T_2 \, l_2 \, x_2 \tk , \dots \tk , T_n \, l_n \, x_n \tk ) S, lbl, fun}{P}{(lbl_1, cstr, fun_1)}}
-        {\argpart{fun_1 \vdash S, lbl_2}{}{(lbl_3, cstr)}}
+        {\argpart{fun_1 \vdash S, lbl_2}{S}{(lbl_3, cstr)}}
         {where $l_{x_i} = \begin{cases}
           \clbl{x_i} & \quad \text{if } l_i = \varepsilon \\
           l_i & \quad otherwise
@@ -92,7 +92,7 @@ Where rules are on the form:
 
 \begin{trules}
   \ctrule{VAR-DECL-EXPR}
-        {\argpart {T \, l \, x \tk = e, lbl} {} {(lbl[x \mapsto l_x], cstr \cup \{ c \})} }
+        {\argpart {T \, l \, x \tk = e, lbl} {S} {(lbl[x \mapsto l_x], cstr \cup \{ c \})} }
         {lbl \vdash e \rightarrow_e (cstr, l_e)}
         {where $l_x = \begin{cases}
             \vlbl x & \quad \text{if } l = \varepsilon \\
@@ -101,7 +101,7 @@ Where rules are on the form:
           and $l_\ib = lbl \, \ib$ \\
           and $c = " \, l_e \sqcup l_\ib \sqsubseteq l_x \, "$ }
   \trule{VAR-DECL}
-        {\argpart {T \, l \, x, lbl} {} {(lbl[x \mapsto l_x], cstr \cup \{ c \})} }
+        {\argpart {T \, l \, x, lbl} {S} {(lbl[x \mapsto l_x], cstr \cup \{ c \})} }
         {where $l_x = \begin{cases}
             \vlbl x & \quad \text{if } l = \varepsilon \\
             l & \quad \text{otherwise}
@@ -113,63 +113,63 @@ Where rules are on the form:
 \subsubsection{Statements}
 
   \trule{STM-EMPTY}
-        {\argpart{\varepsilon, lbl}{}{(lbl, \emptyset)}}
+        {\argpart{\varepsilon, lbl}{S}{(lbl, \emptyset)}}
         {}
   \ctrule{STM-EXPR}
-        {\argpart{e, lbl}{}{(lbl, cstr)}}
+        {\argpart{e, lbl}{S}{(lbl, cstr)}}
         {lbl \vdash e \rightarrow_e (cstr, l_e)}
         {}
   \ctrule{STM-COMP}
-        {\argpart{S_1 \; S_2, lbl}{}{(lbl_2, cstr_1 \cup cstr_2)}}
-        {\argpart{S_1, lbl}{}{(lbl_1, cstr_1)} \quad
-          \argpart{S_2, lbl_1}{}{(lbl_2, cstr_2)}}
+        {\argpart{S_1 \; S_2, lbl}{S}{(lbl_2, cstr_1 \cup cstr_2)}}
+        {\argpart{S_1, lbl}{S}{(lbl_1, cstr_1)} \quad
+          \argpart{S_2, lbl_1}{S}{(lbl_2, cstr_2)}}
         {}
   \ctrule{STM-WHILE}
-        {\argpart{\tk{while} \tk ( e \tk ) S}{}{(lbl, cstr_1 \cup cstr_2 \cup \{ c \})}}
+        {\argpart{\tk{while} \tk ( e \tk ) S}{S}{(lbl, cstr_1 \cup cstr_2 \cup \{ c \})}}
         {lbl_1 \vdash e \rightarrow_e (cstr_1, l_e) \quad
-          \argpart{S, lbl_1}{}{(lbl_2, cstr_2)}}
+          \argpart{S, lbl_1}{S}{(lbl_2, cstr_2)}}
         {where $l_\ib = lbl \, \ib$ \\
           and $l_w = next$ \\
           and $lbl_1 = lbl[\ib \mapsto l_w]$ \\
           and $c = " \, l_e \sqcup l_\ib \sqsubseteq l_w \, "$}
   \ctrule{STM-IF}
-        {\argpart{\tk{if} \tk ( e \tk ) S, lbl}{}{(lbl, cstr_1 \cup cstr_2 \cup \{ c \})}}
+        {\argpart{\tk{if} \tk ( e \tk ) S, lbl}{S}{(lbl, cstr_1 \cup cstr_2 \cup \{ c \})}}
         {lbl \vdash e \rightarrow_e (cstr_1, l_e) \quad
-          \argpart{S, lbl[\ib \mapsto l_{if}]}{}{(lbl_1, cstr_2)}}
+          \argpart{S, lbl[\ib \mapsto l_{if}]}{S}{(lbl_1, cstr_2)}}
         {where $l_\ib = lbl \, \ib$ \\
           and $l_{if} = next$ \\
           and $c = " \, l_e \sqcup l_\ib \sqsubseteq l_{if} \, "$}
   \ctrule{STM-IF-ELSE}
-        {\argpart{\tk{if} \tk ( e \tk ) S_1 \tk{else} S_2, lbl}{}{(lbl, cstr_1 \cup cstr_2 \cup cstr_3 \cup \{ c \})}}
+        {\argpart{\tk{if} \tk ( e \tk ) S_1 \tk{else} S_2, lbl}{S}{(lbl, cstr_1 \cup cstr_2 \cup cstr_3 \cup \{ c \})}}
         {lbl \vdash e \rightarrow_e (cstr_1, l_e) \quad
-          \argpart{S_1, lbl_1}{}{(lbl_2, cstr_2)} \quad
-          \argpart{S_2, lbl_1}{}{(lbl_3, cstr_3)}}
+          \argpart{S_1, lbl_1}{S}{(lbl_2, cstr_2)} \quad
+          \argpart{S_2, lbl_1}{S}{(lbl_3, cstr_3)}}
           {where $l_\ib = lbl \, \ib$ \\
             and $l_{if} = next$ \\
             and $lbl_1 = lbl[\ib \mapsto l_{if}]$ \\
             and $c = " \, l_e \sqcup l_\ib \sqsubseteq l_{if} \, "$}
   \ctrule{STM-ASS}
-        {\argpart{x \tk = e, lbl}{}{(lbl, cstr \cup \{ c \})}}
+        {\argpart{x \tk = e, lbl}{S}{(lbl, cstr \cup \{ c \})}}
         {lbl \vdash e \rightarrow_e (cstr, l_e)}
         {where $l_\ib = lbl \, \ib$ \\
           and $c = " \, l_e \sqcup l_\ib \sqsubseteq l_x \, "$ }
   \ctrule{STM-RET-EXPR}
-        {\argpart{\tk{return} e, lbl}{}{(lbl, cstr \cup \{ c \})}}
+        {\argpart{\tk{return} e, lbl}{S}{(lbl, cstr \cup \{ c \})}}
         {lbl \vdash e \rightarrow_e (cstr, l_e)}
         {where $l_\ib = lbl \, \ib$ \\
           and $l_\ifb = lbl \, \ifb$ \\
           and $c = " \, l_e \sqcup l_\ib \sqsubseteq l_\ifb \, "$}
   \trule{STM-RET}
-        {\argpart{\tk{return}, lbl}{}{(lbl, \emptyset)}}
+        {\argpart{\tk{return}, lbl}{S}{(lbl, \emptyset)}}
         {}
   \ctrule{STM-ACTS-THIS}
-        {\argpart{\tk{this} \tk{-->?} p_1 \tk , p_2 \tk , \dots \tk , p_n \; S, lbl}{}{(lbl, cstr)}}
-        {\argpart{S, lbl[\ia \mapsto l_\ia']}{}{(lbl_1, cstr)}}
+        {\argpart{\tk{this} \tk{-->?} p_1 \tk , p_2 \tk , \dots \tk , p_n \; S, lbl}{S}{(lbl, cstr)}}
+        {\argpart{S, lbl[\ia \mapsto l_\ia']}{S}{(lbl_1, cstr)}}
         {where $l_\ia = lbl \, \ia$ \\
           and $l_\ia' = l_\ia \sqcup \mathlarger\sqcupl_{i=1}^n \, \{ p_i \rightarrow \emptyset \}$}
     \ctrule{STM-ACTS-CALLER}
-        {\argpart{\tk{caller} \tk{-->?} p_1 \tk , p_2 \tk , \dots \tk , p_n \; S, lbl}{}{(lbl, cstr)}}
-        {\argpart{S, lbl[\ia \mapsto l_\ia']}{}{(lbl_1, cstr)}}
+        {\argpart{\tk{caller} \tk{-->?} p_1 \tk , p_2 \tk , \dots \tk , p_n \; S, lbl}{S}{(lbl, cstr)}}
+        {\argpart{S, lbl[\ia \mapsto l_\ia']}{S}{(lbl_1, cstr)}}
         {where $l_\ia = lbl \, \ia$ \\
           and $l_\ia' = l_\ia \sqcup \mathlarger\sqcupl_{i=1}^n \, \{ p_i \rightarrow \emptyset \}$}
 
