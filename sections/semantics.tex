@@ -200,6 +200,14 @@ Where transitions are of the form $lbl, fun \vdash e \rightarrow_e (cstr, l)$.
           {if $lbl \, f = \emptyset$ \\
             and $l' = \mathlarger\sqcupl_{i=1}^n l_{e_i}$ \\
             and $cstr' = \bigcup\limits_{i=1}^n cstr_i$}
+  \ctrule {FUN-CALL}
+          {lbl, fun \vdash f \tk{<{}<{}<} p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{>{}>{}>} \tk ( e_1 \tk , e_2 \tk , \dots \tk , e_n \tk ) \rightarrow_e (cstr', l')}
+          {lbl, fun \vdash e_1 \rightarrow_e (cstr_1, l_{e_1}) \quad e_2 \rightarrow_e (cstr_2, l_{e_2}) \quad
+            \dots \quad e_n \rightarrow_e (cstr_n, l_{e_n})}
+          {where $l_f = lbl \, f$ \\
+            and $((l_1, x_1), (l_2, x_2), \dots, (l_n, x_n)) = fun \, f$ \\
+            and $l' = \mathlarger\sqcupl_{i=1}^n l_{e_i}$ \\
+            and $cstr' = \bigcup\limits_{i=1}^n cstr_i$}
 \end{trules}
 
 \subsubsection{Arithmetics}
