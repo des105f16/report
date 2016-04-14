@@ -74,8 +74,8 @@ Where rules are on the form:
 \subsubsection{Function declarations}
 
 \ctrule {FUNC-DECL}
-        {\argpart{T_f \, l_f \, f \tk ( T_1 \, l_1 \, x_1 \tk , T_2 \, l_2 \, x_2 \tk , \dots \tk , T_n \, l_n \, x_n \tk ) S, lbl}{}{(lbl_1, cstr)}}
-        {\argpart{S, lbl_2}{}{(lbl_3, cstr)}}
+        {\argpart{T_f \, l_f \, f \tk ( T_1 \, l_1 \, x_1 \tk , T_2 \, l_2 \, x_2 \tk , \dots \tk , T_n \, l_n \, x_n \tk ) S, lbl, fun}{P}{(lbl_1, cstr, fun_1)}}
+        {\argpart{fun_1 \vdash S, lbl_2}{}{(lbl_3, cstr)}}
         {where $l_{x_i} = \begin{cases}
           \clbl{x_i} & \quad \text{if } l_i = \varepsilon \\
           l_i & \quad otherwise
@@ -85,7 +85,8 @@ Where rules are on the form:
             l_f & \quad \text{otherwise}
         \end{cases}$ \\
           and $lbl_1 = lbl[f \mapsto l_f']$ \\
-          and $lbl_2 = lbl_1[x_1 \mapsto l_{x_1}, x_2 \mapsto l_{x_2}, \dots, x_n \mapsto l_{x_n}, \ifb \mapsto l_f']$}
+          and $lbl_2 = lbl_1[x_1 \mapsto l_{x_1}, x_2 \mapsto l_{x_2}, \dots, x_n \mapsto l_{x_n}, \ifb \mapsto l_f']$ \\
+          and $fun_1 = fun[f \mapsto ((l_1, x_1), (l_2, x_2), \dots, (l_n, x_n))]$}
 
 \subsubsection{Variable declarations}
 
