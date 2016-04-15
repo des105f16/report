@@ -72,19 +72,21 @@ Where rules are on the form:
 \subsubsection{Function declarations}
 
 \ctrule {FUNC-DECL}
-        {\argpart{T_f \, l_f \, f \tk ( T_1 \, l_1 \, x_1 \tk , T_2 \, l_2 \, x_2 \tk , \dots \tk , T_n \, l_n \, x_n \tk ) S, \ienvL, \ienvP}{P}{(\ienvL_1, \icstr, \ienvP_1)}}
-        {\argpart{\ienvP_1 \vdash S, \ienvL_2}{S}{(\ienvL_3, \icstr)}}
-        {where $l_{x_i} = \begin{cases}
-          \clbl{x_i} & \quad \text{if } l_i = \varepsilon \\
-          l_i & \quad otherwise
+        {\argpart{T_f \, l_f \, f \tk ( T_1 \, l_1 \, x_1 \tk , T_2 \, l_2 \, x_2 \tk , \dots \tk , T_n \, l_n \, x_n \tk ) S, \ienvL, \ienvP}{P}{(\ienvL'', \icstr, \ienvP')}}
+        {\splitfrac{\ienvL \vdash l_1 \rightarrow_L L_1 \quad l_2 \rightarrow_L L_2 \quad \dots \quad l_n \rightarrow_L L_n}
+          {\ienvL' \vdash l_f \rightarrow_L L_f \quad \ienvP' \vdash \argpart{S, \ienvL'''}{S}{(\ienvL'''', \icstr)}}}
+        {where $L_{x_i} = \begin{cases}
+          \clbl{x_i} & \quad \text{if } L_i = \varepsilon \\
+          L_i & \quad otherwise
         \end{cases}\quad \text{for } 1 \leq i \leq n$ \\
-          and $l_f' = \begin{cases}
-            \mathlarger\sqcupl_{i = 1}^n l_{x_i} & \quad \text{if } l_f = \varepsilon \\
-            l_f & \quad \text{otherwise}
+          and $\ienvL' = \ienvL[x_1 \mapsto L_{x_1}, x_2 \mapsto L_{x_2}, \dots, x_n \mapsto L_{x_n}]$ \\
+          and $L_f' = \begin{cases}
+            \mathlarger\sqcupl_{i = 1}^n L_{x_i} & \quad \text{if } L_f = \varepsilon \\
+            L_f & \quad \text{otherwise}
         \end{cases}$ \\
-          and $\ienvL_1 = \ienvL[f \mapsto l_f']$ \\
-          and $\ienvL_2 = \ienvL_1[x_1 \mapsto l_{x_1}, x_2 \mapsto l_{x_2}, \dots, x_n \mapsto l_{x_n}, \ifb \mapsto l_f']$ \\
-          and $\ienvP_1 = \ienvP[f \mapsto ((l_{x_1}, x_1), (l_{x_2}, x_2), \dots, (l_{x_n}, x_n))]$}
+          and $\ienvL'' = \ienvL[f \mapsto L_f']$ \\
+          and $\ienvL''' = \ienvL'[f \mapsto L_f', \ifb \mapsto L_f']$\\
+          and $\ienvP' = \ienvP[f \mapsto ((L_{x_1}, x_1), (L_{x_2}, x_2), \dots, (L_{x_n}, x_n))]$}
 
 \subsubsection{Statements}
 
