@@ -29,7 +29,7 @@ The function parameters environment is called $\iEnvP$ and is defined by:
 
 \paragraph{}\noindent
 $\iCstr$ is a set of constraints where each $c \in \iCstr$ is on the form:
-\[ l_1 \sqsubseteq l_2 \; | \; l_1, l_2 \in \mathbb{L} \]
+\[ L_1 \sqsubseteq L_2 \; | \; L_1, L_2 \in \mathbb{L} \]
 
 
 \subsubsection{Transision systems}
@@ -92,22 +92,23 @@ Where rules are on the form:
 
 \begin{trules}
   \ctrule{VAR-DECL-EXPR}
-        {\ienvP \vdash \argpart {T \, l \, x \tk = e, \ienvL} {S} {(\ienvL[x \mapsto l_x], \icstr \cup \{ c \})} }
-        {\ienvL, \ienvP \vdash e \rightarrow_e (\icstr, l_e)}
-        {where $l_x = \begin{cases}
-            \vlbl x & \quad \text{if } l = \varepsilon \\
-            l & \quad \text{otherwise}
+        {\ienvP \vdash \argpart {T \, l \, x \tk = e, \ienvL} {S} {(\ienvL[x \mapsto L_x], \icstr \cup \{ c \})} }
+        {\ienvL \vdash l \rightarrow L \quad
+          \ienvL, \ienvP \vdash e \rightarrow_e (\icstr, L_e)}
+        {where $L_x = \begin{cases}
+            \vlbl x & \quad \text{if } L = \varepsilon \\
+            L & \quad \text{otherwise}
           \end{cases}$ \\
-          and $l_\ib = \ienvL \, \ib$ \\
-          and $c = " \, l_e \sqcup l_\ib \sqsubseteq l_x \, "$ }
+          and $L_\ib = \ienvL \, \ib$ \\
+          and $c = " \, L_e \sqcup L_\ib \sqsubseteq L_x \, "$ }
   \trule{VAR-DECL}
-        {\ienvP \vdash \argpart {T \, l \, x, \ienvL} {S} {(\ienvL[x \mapsto l_x], \icstr \cup \{ c \})} }
-        {where $l_x = \begin{cases}
-            \vlbl x & \quad \text{if } l = \varepsilon \\
-            l & \quad \text{otherwise}
+        {\ienvP \vdash \argpart {T \, l \, x, \ienvL} {S} {(\ienvL[x \mapsto L_x], \icstr \cup \{ c \})} }
+        {where $L_x = \begin{cases}
+            \vlbl x & \quad \text{if } L = \varepsilon \\
+            L & \quad \text{otherwise}
           \end{cases}$ \\
-          and $l_\ib = \ienvL \, \ib$ \\
-          and $c = "\bot \sqcup l_\ib \sqsubseteq l_x"$ }
+          and $L_\ib = \ienvL \, \ib$ \\
+          and $c = "\bot \sqcup L_\ib \sqsubseteq L_x"$ }
 \end{trules}
 
   \trule{EMPTY}
@@ -115,7 +116,7 @@ Where rules are on the form:
         {}
   \ctrule{EXPR}
         {\ienvP \vdash \argpart{e, \ienvL}{S}{(\ienvL, \icstr)}}
-        {\ienvL, \ienvP \vdash e \rightarrow_e (\icstr, l_e)}
+        {\ienvL, \ienvP \vdash e \rightarrow_e (\icstr, L_e)}
         {}
   \ctrule{COMP}
         {\ienvP \vdash \argpart{S_1 \; S_2, \ienvL}{S}{(\ienvL_2, \icstr_1 \cup \icstr_2)}}
@@ -124,52 +125,53 @@ Where rules are on the form:
         {}
   \ctrule{WHILE}
         {\ienvP \vdash \argpart{\tk{while} \tk ( e \tk ) S, \ienvL}{S}{(\ienvL, \icstr_1 \cup \icstr_2 \cup \{ c \})}}
-        {\ienvL_1, \ienvP \vdash e \rightarrow_e (\icstr_1, l_e) \quad
+        {\ienvL_1, \ienvP \vdash e \rightarrow_e (\icstr_1, L_e) \quad
           \ienvP \vdash \argpart{S, \ienvL_1}{S}{(\ienvL_2, \icstr_2)}}
-        {where $l_\ib = \ienvL \, \ib$ \\
-          and $l_w = next$ \\
-          and $\ienvL_1 = \ienvL[\ib \mapsto l_w]$ \\
-          and $c = " \, l_e \sqcup l_\ib \sqsubseteq l_w \, "$}
+        {where $L_\ib = \ienvL \, \ib$ \\
+          and $L_w = next$ \\
+          and $\ienvL_1 = \ienvL[\ib \mapsto L_w]$ \\
+          and $c = " \, L_e \sqcup L_\ib \sqsubseteq L_w \, "$}
   \ctrule{IF}
         {\ienvP \vdash \argpart{\tk{if} \tk ( e \tk ) S, \ienvL}{S}{(\ienvL, \icstr_1 \cup \icstr_2 \cup \{ c \})}}
-        {\ienvL, \ienvP \vdash e \rightarrow_e (\icstr_1, l_e) \quad
-          \ienvP \vdash \argpart{S, \ienvL[\ib \mapsto l_{if}]}{S}{(\ienvL_1, \icstr_2)}}
-        {where $l_\ib = \ienvL \, \ib$ \\
-          and $l_{if} = next$ \\
-          and $c = " \, l_e \sqcup l_\ib \sqsubseteq l_{if} \, "$}
+        {\ienvL, \ienvP \vdash e \rightarrow_e (\icstr_1, L_e) \quad
+          \ienvP \vdash \argpart{S, \ienvL_1}{S}{(\ienvL_2, \icstr_2)}}
+        {where $L_\ib = \ienvL \, \ib$ \\
+          and $L_{if} = next$ \\
+          and $\ienvL_1 = \ienvL[\ib \mapsto L_{if}]$ \\
+          and $c = " \, L_e \sqcup L_\ib \sqsubseteq L_{if} \, "$}
   \ctrule{IF-ELSE}
         {\ienvP \vdash \argpart{\tk{if} \tk ( e \tk ) S_1 \tk{else} S_2, \ienvL}{S}{(\ienvL, \icstr_1 \cup \icstr_2 \cup \icstr_3 \cup \{ c \})}}
-        {\ienvL, \ienvP \vdash e \rightarrow_e (\icstr_1, l_e) \quad
-          \ienvP \vdash \argpart{S_1, \ienvL_1}{S}{(\ienvL_2, \icstr_2)} \quad
-          \ienvP \vdash \argpart{S_2, \ienvL_1}{S}{(\ienvL_3, \icstr_3)}}
-          {where $l_\ib = \ienvL \, \ib$ \\
-            and $l_{if} = next$ \\
-            and $\ienvL_1 = \ienvL[\ib \mapsto l_{if}]$ \\
-            and $c = " \, l_e \sqcup l_\ib \sqsubseteq l_{if} \, "$}
+        {\splitfrac{\ienvL, \ienvP \vdash e \rightarrow_e (\icstr_1, L_e)}
+          {\ienvP \vdash \argpart{S_1, \ienvL_1}{S}{(\ienvL_2, \icstr_2)} \quad
+          \ienvP \vdash \argpart{S_2, \ienvL_1}{S}{(\ienvL_3, \icstr_3)}}}
+          {where $L_\ib = \ienvL \, \ib$ \\
+            and $L_{if} = next$ \\
+            and $\ienvL_1 = \ienvL[\ib \mapsto L_{if}]$ \\
+            and $c = " \, L_e \sqcup L_\ib \sqsubseteq L_{if} \, "$}
   \ctrule{ASS}
         {\ienvP \vdash \argpart{x \tk = e, \ienvL}{S}{(\ienvL, \icstr \cup \{ c \})}}
-        {\ienvL, \ienvP \vdash e \rightarrow_e (\icstr, l_e)}
-        {where $l_\ib = \ienvL \, \ib$ \\
-          and $c = " \, l_e \sqcup l_\ib \sqsubseteq l_x \, "$ }
+        {\ienvL, \ienvP \vdash e \rightarrow_e (\icstr, L_e)}
+        {where $L_\ib = \ienvL \, \ib$ \\
+          and $c = " \, L_e \sqcup L_\ib \sqsubseteq L_x \, "$ }
   \ctrule{RET-EXPR}
         {\ienvP \vdash \argpart{\tk{return} e, \ienvL}{S}{(\ienvL, \icstr \cup \{ c \})}}
-        {\ienvL, \ienvP \vdash e \rightarrow_e (\icstr, l_e)}
-        {where $l_\ib = \ienvL \, \ib$ \\
-          and $l_\ifb = \ienvL \, \ifb$ \\
-          and $c = " \, l_e \sqcup l_\ib \sqsubseteq l_\ifb \, "$}
+        {\ienvL, \ienvP \vdash e \rightarrow_e (\icstr, L_e)}
+        {where $L_\ib = \ienvL \, \ib$ \\
+          and $L_\ifb = \ienvL \, \ifb$ \\
+          and $c = " \, L_e \sqcup L_\ib \sqsubseteq L_\ifb \, "$}
   \trule{RET}
         {\ienvP \vdash \argpart{\tk{return}, \ienvL}{S}{(\ienvL, \emptyset)}}
         {}
   \ctrule{ACTS-THIS}
         {\ienvP \vdash \argpart{\tk{this} \tk{-->?} p_1 \tk , p_2 \tk , \dots \tk , p_k \; S, \ienvL}{S}{(\ienvL, \icstr)}}
-        {\ienvP \vdash \argpart{S, \ienvL[\ia \mapsto l_\ia']}{S}{(\ienvL_1, \icstr)}}
-        {where $l_\ia = \ienvL \, \ia$ \\
-          and $l_\ia' = l_\ia \sqcup \mathlarger\sqcupl_{i=1}^k \, \{ p_i \rightarrow \emptyset \}$}
+        {\ienvP \vdash \argpart{S, \ienvL[\ia \mapsto L_\ia']}{S}{(\ienvL_1, \icstr)}}
+        {where $L_\ia = \ienvL \, \ia$ \\
+          and $L_\ia' = L_\ia \sqcup \mathlarger\sqcupl_{i=1}^k \, \{ p_i \rightarrow \emptyset \}$}
     \ctrule{ACTS-CALLER}
         {\ienvP \vdash \argpart{\tk{caller} \tk{-->?} p_1 \tk , p_2 \tk , \dots \tk , p_k \; S, \ienvL}{S}{(\ienvL, \icstr)}}
-        {\ienvP \vdash \argpart{S, \ienvL[\ia \mapsto l_\ia']}{S}{(\ienvL_1, \icstr)}}
-        {where $l_\ia = \ienvL \, \ia$ \\
-          and $l_\ia' = l_\ia \sqcup \mathlarger\sqcupl_{i=1}^k \, \{ p_i \rightarrow \emptyset \}$}
+        {\ienvP \vdash \argpart{S, \ienvL[\ia \mapsto L_\ia']}{S}{(\ienvL_1, \icstr)}}
+        {where $L_\ia = \ienvL \, \ia$ \\
+          and $L_\ia' = L_\ia \sqcup \mathlarger\sqcupl_{i=1}^k \, \{ p_i \rightarrow \emptyset \}$}
 
 \subsection{Semantics for deriving labels for expressions}
 $(\Gamma_e, \rightarrow_e, T_e)$, with
@@ -177,43 +179,43 @@ $(\Gamma_e, \rightarrow_e, T_e)$, with
   \Gamma_e =  & \;      \iExp \cup (\iCstr \times \mathbb{L}) \\
   T_e =       & \; (\iCstr \times \mathbb{L})
 \end{align*}
-Where transitions are of the form $\ienvL, \ienvP \vdash e \rightarrow_e (\icstr, l)$.
+Where transitions are of the form $\ienvL, \ienvP \vdash e \rightarrow_e (\icstr, L)$.
 
 \subsubsection{Declassification}
 \begin{trules}
   \ctrule{DEC}
-        {\ienvL, \ienvP \vdash \tk{<|} e \tk{|>} \rightarrow_e (\icstr \cup \{ c \}, l_d)}
-        {\ienvL, \ienvP \vdash e \rightarrow_e (\icstr, l_e)}
-        {where $l_\ia = \ienvL \, \ia$ \\
-          and $l_{d} = next$ \\
-          and $c = " \, l_e \sqsubseteq l_d \sqcup l_\ia \, "$}
+        {\ienvL, \ienvP \vdash \tk{<|} e \tk{|>} \rightarrow_e (\icstr \cup \{ c \}, L_d)}
+        {\ienvL, \ienvP \vdash e \rightarrow_e (\icstr, L_e)}
+        {where $L_\ia = \ienvL \, \ia$ \\
+          and $L_{d} = next$ \\
+          and $c = " \, L_e \sqsubseteq L_d \sqcup L_\ia \, "$}
   \ctrule{DEC-EXPL}
-        {\ienvL, \ienvP \vdash \tk{<|} e \tk , l \tk{|>} \rightarrow_e (\icstr \cup \{ c \}, l)}
-        {\ienvL, \ienvP \vdash e \rightarrow_e (\icstr, l_e)}
-        {where $l_\ia = \ienvL \, \ia$ \\
-          and $l_d = next$ \\
-          and $c = " \, l_e \sqsubseteq l \sqcup l_\ia \, "$}
+        {\ienvL, \ienvP \vdash \tk{<|} e \tk , l \tk{|>} \rightarrow_e (\icstr \cup \{ c \}, L)}
+        {\ienvL \vdash l \rightarrow L \quad \ienvL, \ienvP \vdash e \rightarrow_e (\icstr, L_e)}
+        {where $L_\ia = \ienvL \, \ia$ \\
+          and $L_d = next$ \\
+          and $c = " \, L_e \sqsubseteq L \sqcup L_\ia \, "$}
 \end{trules}
 
 \subsubsection{Arithmetics}
 \begin{trules}
   \trule  {VAR}
-          {\ienvL, \ienvP \vdash x \rightarrow_e (\emptyset, l)}
-          {where $\ienvL \, x = l$}
+          {\ienvL, \ienvP \vdash x \rightarrow_e (\emptyset, L)}
+          {where $\ienvL \, x = L$}
   \trule  {CONST}
           {\ienvL, \ienvP \vdash c \rightarrow_e (\emptyset, \bot)}
           {}
   \ctrule {BINARY-OP}
-          {\ienvL, \ienvP \vdash e_1 \; op_b \; e_2 \rightarrow_e (\icstr_1 \cup \icstr_2, l_1 \sqcup l_2)}
-          {\ienvL, \ienvP \vdash e_1 \rightarrow_e (\icstr_1, l_1) \;\; \ienvL, \ienvP \vdash e_2 \rightarrow_e (\icstr_2, l_2)}
+          {\ienvL, \ienvP \vdash e_1 \; op_b \; e_2 \rightarrow_e (\icstr_1 \cup \icstr_2, L_1 \sqcup L_2)}
+          {\ienvL, \ienvP \vdash e_1 \rightarrow_e (\icstr_1, L_1) \;\; \ienvL, \ienvP \vdash e_2 \rightarrow_e (\icstr_2, L_2)}
           {}
   \ctrule {UNARY-OP}
-          {\ienvL, \ienvP \vdash op_u \; e \rightarrow_e (\icstr, l)}
-          {\ienvL, \ienvP \vdash e \rightarrow_e (\icstr, l)}
+          {\ienvL, \ienvP \vdash op_u \; e \rightarrow_e (\icstr, L)}
+          {\ienvL, \ienvP \vdash e \rightarrow_e (\icstr, L)}
           {}
   \ctrule {PAREN}
-          {\ienvL, \ienvP \vdash \tk ( e \tk ) \rightarrow_e (\icstr, l)}
-          {\ienvL, \ienvP \vdash e \rightarrow_e (\icstr, l)}
+          {\ienvL, \ienvP \vdash \tk ( e \tk ) \rightarrow_e (\icstr, L)}
+          {\ienvL, \ienvP \vdash e \rightarrow_e (\icstr, L)}
           {}
 \end{trules}
 
@@ -221,7 +223,7 @@ Where transitions are of the form $\ienvL, \ienvP \vdash e \rightarrow_e (\icstr
 
 $(\mathbb{L}, \rightarrow_F, \mathbb{L})$,
 
-where transitions are of the form $\ienvL \vdash l_1 \rightarrow_F l_2$.
+where transitions are of the form $\ienvL \vdash L_1 \rightarrow_F L_2$.
 %policy, var, const, low, up, join, meet
 
 \begin{trules}
@@ -235,12 +237,12 @@ where transitions are of the form $\ienvL \vdash l_1 \rightarrow_F l_2$.
          {\ienvL \vdash \vlbl x \rightarrow_F x}
          {}
   \ctrule {JOIN}
-         {\ienvL \vdash \literal{l_1 \sqcup l_2} \rightarrow_F \literal{l_1' \sqcup l_2'}}
-         {\ienvL \vdash l_1 \rightarrow_F l_1' \quad l_2 \rightarrow_F l_2'}
+         {\ienvL \vdash \literal{L_1 \sqcup L_2} \rightarrow_F \literal{L_1' \sqcup L_2'}}
+         {\ienvL \vdash L_1 \rightarrow_F L_1' \quad L_2 \rightarrow_F L_2'}
          {}
   \ctrule {MEET}
-         {\ienvL \vdash \literal{l_1 \sqcap l_2} \rightarrow_F \literal{l_1' \sqcap l_2'}}
-         {\ienvL \vdash l_1 \rightarrow_F l_1' \quad l_2 \rightarrow_F l_2'}
+         {\ienvL \vdash \literal{L_1 \sqcap L_2} \rightarrow_F \literal{L_1' \sqcap L_2'}}
+         {\ienvL \vdash L_1 \rightarrow_F L_1' \quad L_2 \rightarrow_F L_2'}
          {}
   \trule {LOWER-BOUND}
          {\ienvL \vdash \bot \rightarrow_F \bot}
@@ -252,25 +254,25 @@ where transitions are of the form $\ienvL \vdash l_1 \rightarrow_F l_2$.
 
 \begin{trules}
   \ctrule {FUN-CALL-LIB}
-          {\ienvL, \ienvP \vdash f \tk ( e_1 \tk , e_2 \tk , \dots \tk , e_n \tk ) \rightarrow_e (\icstr', l')}
-          {\ienvL, \ienvP \vdash e_1 \rightarrow_e (\icstr_1, l_{e_1}) \quad e_2 \rightarrow_e (\icstr_2, l_{e_2}) \quad
-            \dots \quad e_n \rightarrow_e (\icstr_n, l_{e_n})}
+          {\ienvL, \ienvP \vdash f \tk ( e_1 \tk , e_2 \tk , \dots \tk , e_n \tk ) \rightarrow_e (\icstr', L')}
+          {\ienvL, \ienvP \vdash e_1 \rightarrow_e (\icstr_1, L_{e_1}) \quad e_2 \rightarrow_e (\icstr_2, L_{e_2}) \quad
+            \dots \quad e_n \rightarrow_e (\icstr_n, L_{e_n})}
           {if $\ienvL \, f = \emptyset$ \\
-            and $l' = \mathlarger\sqcupl_{i=1}^n l_{e_i}$ \\
+            and $L' = \mathlarger\sqcupl_{i=1}^n L_{e_i}$ \\
             and $\icstr' = \bigcup\limits_{i=1}^n \icstr_i$}
   \ctrule {FUN-CALL}
-          {\ienvL, \ienvP \vdash f \tk{<{}<{}<} p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{>{}>{}>} \tk ( e_1 \tk , e_2 \tk , \dots \tk , e_n \tk ) \rightarrow_e (\icstr_a \cup \icstr_p, l_f')}
+          {\ienvL, \ienvP \vdash f \tk{<{}<{}<} p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{>{}>{}>} \tk ( e_1 \tk , e_2 \tk , \dots \tk , e_n \tk ) \rightarrow_e (\icstr_a \cup \icstr_p, L_f')}
           {\splitfrac
-            {\ienvL, \ienvP \vdash e_1 \rightarrow_e (\icstr_1, l_{e_1}) \quad e_2 \rightarrow_e (\icstr_2, l_{e_2}) \quad \dots \quad e_n \rightarrow_e (\icstr_n, l_{e_n})}
-            {\ienvL' \vdash l_f \rightarrow_F l_f'}}
-          {where $l_f = \ienvL \, f$ \\
-            and $((l_1, x_1), (l_2, x_2), \dots, (l_n, x_n)) = \ienvP \, f$ \\
-            and $\ienvL' = \ienvL[x_1 \mapsto l_{e_1}, x_2 \mapsto l_{e_2}, \dots, x_n \mapsto l_{e_n}]$ \\
+            {\ienvL, \ienvP \vdash e_1 \rightarrow_e (\icstr_1, L_{e_1}) \quad e_2 \rightarrow_e (\icstr_2, L_{e_2}) \quad \dots \quad e_n \rightarrow_e (\icstr_n, L_{e_n})}
+            {\ienvL' \vdash L_f \rightarrow_F L_f'}}
+          {where $L_f = \ienvL \, f$ \\
+            and $((L_1, x_1), (L_2, x_2), \dots, (L_n, x_n)) = \ienvP \, f$ \\
+            and $\ienvL' = \ienvL[x_1 \mapsto L_{e_1}, x_2 \mapsto L_{e_2}, \dots, x_n \mapsto L_{e_n}]$ \\
             and $\icstr_a = \bigcup\limits_{i=1}^n \icstr_i$ \\
             and $\icstr_p = \bigcup\limits_{i=1}^n
             \begin{cases}
-              \emptyset &\text{if } l_i \text{ is a constant label}\\
-              \{ \literal{l_{e_i} \sqsubseteq l_i} \} & \text{otherwise}
+              \emptyset &\text{if } L_i \text{ is a constant label}\\
+              \{ \literal{L_{e_i} \sqsubseteq L_i} \} & \text{otherwise}
             \end{cases}$
             }
 \end{trules}
