@@ -26,5 +26,7 @@
             & \gp \tk{this} \tk{-{}->?} p_1 \tk , p_2 \tk , \dots \tk , p_k \; S \gp \tk{caller} \tk{-{}->?} p_1 \tk , p_2 \tk , \dots \tk , p_k \; S \\
   e         & ::= x \gp c \gp e_1 \; op_b \; e_2 \gp op_u \; e \gp \tk ( e \tk ) \\
             & \gp \tk{<|} e \tk , l \tk{|>} \gp \tk{<|} e \tk{|>} \\
-            & \gp f \tk{<{}<{}<} p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{>{}>{}>} \tk ( e_1 \tk , e_2 \tk , \dots \tk , e_n \tk )
+            & \gp f \tk{<{}<{}<} p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{>{}>{}>} \tk ( e_1 \tk , e_2 \tk , \dots \tk , e_n \tk ) \\
+  l         & ::= \tk{\{\{} pol \tk{\}\}} \gp \varepsilon \\
+  pol       & ::= x \gp p_0 \tk{->} p_1 \tk , p_2 \tk , \dots \tk , p_k \gp pol_1 \tk ; pol_2
 \end{align*}
