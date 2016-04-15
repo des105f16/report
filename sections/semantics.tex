@@ -252,27 +252,26 @@ where transitions are of the form $\ienvL \vdash L_1 \rightarrow_F L_2$.
          {}
 \end{trules}
 
-\begin{trules}
-  \ctrule {FUN-CALL-LIB}
-          {\ienvL, \ienvP \vdash f \tk ( e_1 \tk , e_2 \tk , \dots \tk , e_n \tk ) \rightarrow_e (\icstr', L')}
-          {\ienvL, \ienvP \vdash e_1 \rightarrow_e (\icstr_1, L_{e_1}) \quad e_2 \rightarrow_e (\icstr_2, L_{e_2}) \quad
-            \dots \quad e_n \rightarrow_e (\icstr_n, L_{e_n})}
-          {if $\ienvL \, f = \emptyset$ \\
-            and $L' = \mathlarger\sqcupl_{i=1}^n L_{e_i}$ \\
-            and $\icstr' = \bigcup\limits_{i=1}^n \icstr_i$}
-  \ctrule {FUN-CALL}
-          {\ienvL, \ienvP \vdash f \tk{<{}<{}<} p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{>{}>{}>} \tk ( e_1 \tk , e_2 \tk , \dots \tk , e_n \tk ) \rightarrow_e (\icstr_a \cup \icstr_p, L_f')}
-          {\splitfrac
-            {\ienvL, \ienvP \vdash e_1 \rightarrow_e (\icstr_1, L_{e_1}) \quad e_2 \rightarrow_e (\icstr_2, L_{e_2}) \quad \dots \quad e_n \rightarrow_e (\icstr_n, L_{e_n})}
-            {\ienvL' \vdash L_f \rightarrow_F L_f'}}
-          {where $L_f = \ienvL \, f$ \\
-            and $((L_1, x_1), (L_2, x_2), \dots, (L_n, x_n)) = \ienvP \, f$ \\
-            and $\ienvL' = \ienvL[x_1 \mapsto L_{e_1}, x_2 \mapsto L_{e_2}, \dots, x_n \mapsto L_{e_n}]$ \\
-            and $\icstr_a = \bigcup\limits_{i=1}^n \icstr_i$ \\
-            and $\icstr_p = \bigcup\limits_{i=1}^n
-            \begin{cases}
-              \emptyset &\text{if } L_i \text{ is a constant label}\\
-              \{ \literal{L_{e_i} \sqsubseteq L_i} \} & \text{otherwise}
-            \end{cases}$
-            }
-\end{trules}
+\ctrule {FUN-CALL-LIB}
+        {\ienvL, \ienvP \vdash f \tk ( e_1 \tk , e_2 \tk , \dots \tk , e_n \tk ) \rightarrow_e (\icstr', L')}
+        {\ienvL, \ienvP \vdash e_1 \rightarrow_e (\icstr_1, L_{e_1}) \quad e_2 \rightarrow_e (\icstr_2, L_{e_2}) \quad
+          \dots \quad e_n \rightarrow_e (\icstr_n, L_{e_n})}
+        {if $\ienvL \, f = \emptyset$ \\
+          and $L' = \mathlarger\sqcupl_{i=1}^n L_{e_i}$ \\
+          and $\icstr' = \bigcup\limits_{i=1}^n \icstr_i$}
+\ctrule {FUN-CALL}
+        {\ienvL, \ienvP \vdash f \tk{<{}<{}<} p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{>{}>{}>} \tk ( e_1 \tk , e_2 \tk , \dots \tk , e_n \tk ) \rightarrow_e (\icstr_a \cup \icstr_p, L_f')}
+        {\begin{gathered}
+          \ienvL, \ienvP \vdash e_1 \rightarrow_e (\icstr_1, L_{e_1}) \quad e_2 \rightarrow_e (\icstr_2, L_{e_2}) \quad \dots \quad e_n \rightarrow_e (\icstr_n, L_{e_n}) \\
+          \ienvL' \vdash L_f \rightarrow_F L_f'
+        \end{gathered}}
+        {where $L_f = \ienvL \, f$ \\
+          and $((L_1, x_1), (L_2, x_2), \dots, (L_n, x_n)) = \ienvP \, f$ \\
+          and $\ienvL' = \ienvL[x_1 \mapsto L_{e_1}, x_2 \mapsto L_{e_2}, \dots, x_n \mapsto L_{e_n}]$ \\
+          and $\icstr_a = \bigcup\limits_{i=1}^n \icstr_i$ \\
+          and $\icstr_p = \bigcup\limits_{i=1}^n
+          \begin{cases}
+            \emptyset &\text{if } L_i \text{ is a constant label}\\
+            \{ \literal{L_{e_i} \sqsubseteq L_i} \} & \text{otherwise}
+          \end{cases}$
+          }
