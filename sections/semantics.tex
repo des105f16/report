@@ -21,6 +21,13 @@ The label environment is called $\iLbl$ and is defined by:
 \end{tabular}
 
 \paragraph{}\noindent
+The function parameters environment is called $\iFunPar$ and is defined by:
+\[
+  %\iFunPar = \iFun \rightharpoonup \mathbf{P}(\iVar \times \mathbb{L})
+  \iFunPar = \iFun \rightharpoonup (\iVar \times \mathbb{L})_1 \cup (\iVar \times \mathbb{L})_2 \cup \dots \cup (\iVar \times \mathbb{L})_n
+\]
+
+\paragraph{}\noindent
 $\iCstr$ is a set of constraints where each $c \in \iCstr$ is on the form:
 \[ l_1 \sqsubseteq l_2 \; | \; l_1, l_2 \in \mathbb{L} \]
 
@@ -36,51 +43,37 @@ $(\Gamma_P, \rightarrow_P, T_P)$, with
 \end{align*}
 
 \paragraph{}\noindent
-$(\Gamma, \rightarrow, T)$, with
+$(\Gamma_S, \rightarrow_S, T_S)$, with
 \begin{align*}
-  \Gamma & = (\iStm \times \iLbl) \cup (\iLbl \times \iCstr) \\
-  T & = (\iLbl \times \iCstr)
+  \Gamma_S & = (\iStm \times \iLbl) \cup (\iLbl \times \iCstr) \\
+  T_S & = (\iLbl \times \iCstr)
 \end{align*}
 
 \noindent
 Where rules are on the form:
-\[ fun \vdash \argpart{S, lbl}{}{(lbl, cstr)} \]
+\[ fun \vdash \argpart{S, lbl}{S}{(lbl, cstr)} \]
+
+
 
 \subsubsection{Program}
 
 \ctrule {PROG-COMP}
-        {\argpart{P_1 \; P_2, lbl}{}{(lbl_2, cstr_1 \cup cstr_2)}}
-        {\argpart{P_1, lbl}{}{(lbl_1, cstr_1)} \quad
-          \argpart{P_2, lbl_1}{}{(lbl_2, cstr_2)}}
+        {\argpart{P_1 \; P_2, lbl, fun}{P}{(lbl_2, cstr_1 \cup cstr_2, fun_2)}}
+        {\argpart{P_1, lbl, fun}{P}{(lbl_1, cstr_1, fun_1)} \quad
+          \argpart{P_2, lbl_1, fun_1}{P}{(lbl_2, cstr_2, fun_2)}}
         {}
-
-\subsubsection{Variable declarations}
-
 \begin{trules}
-  \ctrule{VAR-DECL-EXPR}
-        {\argpart {T \, l \, x \tk = e, lbl} {} {(lbl[x \mapsto l_x], cstr \cup \{ c \})} }
-        {lbl \vdash e \rightarrow_e (cstr, l_e)}
-        {where $l_x = \begin{cases}
-            \vlbl x & \quad \text{if } l = \varepsilon \\
-            l & \quad \text{otherwise}
-          \end{cases}$ \\
-          and $l_\ib = lbl \, \ib$ \\
-          and $c = " \, l_e \sqcup l_\ib \sqsubseteq l_x \, "$ }
-  \trule{VAR-DECL}
-        {\argpart {T \, l \, x, lbl} {} {(lbl[x \mapsto l_x], cstr \cup \{ c \})} }
-        {where $l_x = \begin{cases}
-            \vlbl x & \quad \text{if } l = \varepsilon \\
-            l & \quad \text{otherwise}
-          \end{cases}$ \\
-          and $l_\ib = lbl \, \ib$ \\
-          and $c = "\bot \sqcup l_\ib \sqsubseteq l_x"$ }
+\ctrule {PROG-VAR-DECL}
+        {\argpart {D_V} {P} {(lbl_1, cstr, fun)} }
+        {fun \vdash \argpart{D_V, lbl}{S}{(lbl_1, cstr)}}
+        {}
 \end{trules}
 
 \subsubsection{Function declarations}
 
 \ctrule {FUNC-DECL}
-        {\argpart{T_f \, l_f \, f \tk ( T_1 \, l_1 \, x_1 \tk , T_2 \, l_2 \, x_2 \tk , \dots \tk , T_n \, l_n \, x_n \tk ) S, lbl}{}{(lbl_1, cstr)}}
-        {\argpart{S, lbl_2}{}{(lbl_3, cstr)}}
+        {\argpart{T_f \, l_f \, f \tk ( T_1 \, l_1 \, x_1 \tk , T_2 \, l_2 \, x_2 \tk , \dots \tk , T_n \, l_n \, x_n \tk ) S, lbl, fun}{P}{(lbl_1, cstr, fun_1)}}
+        {\argpart{fun_1 \vdash S, lbl_2}{S}{(lbl_3, cstr)}}
         {where $l_{x_i} = \begin{cases}
           \clbl{x_i} & \quad \text{if } l_i = \varepsilon \\
           l_i & \quad otherwise
@@ -90,70 +83,91 @@ Where rules are on the form:
             l_f & \quad \text{otherwise}
         \end{cases}$ \\
           and $lbl_1 = lbl[f \mapsto l_f']$ \\
-          and $lbl_2 = lbl_1[x_1 \mapsto l_{x_1}, x_2 \mapsto l_{x_2}, \dots, x_n \mapsto l_{x_n}, \ifb \mapsto l_f']$}
+          and $lbl_2 = lbl_1[x_1 \mapsto l_{x_1}, x_2 \mapsto l_{x_2}, \dots, x_n \mapsto l_{x_n}, \ifb \mapsto l_f']$ \\
+          and $fun_1 = fun[f \mapsto ((l_{x_1}, x_1), (l_{x_2}, x_2), \dots, (l_{x_n}, x_n))]$}
 
 \subsubsection{Statements}
 
-  \trule{STM-EMPTY}
-        {\argpart{\varepsilon, lbl}{}{(lbl, \emptyset)}}
+\begin{trules}
+  \ctrule{VAR-DECL-EXPR}
+        {fun \vdash \argpart {T \, l \, x \tk = e, lbl} {S} {(lbl[x \mapsto l_x], cstr \cup \{ c \})} }
+        {lbl, fun \vdash e \rightarrow_e (cstr, l_e)}
+        {where $l_x = \begin{cases}
+            \vlbl x & \quad \text{if } l = \varepsilon \\
+            l & \quad \text{otherwise}
+          \end{cases}$ \\
+          and $l_\ib = lbl \, \ib$ \\
+          and $c = " \, l_e \sqcup l_\ib \sqsubseteq l_x \, "$ }
+  \trule{VAR-DECL}
+        {fun \vdash \argpart {T \, l \, x, lbl} {S} {(lbl[x \mapsto l_x], cstr \cup \{ c \})} }
+        {where $l_x = \begin{cases}
+            \vlbl x & \quad \text{if } l = \varepsilon \\
+            l & \quad \text{otherwise}
+          \end{cases}$ \\
+          and $l_\ib = lbl \, \ib$ \\
+          and $c = "\bot \sqcup l_\ib \sqsubseteq l_x"$ }
+\end{trules}
+
+  \trule{EMPTY}
+        {fun \vdash \argpart{\varepsilon, lbl}{S}{(lbl, \emptyset)}}
         {}
-  \ctrule{STM-EXPR}
-        {\argpart{e, lbl}{}{(lbl, cstr)}}
-        {lbl \vdash e \rightarrow_e (cstr, l_e)}
+  \ctrule{EXPR}
+        {fun \vdash \argpart{e, lbl}{S}{(lbl, cstr)}}
+        {lbl, fun \vdash e \rightarrow_e (cstr, l_e)}
         {}
-  \ctrule{STM-COMP}
-        {\argpart{S_1 \; S_2, lbl}{}{(lbl_2, cstr_1 \cup cstr_2)}}
-        {\argpart{S_1, lbl}{}{(lbl_1, cstr_1)} \quad
-          \argpart{S_2, lbl_1}{}{(lbl_2, cstr_2)}}
+  \ctrule{COMP}
+        {fun \vdash \argpart{S_1 \; S_2, lbl}{S}{(lbl_2, cstr_1 \cup cstr_2)}}
+        {fun \vdash \argpart{S_1, lbl}{S}{(lbl_1, cstr_1)} \quad
+          fun \vdash \argpart{S_2, lbl_1}{S}{(lbl_2, cstr_2)}}
         {}
-  \ctrule{STM-WHILE}
-        {\argpart{\tk{while} \tk ( e \tk ) S}{}{(lbl, cstr_1 \cup cstr_2 \cup \{ c \})}}
-        {lbl_1 \vdash e \rightarrow_e (cstr_1, l_e) \quad
-          \argpart{S, lbl_1}{}{(lbl_2, cstr_2)}}
+  \ctrule{WHILE}
+        {fun \vdash \argpart{\tk{while} \tk ( e \tk ) S, lbl}{S}{(lbl, cstr_1 \cup cstr_2 \cup \{ c \})}}
+        {lbl_1, fun \vdash e \rightarrow_e (cstr_1, l_e) \quad
+          fun \vdash \argpart{S, lbl_1}{S}{(lbl_2, cstr_2)}}
         {where $l_\ib = lbl \, \ib$ \\
           and $l_w = next$ \\
           and $lbl_1 = lbl[\ib \mapsto l_w]$ \\
           and $c = " \, l_e \sqcup l_\ib \sqsubseteq l_w \, "$}
-  \ctrule{STM-IF}
-        {\argpart{\tk{if} \tk ( e \tk ) S, lbl}{}{(lbl, cstr_1 \cup cstr_2 \cup \{ c \})}}
-        {lbl \vdash e \rightarrow_e (cstr_1, l_e) \quad
-          \argpart{S, lbl[\ib \mapsto l_{if}]}{}{(lbl_1, cstr_2)}}
+  \ctrule{IF}
+        {fun \vdash \argpart{\tk{if} \tk ( e \tk ) S, lbl}{S}{(lbl, cstr_1 \cup cstr_2 \cup \{ c \})}}
+        {lbl, fun \vdash e \rightarrow_e (cstr_1, l_e) \quad
+          fun \vdash \argpart{S, lbl[\ib \mapsto l_{if}]}{S}{(lbl_1, cstr_2)}}
         {where $l_\ib = lbl \, \ib$ \\
           and $l_{if} = next$ \\
           and $c = " \, l_e \sqcup l_\ib \sqsubseteq l_{if} \, "$}
-  \ctrule{STM-IF-ELSE}
-        {\argpart{\tk{if} \tk ( e \tk ) S_1 \tk{else} S_2, lbl}{}{(lbl, cstr_1 \cup cstr_2 \cup cstr_3 \cup \{ c \})}}
-        {lbl \vdash e \rightarrow_e (cstr_1, l_e) \quad
-          \argpart{S_1, lbl_1}{}{(lbl_2, cstr_2)} \quad
-          \argpart{S_2, lbl_1}{}{(lbl_3, cstr_3)}}
+  \ctrule{IF-ELSE}
+        {fun \vdash \argpart{\tk{if} \tk ( e \tk ) S_1 \tk{else} S_2, lbl}{S}{(lbl, cstr_1 \cup cstr_2 \cup cstr_3 \cup \{ c \})}}
+        {lbl, fun \vdash e \rightarrow_e (cstr_1, l_e) \quad
+          fun \vdash \argpart{S_1, lbl_1}{S}{(lbl_2, cstr_2)} \quad
+          fun \vdash \argpart{S_2, lbl_1}{S}{(lbl_3, cstr_3)}}
           {where $l_\ib = lbl \, \ib$ \\
             and $l_{if} = next$ \\
             and $lbl_1 = lbl[\ib \mapsto l_{if}]$ \\
             and $c = " \, l_e \sqcup l_\ib \sqsubseteq l_{if} \, "$}
-  \ctrule{STM-ASS}
-        {\argpart{x \tk = e, lbl}{}{(lbl, cstr \cup \{ c \})}}
-        {lbl \vdash e \rightarrow_e (cstr, l_e)}
+  \ctrule{ASS}
+        {fun \vdash \argpart{x \tk = e, lbl}{S}{(lbl, cstr \cup \{ c \})}}
+        {lbl, fun \vdash e \rightarrow_e (cstr, l_e)}
         {where $l_\ib = lbl \, \ib$ \\
           and $c = " \, l_e \sqcup l_\ib \sqsubseteq l_x \, "$ }
-  \ctrule{STM-RET-EXPR}
-        {\argpart{\tk{return} e, lbl}{}{(lbl, cstr \cup \{ c \})}}
-        {lbl \vdash e \rightarrow_e (cstr, l_e)}
+  \ctrule{RET-EXPR}
+        {fun \vdash \argpart{\tk{return} e, lbl}{S}{(lbl, cstr \cup \{ c \})}}
+        {lbl, fun \vdash e \rightarrow_e (cstr, l_e)}
         {where $l_\ib = lbl \, \ib$ \\
           and $l_\ifb = lbl \, \ifb$ \\
           and $c = " \, l_e \sqcup l_\ib \sqsubseteq l_\ifb \, "$}
-  \trule{STM-RET}
-        {\argpart{\tk{return}, lbl}{}{(lbl, \emptyset)}}
+  \trule{RET}
+        {fun \vdash \argpart{\tk{return}, lbl}{S}{(lbl, \emptyset)}}
         {}
-  \ctrule{STM-ACTS-THIS}
-        {\argpart{\tk{this} \tk{-->?} p_1 \tk , p_2 \tk , \dots \tk , p_n \; S, lbl}{}{(lbl, cstr)}}
-        {\argpart{S, lbl[\ia \mapsto l_\ia']}{}{(lbl_1, cstr)}}
+  \ctrule{ACTS-THIS}
+        {fun \vdash \argpart{\tk{this} \tk{-->?} p_1 \tk , p_2 \tk , \dots \tk , p_k \; S, lbl}{S}{(lbl, cstr)}}
+        {fun \vdash \argpart{S, lbl[\ia \mapsto l_\ia']}{S}{(lbl_1, cstr)}}
         {where $l_\ia = lbl \, \ia$ \\
-          and $l_\ia' = l_\ia \sqcup \mathlarger\sqcupl_{i=1}^n \, \{ p_i \rightarrow \emptyset \}$}
-    \ctrule{STM-ACTS-CALLER}
-        {\argpart{\tk{caller} \tk{-->?} p_1 \tk , p_2 \tk , \dots \tk , p_n \; S, lbl}{}{(lbl, cstr)}}
-        {\argpart{S, lbl[\ia \mapsto l_\ia']}{}{(lbl_1, cstr)}}
+          and $l_\ia' = l_\ia \sqcup \mathlarger\sqcupl_{i=1}^k \, \{ p_i \rightarrow \emptyset \}$}
+    \ctrule{ACTS-CALLER}
+        {fun \vdash \argpart{\tk{caller} \tk{-->?} p_1 \tk , p_2 \tk , \dots \tk , p_k \; S, lbl}{S}{(lbl, cstr)}}
+        {fun \vdash \argpart{S, lbl[\ia \mapsto l_\ia']}{S}{(lbl_1, cstr)}}
         {where $l_\ia = lbl \, \ia$ \\
-          and $l_\ia' = l_\ia \sqcup \mathlarger\sqcupl_{i=1}^n \, \{ p_i \rightarrow \emptyset \}$}
+          and $l_\ia' = l_\ia \sqcup \mathlarger\sqcupl_{i=1}^k \, \{ p_i \rightarrow \emptyset \}$}
 
 \subsection{Semantics for deriving labels for expressions}
 $(\Gamma_e, \rightarrow_e, T_e)$, with
@@ -161,53 +175,100 @@ $(\Gamma_e, \rightarrow_e, T_e)$, with
   \Gamma_e =  & \;      \iExp \cup (\iCstr \times \mathbb{L}) \\
   T_e =       & \; (\iCstr \times \mathbb{L})
 \end{align*}
-Where transitions are of the form $lbl \vdash e \rightarrow_e (cstr, l)$.
+Where transitions are of the form $lbl, fun \vdash e \rightarrow_e (cstr, l)$.
 
 \subsubsection{Declassification}
 \begin{trules}
   \ctrule{DEC}
-        {lbl \vdash \tk{<|} e \tk{|>} \rightarrow_e (cstr \cup \{ c \}, l_d)}
-        {lbl \vdash e \rightarrow_e (cstr, l_e)}
+        {lbl, fun \vdash \tk{<|} e \tk{|>} \rightarrow_e (cstr \cup \{ c \}, l_d)}
+        {lbl, fun \vdash e \rightarrow_e (cstr, l_e)}
         {where $l_\ia = lbl \, \ia$ \\
           and $l_{d} = next$ \\
           and $c = " \, l_e \sqsubseteq l_d \sqcup l_\ia \, "$}
   \ctrule{DEC-EXPL}
-        {lbl \vdash \tk{<|} e \tk , l \tk{|>} \rightarrow_e (cstr \cup \{ c \}, l)}
-        {lbl \vdash e \rightarrow_e (cstr, l_e)}
+        {lbl, fun \vdash \tk{<|} e \tk , l \tk{|>} \rightarrow_e (cstr \cup \{ c \}, l)}
+        {lbl, fun \vdash e \rightarrow_e (cstr, l_e)}
         {where $l_\ia = lbl \, \ia$ \\
           and $l_d = next$ \\
           and $c = " \, l_e \sqsubseteq l \sqcup l_\ia \, "$}
 \end{trules}
 
+\subsubsection{Arithmetics}
+\begin{trules}
+  \trule  {VAR}
+          {lbl, fun \vdash x \rightarrow_e (\emptyset, l)}
+          {where $lbl \, x = l$}
+  \trule  {CONST}
+          {lbl, fun \vdash c \rightarrow_e (\emptyset, \bot)}
+          {}
+  \ctrule {BINARY-OP}
+          {lbl, fun \vdash e_1 \; op_b \; e_2 \rightarrow_e (cstr_1 \cup cstr_2, l_1 \sqcup l_2)}
+          {lbl, fun \vdash e_1 \rightarrow_e (cstr_1, l_1) \;\; lbl, fun \vdash e_2 \rightarrow_e (cstr_2, l_2)}
+          {}
+  \ctrule {UNARY-OP}
+          {lbl, fun \vdash op_u \; e \rightarrow_e (cstr, l)}
+          {lbl, fun \vdash e \rightarrow_e (cstr, l)}
+          {}
+  \ctrule {PAREN}
+          {lbl, fun \vdash \tk ( e \tk ) \rightarrow_e (cstr, l)}
+          {lbl, fun \vdash e \rightarrow_e (cstr, l)}
+          {}
+\end{trules}
+
 \subsubsection{Function call}
+
+$(\mathbb{F}, \rightarrow_F, \mathbb{F})$, 
+
+where transitions are of the form $lbl \vdash l_1 \rightarrow_F l_2$.
+%policy, var, const, low, up, join, meet
+
+\begin{trules}
+  \trule {POLICY}
+         {lbl \vdash \literal{p_0 \rightarrow p_1, p_2, \dots, p_n} \rightarrow_F \literal{p_0 \rightarrow p_1, p_2, \dots, p_n}}
+         {}
+  \trule {CONSTANT}
+         {lbl \vdash \clbl x \rightarrow_F lbl \, x}
+         {}
+  \trule {VARIABLE}
+         {lbl \vdash \vlbl x \rightarrow_F x}
+         {}
+  \ctrule {JOIN}
+         {lbl \vdash \literal{l_1 \sqcup l_2} \rightarrow_F \literal{l_1' \sqcup l_2'}}
+         {lbl \vdash l_1 \rightarrow_F l_1' \quad l_2 \rightarrow_F l_2'}
+         {}
+  \ctrule {MEET}
+         {lbl \vdash \literal{l_1 \sqcap l_2} \rightarrow_F \literal{l_1' \sqcap l_2'}}
+         {lbl \vdash l_1 \rightarrow_F l_1' \quad l_2 \rightarrow_F l_2'}
+         {}
+  \trule {LOWER-BOUND}
+         {lbl \vdash \bot \rightarrow_F \bot}
+         {}
+  \trule {UPPER-BOUND}
+         {lbl \vdash \top \rightarrow_F \top}
+         {}
+\end{trules}
+
 \begin{trules}
   \ctrule {FUN-CALL-LIB}
-          {lbl \vdash f \tk ( e_1 \tk , e_2 \tk , \dots \tk , e_n \tk ) \rightarrow_e (cstr', l')}
-          {lbl \vdash e_1 \rightarrow_e (cstr_1, l_{e_1}) \quad e_2 \rightarrow_e (cstr_2, l_{e_2}) \quad
+          {lbl, fun \vdash f \tk ( e_1 \tk , e_2 \tk , \dots \tk , e_n \tk ) \rightarrow_e (cstr', l')}
+          {lbl, fun \vdash e_1 \rightarrow_e (cstr_1, l_{e_1}) \quad e_2 \rightarrow_e (cstr_2, l_{e_2}) \quad
             \dots \quad e_n \rightarrow_e (cstr_n, l_{e_n})}
           {if $lbl \, f = \emptyset$ \\
             and $l' = \mathlarger\sqcupl_{i=1}^n l_{e_i}$ \\
             and $cstr' = \bigcup\limits_{i=1}^n cstr_i$}
-\end{trules}
-
-\subsubsection{Arithmetics}
-\begin{trules}
-  \trule  {VAR}
-          {lbl \vdash x \rightarrow_e (\emptyset, l)}
-          {where $lbl \, x = l$}
-  \trule  {CONST}
-          {lbl \vdash c \rightarrow_e (\emptyset, \bot)}
-          {}
-  \ctrule {BINARY-OP}
-          {lbl \vdash e_1 \; op_b \; e_2 \rightarrow_e (cstr_1 \cup cstr_2, l_1 \sqcup l_2)}
-          {lbl \vdash e_1 \rightarrow_e (cstr_1, l_1) \;\; lbl \vdash e_2 \rightarrow_e (cstr_2, l_2)}
-          {}
-  \ctrule {UNARY-OP}
-          {lbl \vdash op_u \; e \rightarrow_e (cstr, l)}
-          {lbl \vdash e \rightarrow_e (cstr, l)}
-          {}
-  \ctrule {PAREN}
-          {lbl \vdash \tk ( e \tk ) \rightarrow_e (cstr, l)}
-          {lbl \vdash e \rightarrow_e (cstr, l)}
-          {}
+  \ctrule {FUN-CALL}
+          {lbl, fun \vdash f \tk{<{}<{}<} p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{>{}>{}>} \tk ( e_1 \tk , e_2 \tk , \dots \tk , e_n \tk ) \rightarrow_e (cstr_a \cup cstr_p, l_f')}
+          {\splitfrac
+            {lbl, fun \vdash e_1 \rightarrow_e (cstr_1, l_{e_1}) \quad e_2 \rightarrow_e (cstr_2, l_{e_2}) \quad \dots \quad e_n \rightarrow_e (cstr_n, l_{e_n})}
+            {lbl' \vdash l_f \rightarrow_F l_f'}}
+          {where $l_f = lbl \, f$ \\
+            and $((l_1, x_1), (l_2, x_2), \dots, (l_n, x_n)) = fun \, f$ \\
+            and $lbl' = lbl[x_1 \mapsto l_{e_1}, x_2 \mapsto l_{e_2}, \dots, x_n \mapsto l_{e_n}]$ \\
+            and $cstr_a = \bigcup\limits_{i=1}^n cstr_i$ \\
+            and $cstr_p = \bigcup\limits_{i=1}^n
+            \begin{cases}
+              \emptyset &\text{if } l_i \text{ is a constant label}\\
+              \{ \literal{l_{e_i} \sqsubseteq l_i} \} & \text{otherwise}
+            \end{cases}$
+            }
 \end{trules}
