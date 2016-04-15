@@ -53,6 +53,8 @@ $(\Gamma_S, \rightarrow_S, T_S)$, with
 Where rules are on the form:
 \[ fun \vdash \argpart{S, lbl}{S}{(lbl, cstr)} \]
 
+
+
 \subsubsection{Program}
 
 \ctrule {PROG-COMP}
@@ -157,15 +159,15 @@ Where rules are on the form:
         {fun \vdash \argpart{\tk{return}, lbl}{S}{(lbl, \emptyset)}}
         {}
   \ctrule{ACTS-THIS}
-        {fun \vdash \argpart{\tk{this} \tk{-->?} p_1 \tk , p_2 \tk , \dots \tk , p_n \; S, lbl}{S}{(lbl, cstr)}}
+        {fun \vdash \argpart{\tk{this} \tk{-->?} p_1 \tk , p_2 \tk , \dots \tk , p_k \; S, lbl}{S}{(lbl, cstr)}}
         {fun \vdash \argpart{S, lbl[\ia \mapsto l_\ia']}{S}{(lbl_1, cstr)}}
         {where $l_\ia = lbl \, \ia$ \\
-          and $l_\ia' = l_\ia \sqcup \mathlarger\sqcupl_{i=1}^n \, \{ p_i \rightarrow \emptyset \}$}
+          and $l_\ia' = l_\ia \sqcup \mathlarger\sqcupl_{i=1}^k \, \{ p_i \rightarrow \emptyset \}$}
     \ctrule{ACTS-CALLER}
-        {fun \vdash \argpart{\tk{caller} \tk{-->?} p_1 \tk , p_2 \tk , \dots \tk , p_n \; S, lbl}{S}{(lbl, cstr)}}
+        {fun \vdash \argpart{\tk{caller} \tk{-->?} p_1 \tk , p_2 \tk , \dots \tk , p_k \; S, lbl}{S}{(lbl, cstr)}}
         {fun \vdash \argpart{S, lbl[\ia \mapsto l_\ia']}{S}{(lbl_1, cstr)}}
         {where $l_\ia = lbl \, \ia$ \\
-          and $l_\ia' = l_\ia \sqcup \mathlarger\sqcupl_{i=1}^n \, \{ p_i \rightarrow \emptyset \}$}
+          and $l_\ia' = l_\ia \sqcup \mathlarger\sqcupl_{i=1}^k \, \{ p_i \rightarrow \emptyset \}$}
 
 \subsection{Semantics for deriving labels for expressions}
 $(\Gamma_e, \rightarrow_e, T_e)$, with
