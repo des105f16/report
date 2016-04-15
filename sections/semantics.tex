@@ -232,13 +232,12 @@ Where transitions are of the form $\ienvL, \ienvP \vdash e \rightarrow_e (\icstr
         {\ienvL, \ienvP \vdash \tk{<|} e \tk , l \tk{|>} \rightarrow_e (\icstr \cup \{ c \}, L)}
         {\ienvL \vdash l \rightarrow L \quad \ienvL, \ienvP \vdash e \rightarrow_e (\icstr, L_e)}
         {where $L_\ia = \ienvL \, \ia$ \\
-          and $L_d = next$ \\
           and $c = " \, L_e \sqsubseteq L \sqcup L_\ia \, "$}
 \end{trules}
 
 \subsubsection{Arithmetics}
 \begin{trules}
-  \trule  {VAR}
+  \trule  {VAR-AKA-THE-ØL-RULE}
           {\ienvL, \ienvP \vdash x \rightarrow_e (\emptyset, L)}
           {where $\ienvL \, x = L$}
   \trule  {CONST}
