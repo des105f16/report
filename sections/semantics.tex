@@ -137,8 +137,9 @@ Where rules are one of the following two forms:
           \end{cases}$ \\
           and $L_\ib = \ienvL \, \ib$ \\
           and $c = " \, L_e \sqcup L_\ib \sqsubseteq L_x \, "$ }
-  \trule{VAR-DECL}
+  \ctrule{VAR-DECL}
         {\ienvP \vdash \argpart {T \, l \, x, \ienvL} {S} {(\ienvL[x \mapsto L_x], \icstr \cup \{ c \})} }
+        {\ienvL \vdash l \rightarrow L}
         {where $L_x = \begin{cases}
             \vlbl x & \quad \text{if } L = \varepsilon \\
             L & \quad \text{otherwise}
