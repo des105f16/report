@@ -82,7 +82,7 @@ Where rules are on the form:
         \end{cases}$ \\
           and $lbl_1 = lbl[f \mapsto l_f']$ \\
           and $lbl_2 = lbl_1[x_1 \mapsto l_{x_1}, x_2 \mapsto l_{x_2}, \dots, x_n \mapsto l_{x_n}, \ifb \mapsto l_f']$ \\
-          and $fun_1 = fun[f \mapsto ((l_1, x_1), (l_2, x_2), \dots, (l_n, x_n))]$}
+          and $fun_1 = fun[f \mapsto ((l_{x_1}, x_1), (l_{x_2}, x_2), \dots, (l_{x_n}, x_n))]$}
 
 \subsubsection{Statements}
 
@@ -214,6 +214,38 @@ Where transitions are of the form $lbl, fun \vdash e \rightarrow_e (cstr, l)$.
 \end{trules}
 
 \subsubsection{Function call}
+
+$(\mathbb{F}, \rightarrow_F, \mathbb{F})$, 
+
+where transitions are of the form $lbl \vdash l_1 \rightarrow_F l_2$.
+%policy, var, const, low, up, join, meet
+
+\begin{trules}
+  \trule {POLICY}
+         {lbl \vdash \literal{p_0 \rightarrow p_1, p_2, \dots, p_n} \rightarrow_F \literal{p_0 \rightarrow p_1, p_2, \dots, p_n}}
+         {}
+  \trule {CONSTANT}
+         {lbl \vdash \clbl x \rightarrow_F lbl \, x}
+         {}
+  \trule {VARIABLE}
+         {lbl \vdash \vlbl x \rightarrow_F x}
+         {}
+  \ctrule {JOIN}
+         {lbl \vdash \literal{l_1 \sqcup l_2} \rightarrow_F \literal{l_1' \sqcup l_2'}}
+         {lbl \vdash l_1 \rightarrow_F l_1' \quad l_2 \rightarrow_F l_2'}
+         {}
+  \ctrule {MEET}
+         {lbl \vdash \literal{l_1 \sqcap l_2} \rightarrow_F \literal{l_1' \sqcap l_2'}}
+         {lbl \vdash l_1 \rightarrow_F l_1' \quad l_2 \rightarrow_F l_2'}
+         {}
+  \trule {LOWER-BOUND}
+         {lbl \vdash \bot \rightarrow_F \bot}
+         {}
+  \trule {UPPER-BOUND}
+         {lbl \vdash \top \rightarrow_F \top}
+         {}
+\end{trules}
+
 \begin{trules}
   \ctrule {FUN-CALL-LIB}
           {lbl, fun \vdash f \tk ( e_1 \tk , e_2 \tk , \dots \tk , e_n \tk ) \rightarrow_e (cstr', l')}
@@ -223,11 +255,18 @@ Where transitions are of the form $lbl, fun \vdash e \rightarrow_e (cstr, l)$.
             and $l' = \mathlarger\sqcupl_{i=1}^n l_{e_i}$ \\
             and $cstr' = \bigcup\limits_{i=1}^n cstr_i$}
   \ctrule {FUN-CALL}
-          {lbl, fun \vdash f \tk{<{}<{}<} p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{>{}>{}>} \tk ( e_1 \tk , e_2 \tk , \dots \tk , e_n \tk ) \rightarrow_e (cstr', l')}
-          {lbl, fun \vdash e_1 \rightarrow_e (cstr_1, l_{e_1}) \quad e_2 \rightarrow_e (cstr_2, l_{e_2}) \quad
-            \dots \quad e_n \rightarrow_e (cstr_n, l_{e_n})}
+          {lbl, fun \vdash f \tk{<{}<{}<} p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{>{}>{}>} \tk ( e_1 \tk , e_2 \tk , \dots \tk , e_n \tk ) \rightarrow_e (cstr_a \cup cstr_p, l_f')}
+          {\splitfrac
+            {lbl, fun \vdash e_1 \rightarrow_e (cstr_1, l_{e_1}) \quad e_2 \rightarrow_e (cstr_2, l_{e_2}) \quad \dots \quad e_n \rightarrow_e (cstr_n, l_{e_n})}
+            {lbl' \vdash l_f \rightarrow_F l_f'}}
           {where $l_f = lbl \, f$ \\
             and $((l_1, x_1), (l_2, x_2), \dots, (l_n, x_n)) = fun \, f$ \\
-            and $l' = \mathlarger\sqcupl_{i=1}^n l_{e_i}$ \\
-            and $cstr' = \bigcup\limits_{i=1}^n cstr_i$}
+            and $lbl' = lbl[x_1 \mapsto l_{e_1}, x_2 \mapsto l_{e_2}, \dots, x_n \mapsto l_{e_n}]$ \\
+            and $cstr_a = \bigcup\limits_{i=1}^n cstr_i$ \\
+            and $cstr_p = \bigcup\limits_{i=1}^n
+            \begin{cases}
+              \emptyset &\text{if } l_i \text{ is a constant label}\\
+              \{ \literal{l_{e_i} \sqsubseteq l_i} \} & \text{otherwise}
+            \end{cases}$
+            }
 \end{trules}
