@@ -53,7 +53,39 @@ $(\Gamma_S, \rightarrow_S, T_S)$, with
 Where rules are on the form:
 \[ \ienvP \vdash \argpart{S, \ienvL}{S}{(\ienvL, \icstr)} \]
 
+\paragraph{}\noindent
+$(\Gamma_L, \rightarrow_L, T_L)$, with
+\begin{align*}
+  \Gamma_L & = \iLbl \cup \iPol \cup \mathbb{L} \cup \varepsilon \\
+  T_L & = \mathbb{L} \cup \varepsilon
+\end{align*}
 
+\noindent
+Where rules are one of the following two forms:
+\[ \ienvL \vdash l \rightarrow_L L \]
+\[ \ienvL \vdash l \rightarrow_L \varepsilon \]
+
+\subsubsection{Label declarations}
+\begin{trules}
+  \ctrule{LABEL}
+        {\ienvL \vdash \tk{\{\{} pol \tk{\}\}} \rightarrow_L L}
+        {\ienvL \vdash pol \rightarrow_L L}
+        {}
+  \trule{LABEL-EMPTY}
+        {\ienvL \vdash \varepsilon \rightarrow_L \varepsilon}
+        {}
+  \ctrule{POLICY-COMP}
+        {\ienvL \vdash pol_1 \tk ; pol_2 \rightarrow_L L_1 \sqcup L_2}
+        {\ienvL \vdash pol_1 \rightarrow_L L_1 \quad pol_2 \rightarrow_L L_2}
+        {}
+  \trule{POLICY-VAR}
+        {\ienvL \vdash x \rightarrow_L L}
+        {where $\ienvL \, x = L$}
+  \trule{POLICY-PRINCIPALS}
+        {\ienvL \vdash p_0 \tk{->} p_1 \tk , p_2 \tk , \dots \tk , p_k \rightarrow_L L}
+        {where $p_i' = \mathcal{P}(p_i)$, for $0 \leq i \leq k$ \\
+          and $L = \{p_0' \rightarrow p_1', p_2', \dots, p_k'\}$}
+\end{trules}
 
 \subsubsection{Program}
 
