@@ -202,14 +202,14 @@ Where rules are one of the following two forms:
         {\ienvP \vdash \argpart{\tk{return}, \ienvL}{S}{(\ienvL, \emptyset)}}
         {}
   \ctrule{ACTS-THIS}
-        {\ienvP \vdash \argpart{\tk{this} \tk{-->?} p_1 \tk , p_2 \tk , \dots \tk , p_k \; S, \ienvL}{S}{(\ienvL, \icstr)}}
+        {\ienvP \vdash \argpart{\tk{this} \tk{-{}->?} p_1 \tk , p_2 \tk , \dots \tk , p_k \; S, \ienvL}{S}{(\ienvL, \icstr)}}
         {\ienvP \vdash \argpart{S, \ienvL[\ia \mapsto L_\ia']}{S}{(\ienvL_1, \icstr)}}
-        {where $L_\ia = \ienvL \, \ia$ \\
+        {where $L_\ia = \ienvL \, \ia$ \\[0.5em]
           and $L_\ia' = L_\ia \sqcup \mathlarger\sqcupl_{i=1}^k \, \{ p_i \rightarrow \emptyset \}$}
     \ctrule{ACTS-CALLER}
-        {\ienvP \vdash \argpart{\tk{caller} \tk{-->?} p_1 \tk , p_2 \tk , \dots \tk , p_k \; S, \ienvL}{S}{(\ienvL, \icstr)}}
+        {\ienvP \vdash \argpart{\tk{caller} \tk{-{}->?} p_1 \tk , p_2 \tk , \dots \tk , p_k \; S, \ienvL}{S}{(\ienvL, \icstr)}}
         {\ienvP \vdash \argpart{S, \ienvL[\ia \mapsto L_\ia']}{S}{(\ienvL_1, \icstr)}}
-        {where $L_\ia = \ienvL \, \ia$ \\
+        {where $L_\ia = \ienvL \, \ia$ \\[0.5em]
           and $L_\ia' = L_\ia \sqcup \mathlarger\sqcupl_{i=1}^k \, \{ p_i \rightarrow \emptyset \}$}
 
 \subsection{Semantics for deriving labels for expressions}
