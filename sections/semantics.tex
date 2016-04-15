@@ -91,8 +91,10 @@ Where rules are one of the following two forms:
 
 \ctrule {PROG-COMP}
         {\argpart{P_1 \; P_2, \ienvL, \ienvP}{P}{(\ienvL_2, \icstr_1 \cup \icstr_2, \ienvP_2)}}
-        {\argpart{P_1, \ienvL, \ienvP}{P}{(\ienvL_1, \icstr_1, \ienvP_1)} \quad
-          \argpart{P_2, \ienvL_1, \ienvP_1}{P}{(\ienvL_2, \icstr_2, \ienvP_2)}}
+        {\begin{gathered}
+          \argpart{P_1, \ienvL, \ienvP}{P}{(\ienvL_1, \icstr_1, \ienvP_1)} \\
+          \argpart{P_2, \ienvL_1, \ienvP_1}{P}{(\ienvL_2, \icstr_2, \ienvP_2)}
+        \end{gathered}}
         {}
 \begin{trules}
 \ctrule {PROG-VAR-DECL}
@@ -105,8 +107,10 @@ Where rules are one of the following two forms:
 
 \ctrule {FUNC-DECL}
         {\argpart{T_f \, l_f \, f \tk ( T_1 \, l_1 \, x_1 \tk , T_2 \, l_2 \, x_2 \tk , \dots \tk , T_n \, l_n \, x_n \tk ) S, \ienvL, \ienvP}{P}{(\ienvL'', \icstr, \ienvP')}}
-        {\splitfrac{\ienvL \vdash l_1 \rightarrow_L L_1 \quad l_2 \rightarrow_L L_2 \quad \dots \quad l_n \rightarrow_L L_n}
-          {\ienvL' \vdash l_f \rightarrow_L L_f \quad \ienvP' \vdash \argpart{S, \ienvL'''}{S}{(\ienvL'''', \icstr)}}}
+        {\begin{gathered}
+          \ienvL \vdash l_1 \rightarrow_L L_1 \quad l_2 \rightarrow_L L_2 \quad \dots \quad l_n \rightarrow_L L_n \\
+          \ienvL' \vdash l_f \rightarrow_L L_f \quad \ienvP' \vdash \argpart{S, \ienvL'''}{S}{(\ienvL'''', \icstr)}
+        \end{gathered}}
         {where $L_{x_i} = \begin{cases}
           \clbl{x_i} & \quad \text{if } L_i = \varepsilon \\
           L_i & \quad otherwise
@@ -173,9 +177,11 @@ Where rules are one of the following two forms:
           and $c = " \, L_e \sqcup L_\ib \sqsubseteq L_{if} \, "$}
   \ctrule{IF-ELSE}
         {\ienvP \vdash \argpart{\tk{if} \tk ( e \tk ) S_1 \tk{else} S_2, \ienvL}{S}{(\ienvL, \icstr_1 \cup \icstr_2 \cup \icstr_3 \cup \{ c \})}}
-        {\splitfrac{\ienvL, \ienvP \vdash e \rightarrow_e (\icstr_1, L_e)}
-          {\ienvP \vdash \argpart{S_1, \ienvL_1}{S}{(\ienvL_2, \icstr_2)} \quad
-          \ienvP \vdash \argpart{S_2, \ienvL_1}{S}{(\ienvL_3, \icstr_3)}}}
+        {\begin{gathered}
+          \ienvL, \ienvP \vdash e \rightarrow_e (\icstr_1, L_e) \\
+          \ienvP \vdash \argpart{S_1, \ienvL_1}{S}{(\ienvL_2, \icstr_2)} \\
+            \ienvP \vdash \argpart{S_2, \ienvL_1}{S}{(\ienvL_3, \icstr_3)}
+        \end{gathered}}
           {where $L_\ib = \ienvL \, \ib$ \\
             and $L_{if} = next$ \\
             and $\ienvL_1 = \ienvL[\ib \mapsto L_{if}]$ \\
@@ -286,8 +292,8 @@ where transitions are of the form $\ienvL \vdash L_1 \rightarrow_F L_2$.
 
 \ctrule {FUN-CALL-LIB}
         {\ienvL, \ienvP \vdash f \tk ( e_1 \tk , e_2 \tk , \dots \tk , e_n \tk ) \rightarrow_e (\icstr', L')}
-        {\ienvL, \ienvP \vdash e_1 \rightarrow_e (\icstr_1, L_{e_1}) \quad e_2 \rightarrow_e (\icstr_2, L_{e_2}) \quad
-          \dots \quad e_n \rightarrow_e (\icstr_n, L_{e_n})}
+        {\ienvL, \ienvP \vdash e_1 \rightarrow_e (\icstr_1, L_{e_1}) \quad e_2 \rightarrow_e (\icstr_2, L_{e_2})
+          \dots e_n \rightarrow_e (\icstr_n, L_{e_n})}
         {if $\ienvL \, f = \emptyset$ \\
           and $L' = \mathlarger\sqcupl_{i=1}^n L_{e_i}$ \\
           and $\icstr' = \bigcup\limits_{i=1}^n \icstr_i$}
