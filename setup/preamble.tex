@@ -103,6 +103,10 @@
 }
 \let\cleardoublepage\clearemptydoublepage
 
+% Use newline for paragraphs
+\newcommand{\myparagraph}[1]{\paragraph{#1}\mbox{}\\}
+\usepackage[parfill]{parskip}
+
 % Change the headers and footers
 \usepackage{fancyhdr}
 \pagestyle{fancy}
