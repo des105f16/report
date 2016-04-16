@@ -71,6 +71,7 @@
 \end{align}}
 
 \newenvironment{trules}{%
+  \allowdisplaybreaks
 	\renewcommand{\trule}[3]{\truleHelper{##1}{##2}{##3} \\[1em] \nonumber}
 	\renewcommand{\ctrule}[4]{\ctruleHelper{##1}{##2}{##3}{##4} \\[1em] \nonumber}
   \align%

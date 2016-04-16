@@ -1,34 +1,63 @@
 % !TEX root = ../master.tex
 \section{Abstract syntax}
+Below follows an abstract syntax that describes the structure of our grammar.
+The grammar is made to represent the C programming language in both structure and actual syntax.
+The latter is not directly apparent here, as some syntactical details have been removed to achieve a higher level of abstraction.
 
-\begin{align*}
-  P       & \in \iProg \text{ -- Programs}\\
-  D_V     & \in \iDecv \text{ -- Variable declarations}\\
-  x       & \in \iVar \text{ -- Variables}\\
-  D_F     & \in \iDecf \text{ -- Function declarations}\\
-  f       & \in \iFun \text{ -- Functions}\\
-  p       & \in \iPrin \text{ -- Principals}\\
-  S       & \in \iStm \text{ -- Statements}\\
-  e       & \in \iExp \text{ -- Expressions}\\
-  l       & \in \iLbl \text{ -- Label declaration}\\
-  pol     & \in \iPol \text{ -- Policy declaration}\\
-  op_b    & \in \{ \tk + ,  \tk - ,  \tk * ,  \tk / ,  \tk \% ,  \tk{||} ,  \tk{\&\&} ,  \tk < ,  \tk > ,  \tk{==} ,  \tk{<=} ,  \tk{>=} \} \\
-  op_u    & \in \{ \tk ! ,  \tk - \} \\
-  K       & \in \{ \tk{true}, \tk{false} \} \cup \mathbf{Num} \text{ -- Boolean or integer}
-\end{align*}
-\begin{align*}
-  P         & ::= D_V \gp D_F \gp P_1 \; P_2 \\
-  D_V       & ::= T \, l \, x \tk = e \gp T \, l x \\
-  D_F       & ::= T_f \, l_f \, f \tk ( T_1 \, l_1 \, x_1 \tk , T_2 \, l_2 \, x_2 \tk , \dots \tk , T_n \, l_n \, x_n \tk ) S \\
-  S         & ::= e \gp S_1 \; S_2 \gp \varepsilon \\
-            & \gp D_V \\
-            & \gp \tk{while} \tk ( e \tk ) S \gp \tk{if} \tk ( e \tk ) S \gp \tk{if} \tk ( e \tk ) S_1 \tk{else} S_2 \\
-            & \gp x \tk = e \\
-            & \gp \tk{return} e \gp \tk{return} \\
-            & \gp \tk{this} \tk{-{}->?} p_1 \tk , p_2 \tk , \dots \tk , p_k \; S \gp \tk{caller} \tk{-{}->?} p_1 \tk , p_2 \tk , \dots \tk , p_k \; S \\
-  e         & ::= x \gp K \gp e_1 \; op_b \; e_2 \gp op_u \; e \gp \tk ( e \tk ) \\
-            & \gp \tk{<|} e \tk , l \tk{|>} \gp \tk{<|} e \tk{|>} \\
-            & \gp f \tk{<{}<{}<} p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{>{}>{}>} \tk ( e_1 \tk , e_2 \tk , \dots \tk , e_n \tk ) \\
-  l         & ::= \tk{\{\{} pol \tk{\}\}} \gp \varepsilon \\
-  pol       & ::= x \gp p_0 \tk{->} p_1 \tk , p_2 \tk , \dots \tk , p_k \gp pol_1 \tk ; pol_2
-\end{align*}
+\Cref{ctif:categories} and \Cref{ctif:rules} primarily serve as a reference-point for the following sections.
+We will however briefly discuss a few details that might be of special interest:
+
+\paragraph{Simplified arithmetics}
+As the semantics, described in this section, only concerns how data \textit{flows} and not its value on execution we can simplify the possible binary and unary operations into two rules.
+Doing so provides for a less cluttered syntax and a clearer focus on the label semantics that are expressed.
+
+\paragraph{Empty labels}
+No value (represented by $\varepsilon$) can be provided for any label declaration.
+When omitting a label the semantic rules specify a \textit{default} value for the label.
+This is initial step of label inference and allows unlabeled C to be recognized and evaluated using these rules.
+
+\paragraph{No principal declaration}
+Principals and possibly a principal hierarchy are expected to be extracted from some system information and not defined in the program code itself.
+In the rules below a \textit{pseudo} function $\mathcal{P}$ is used to represent the lookup of principal names in some system.
+\mikkel{Is this an acceptable explanation?}
+
+\begin{table}
+  \begin{align*}
+    P       & \in \iProg \text{ -- Programs}\\
+    D_V     & \in \iDecv \text{ -- Variable declarations}\\
+    x       & \in \iVar \text{ -- Variables}\\
+    D_F     & \in \iDecf \text{ -- Function declarations}\\
+    f       & \in \iFun \text{ -- Functions}\\
+    p       & \in \iPrin \text{ -- Principals}\\
+    S       & \in \iStm \text{ -- Statements}\\
+    e       & \in \iExp \text{ -- Expressions}\\
+    l       & \in \iLbl \text{ -- Label declaration}\\
+    pol     & \in \iPol \text{ -- Policy declaration}\\
+    op_b    & \in \{ \tk + ,  \tk - ,  \tk * ,  \tk / ,  \tk \% ,  \tk{||} ,  \tk{\&\&} ,  \tk < ,  \tk > ,  \tk{==} ,  \tk{<=} ,  \tk{>=} \} \\
+    op_u    & \in \{ \tk ! ,  \tk - \} \\
+    K       & \in \{ \tk{true}, \tk{false} \} \cup \mathbf{Num} \text{ -- Boolean and integer literals}
+  \end{align*}
+  \caption{Syntactic categories}
+  \label{ctif:categories}
+\end{table}
+
+\begin{table}
+  \begin{align*}
+    P         & ::= D_V \gp D_F \gp P_1 \; P_2 \\
+    D_V       & ::= T \, l \, x \tk = e \gp T \, l x \\
+    D_F       & ::= T_f \, l_f \, f \tk ( T_1 \, l_1 \, x_1 \tk , T_2 \, l_2 \, x_2 \tk , \dots \tk , T_n \, l_n \, x_n \tk ) S \\
+    S         & ::= e \gp S_1 \; S_2 \gp \varepsilon \\
+              & \gp D_V \\
+              & \gp \tk{while} \tk ( e \tk ) S \gp \tk{if} \tk ( e \tk ) S \gp \tk{if} \tk ( e \tk ) S_1 \tk{else} S_2 \\
+              & \gp x \tk = e \\
+              & \gp \tk{return} e \gp \tk{return} \\
+              & \gp \tk{this} \tk{-{}->?} p_1 \tk , p_2 \tk , \dots \tk , p_k \; S \gp \tk{caller} \tk{-{}->?} p_1 \tk , p_2 \tk , \dots \tk , p_k \; S \\
+    e         & ::= x \gp K \gp e_1 \; op_b \; e_2 \gp op_u \; e \gp \tk ( e \tk ) \\
+              & \gp \tk{<|} e \tk , l \tk{|>} \gp \tk{<|} e \tk{|>} \\
+              & \gp f \tk{<{}<{}<} p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{>{}>{}>} \tk ( e_1 \tk , e_2 \tk , \dots \tk , e_n \tk ) \\
+    l         & ::= \tk{\{\{} pol \tk{\}\}} \gp \varepsilon \\
+    pol       & ::= x \gp p_0 \tk{->} p_1 \tk , p_2 \tk , \dots \tk , p_k \gp pol_1 \tk ; pol_2
+  \end{align*}
+  \caption{Formation rules}
+  \label{ctif:rules}
+\end{table}

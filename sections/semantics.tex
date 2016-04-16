@@ -1,15 +1,18 @@
 % !TEX root = ../master.tex
 \section{Semantics}
+The following section presents the set of formal rules that define how constraints are extracted from a program.
+To do this we define the environments we require for our rules and then the transition systems in which the rules exist.
 
-\subsection{Semantics for determining labels}
+\myparagraph{Label environment}
 The label environment is called $\iEnvL$ and is defined by:
 \[
   \iEnvL = \iVar \cup \iFun \cup \ia \cup \ib \cup \ifb \rightharpoonup \mathbb{L}
 \]
 
-\noindent where $\ia$ is the authority label, $\ib$ the block label, and $\ifb$ the function block label.
+where $\ia$ is the authority label, $\ib$ the block label (also known as the program counter), and $\ifb$ the function block label.
+The latter is used to refer to the label of a function, when the body of that function is evaluated.
 
-\noindent $\mathbb{L}$ is the set of all possible labels, with the six types of labels: \\
+$\mathbb{L}$ is the set of all possible labels, with the six types of labels: \\
 
 \begin{tabular}{rl}
   \textbf{Policy labels}    & Like those described earlier \\
@@ -20,52 +23,78 @@ The label environment is called $\iEnvL$ and is defined by:
   \textbf{Join/meet labels} & Combinations of the above-mentioned labels
 \end{tabular}
 
-\paragraph{}\noindent
+\myparagraph{Function parameters environment}
+An environment is used to store the collection of parameters and their labels, such that this information can be applied when calling a function.
 The function parameters environment is called $\iEnvP$ and is defined by:
 \[
   %\iEnvP = \iFun \rightharpoonup \mathbf{P}(\iVar \times \mathbb{L})
   \iEnvP = \iFun \rightharpoonup (\iVar \times \mathbb{L})_1 \cup (\iVar \times \mathbb{L})_2 \cup \dots \cup (\iVar \times \mathbb{L})_n
 \]
 
-\paragraph{}\noindent
-$\iCstr$ is a set of constraints where each $c \in \iCstr$ is on the form:
+\myparagraph{Constraint set}
+In order to capture the set of constraints in a program, we require a definition for a set of constraints.
+We use $\iCstr$ to denote a set of constraints where each $c \in \iCstr$ is on the form:
 \[ L_1 \sqsubseteq L_2 \; | \; L_1, L_2 \in \mathbb{L} \]
 
+\myparagraph{Program transition system}
+For the syntactical category $\iProg$ we provide the following transition system.
+The system handles the declaration of global variables and functions.
+The $\iCstr$ defined in the system output represents the collection of all constraints in that program.
+\mikkelin{Hvordan definerer vi et ``entry-point''?}
 
-\subsubsection{Transision systems}
 $(\Gamma_P, \rightarrow_P, T_P)$, with
 \begin{align*}
-  \Gamma_P  & = (\iProg \times \iEnvL \times \iEnvP) \\
-            & \cup (\iDecv \times \iEnvL \times \iEnvP) \\
-            & \cup (\iDecf \times \iEnvL \times \iEnvP) \\
-            & \cup (\iEnvL \times \iCstr \times \iEnvP) \\
+  \Gamma_P  & = (\iProg \times \iEnvL \times \iEnvP) \cup (\iEnvL \times \iCstr \times \iEnvP) \\
   T_P       & = (\iEnvL \times \iCstr \times \iEnvP)
 \end{align*}
 
-\paragraph{}\noindent
+\myparagraph{Statement transition system}
+For the syntactical category $\iStm$ we provide the following transition system.
+The system evaluates statements, effectively extracting any constraints therein.
+As functions can only be declared in the global scope, the $\iEnvP$ is not directly a part of the transition system.
+
 $(\Gamma_S, \rightarrow_S, T_S)$, with
 \begin{align*}
   \Gamma_S & = (\iStm \times \iEnvL) \cup (\iEnvL \times \iCstr) \\
   T_S & = (\iEnvL \times \iCstr)
 \end{align*}
 
-\noindent
-Where rules are on the form:
+Where transitions are on the form:
 \[ \ienvP \vdash \argpart{S, \ienvL}{S}{(\ienvL, \icstr)} \]
 
-\paragraph{}\noindent
+\myparagraph{Label transition system}
+For the syntactical category $\iLbl$ and $\iPol$ we provide the following transition system.
+The system translates the literals used for label declarations into actual labels.
+
+Note the use of $\varepsilon$, which allows for missing label declarations to be passed through the transition system.
+
 $(\Gamma_L, \rightarrow_L, T_L)$, with
 \begin{align*}
   \Gamma_L & = \iLbl \cup \iPol \cup \mathbb{L} \cup \varepsilon \\
   T_L & = \mathbb{L} \cup \varepsilon
 \end{align*}
 
-\noindent
-Where rules are one of the following two forms:
+Where transitions are one of the following two forms:
 \[ \ienvL \vdash l \rightarrow_L L \]
 \[ \ienvL \vdash l \rightarrow_L \varepsilon \]
 
-\subsubsection{Label declarations}
+\myparagraph{Expression transition system}
+For the syntactical category $\iExp$ we provide the following transition system.
+The system evaluates expressions and returns any constraints in an expression along with the label value of that expression.
+
+$(\Gamma_e, \rightarrow_e, T_e)$, with
+\begin{align*}
+  \Gamma_e =  & \;      \iExp \cup (\iCstr \times \mathbb{L}) \\
+  T_e =       & \; (\iCstr \times \mathbb{L})
+\end{align*}
+
+Where transitions are of the form $\ienvL, \ienvP \vdash e \rightarrow_e (\icstr, L)$.
+
+\subsection{Label declarations}
+The first set of rules will handle the translation of all label declarations.
+Note that these rules do not provide an $\mathbb{L}$ value for an undeclared label.
+As the label value for an undeclared label depends on its context, $\varepsilon$ is simply passed through on evaluation.
+
 \begin{trules}
   \ctrule{LABEL}
         {\ienvL \vdash \tk{\{\{} pol \tk{\}\}} \rightarrow_L L}
@@ -87,8 +116,10 @@ Where rules are one of the following two forms:
           and $L = \{p_0' \rightarrow p_1', p_2', \dots, p_k'\}$}
 \end{trules}
 
-\subsubsection{Program}
-
+\subsection{Program}
+The rules for programs can be split in two groups; the two that are simple and the one that is not.
+Note however that variable declaration is only this simple because the actual evaluation is deferred to the $\rightarrow_S$ transition system, which is detailed in \Cref{semantic:statements}.
+\begin{trules}
 \ctrule {PROG-COMP}
         {\argpart{P_1 \; P_2, \ienvL, \ienvP}{P}{(\ienvL_2, \icstr_1 \cup \icstr_2, \ienvP_2)}}
         {\begin{gathered}
@@ -96,14 +127,24 @@ Where rules are one of the following two forms:
           \argpart{P_2, \ienvL_1, \ienvP_1}{P}{(\ienvL_2, \icstr_2, \ienvP_2)}
         \end{gathered}}
         {}
-\begin{trules}
 \ctrule {PROG-VAR-DECL}
         {\argpart {D_V} {P} {(\ienvL_1, \icstr, \ienvP)} }
         {\ienvP \vdash \argpart{D_V, \ienvL}{S}{(\ienvL_1, \icstr)}}
         {}
 \end{trules}
 
-\subsubsection{Function declarations}
+\mikkelin{Vi har lavet en let blanding af $'$ og sub-script i den her regel.
+Det er endnu ikke afklaret hvad vores løsning bliver.}
+Function declaration (along with function call) can easily be considered the most complex semantic rule(s).
+Specifically the many different label environments in function declarations can render to rule complex.
+
+In a function declarations return label $l_f$ it is possible to reference the parameters of that function.
+To achieve this the $\ienvL'$ environment is constructed from the parameters.
+
+When evaluating the statements of the function a reference to the functions return label is required; this is included in $\ienvL'''$ along with a label reference for the declared function itself.
+The latter allows for recursion.
+
+Finally $\ienvL''$ represents the label environment exposed to other functions that might call the function.
 
 \ctrule {FUNC-DECL}
         {\argpart{T_f \, l_f \, f \tk ( T_1 \, l_1 \, x_1 \tk , T_2 \, l_2 \, x_2 \tk , \dots \tk , T_n \, l_n \, x_n \tk ) S, \ienvL, \ienvP}{P}{(\ienvL'', \icstr, \ienvP')}}
@@ -124,7 +165,28 @@ Where rules are one of the following two forms:
           and $\ienvL''' = \ienvL'[f \mapsto L_f', \ifb \mapsto L_f']$\\
           and $\ienvP' = \ienvP[f \mapsto ((L_{x_1}, x_1), (L_{x_2}, x_2), \dots, (L_{x_n}, x_n))]$}
 
-\subsubsection{Statements}
+\subsection{Statements}\label{semantic:statements}
+For statement evaluation we first cover a few simple rules.
+The expression statement allows us to perform function calls where we are not interested in the return value.
+
+\begin{trules}
+  \trule{EMPTY}
+        {\ienvP \vdash \argpart{\varepsilon, \ienvL}{S}{(\ienvL, \emptyset)}}
+        {}
+  \ctrule{EXPR}
+        {\ienvP \vdash \argpart{e, \ienvL}{S}{(\ienvL, \icstr)}}
+        {\ienvL, \ienvP \vdash e \rightarrow_e (\icstr, L_e)}
+        {}
+  \ctrule{COMP}
+        {\ienvP \vdash \argpart{S_1 \; S_2, \ienvL}{S}{(\ienvL_2, \icstr_1 \cup \icstr_2)}}
+        {\ienvP \vdash \argpart{S_1, \ienvL}{S}{(\ienvL_1, \icstr_1)} \quad
+          \ienvP \vdash \argpart{S_2, \ienvL_1}{S}{(\ienvL_2, \icstr_2)}}
+        {}
+\end{trules}
+
+\myparagraph{Variable declarations}
+New labels are introduced when declaring variables.
+A variable declaration without initialization uses $\bot$ as the label value for the missing initialization value.
 
 \begin{trules}
   \ctrule{VAR-DECL-EXPR}
@@ -148,18 +210,11 @@ Where rules are one of the following two forms:
           and $c = "\bot \sqcup L_\ib \sqsubseteq L_x"$ }
 \end{trules}
 
-  \trule{EMPTY}
-        {\ienvP \vdash \argpart{\varepsilon, \ienvL}{S}{(\ienvL, \emptyset)}}
-        {}
-  \ctrule{EXPR}
-        {\ienvP \vdash \argpart{e, \ienvL}{S}{(\ienvL, \icstr)}}
-        {\ienvL, \ienvP \vdash e \rightarrow_e (\icstr, L_e)}
-        {}
-  \ctrule{COMP}
-        {\ienvP \vdash \argpart{S_1 \; S_2, \ienvL}{S}{(\ienvL_2, \icstr_1 \cup \icstr_2)}}
-        {\ienvP \vdash \argpart{S_1, \ienvL}{S}{(\ienvL_1, \icstr_1)} \quad
-          \ienvP \vdash \argpart{S_2, \ienvL_1}{S}{(\ienvL_2, \icstr_2)}}
-        {}
+\myparagraph{Control flow}
+The control flow constructs (while and if) define constraints that will allow inference to determine their label basic blocks.
+These constraints allows for propagation of label constraints and are effectively the implementation of implicit flows.
+
+\begin{trules}
   \ctrule{WHILE}
         {\ienvP \vdash \argpart{\tk{while} \tk ( e \tk ) S, \ienvL}{S}{(\ienvL, \icstr_1 \cup \icstr_2 \cup \{ c \})}}
         {\ienvL_1, \ienvP \vdash e \rightarrow_e (\icstr_1, L_e) \quad
@@ -187,6 +242,13 @@ Where rules are one of the following two forms:
             and $L_{if} = next$ \\
             and $\ienvL_1 = \ienvL[\ib \mapsto L_{if}]$ \\
             and $c = " \, L_e \sqcup L_\ib \sqsubseteq L_{if} \, "$}
+\end{trules}
+
+\myparagraph{Assignments and return statements}
+It should be noticed that the constraints constructed for declarations, assignments and return statements have a similar structure.
+This structure represents the similarity in the feature they are handling, be it assignment to a variables value or to the return value of a function.
+
+\begin{trules}
   \ctrule{ASS}
         {\ienvP \vdash \argpart{x \tk = e, \ienvL}{S}{(\ienvL, \icstr \cup \{ c \})}}
         {\ienvL, \ienvP \vdash e \rightarrow_e (\icstr, L_e)}
@@ -201,6 +263,15 @@ Where rules are one of the following two forms:
   \trule{RET}
         {\ienvP \vdash \argpart{\tk{return}, \ienvL}{S}{(\ienvL, \emptyset)}}
         {}
+\end{trules}
+
+\myparagraph{Acts for statements}
+Finally the acts for statements have identical rules.
+This is because the difference between the two only exists at runtime.
+The $L_a$ label represents the effective authority on execution.
+This is stored in the label environment to be used for implicit declassification when evaluating expressions.
+
+\begin{trules}
   \ctrule{ACTS-THIS}
         {\ienvP \vdash \argpart{\tk{this} \tk{-{}->?} p_1 \tk , p_2 \tk , \dots \tk , p_k \; S, \ienvL}{S}{(\ienvL, \icstr)}}
         {\ienvP \vdash \argpart{S, \ienvL[\ia \mapsto L_\ia']}{S}{(\ienvL_1, \icstr)}}
@@ -211,33 +282,12 @@ Where rules are one of the following two forms:
         {\ienvP \vdash \argpart{S, \ienvL[\ia \mapsto L_\ia']}{S}{(\ienvL_1, \icstr)}}
         {where $L_\ia = \ienvL \, \ia$ \\[0.5em]
           and $L_\ia' = L_\ia \sqcup \mathlarger\sqcupl_{i=1}^k \, \{ p_i \rightarrow \emptyset \}$}
-
-\subsection{Semantics for deriving labels for expressions}
-$(\Gamma_e, \rightarrow_e, T_e)$, with
-\begin{align*}
-  \Gamma_e =  & \;      \iExp \cup (\iCstr \times \mathbb{L}) \\
-  T_e =       & \; (\iCstr \times \mathbb{L})
-\end{align*}
-Where transitions are of the form $\ienvL, \ienvP \vdash e \rightarrow_e (\icstr, L)$.
-
-\subsubsection{Declassification}
-\begin{trules}
-  \ctrule{DEC}
-        {\ienvL, \ienvP \vdash \tk{<|} e \tk{|>} \rightarrow_e (\icstr \cup \{ c \}, L_d)}
-        {\ienvL, \ienvP \vdash e \rightarrow_e (\icstr, L_e)}
-        {where $L_\ia = \ienvL \, \ia$ \\
-          and $L_{d} = next$ \\
-          and $c = " \, L_e \sqsubseteq L_d \sqcup L_\ia \, "$}
-  \ctrule{DEC-EXPL}
-        {\ienvL, \ienvP \vdash \tk{<|} e \tk , l \tk{|>} \rightarrow_e (\icstr \cup \{ c \}, L)}
-        {\ienvL \vdash l \rightarrow L \quad \ienvL, \ienvP \vdash e \rightarrow_e (\icstr, L_e)}
-        {where $L_\ia = \ienvL \, \ia$ \\
-          and $c = " \, L_e \sqsubseteq L \sqcup L_\ia \, "$}
 \end{trules}
 
-\subsubsection{Arithmetics}
+\subsection{Expressions}
+Most rules for expression evaluation produce no constraints and have a simple definition in terms of the label they return.
 \begin{trules}
-  \trule  {VAR-AKA-THE-ØL-RULE}
+  \trule  {VAR}
           {\ienvL, \ienvP \vdash x \rightarrow_e (\emptyset, L)}
           {where $\ienvL \, x = L$}
   \trule  {CONST}
@@ -257,12 +307,41 @@ Where transitions are of the form $\ienvL, \ienvP \vdash e \rightarrow_e (\icstr
           {}
 \end{trules}
 
-\subsubsection{Function call}
+\myparagraph{Declassification}
+The two rules for declassification shows some of the simplicity that is part of inference.
+Either an explicit label is defined for declassification or one (represented by the variable label $L_d$) will be inferred.
+Asides from that the rules are exactly the same.
+
+\begin{trules}
+  \ctrule{DEC}
+        {\ienvL, \ienvP \vdash \tk{<|} e \tk{|>} \rightarrow_e (\icstr \cup \{ c \}, L_d)}
+        {\ienvL, \ienvP \vdash e \rightarrow_e (\icstr, L_e)}
+        {where $L_\ia = \ienvL \, \ia$ \\
+          and $L_{d} = next$ \\
+          and $c = " \, L_e \sqsubseteq L_d \sqcup L_\ia \, "$}
+  \ctrule{DEC-EXPL}
+        {\ienvL, \ienvP \vdash \tk{<|} e \tk , l \tk{|>} \rightarrow_e (\icstr \cup \{ c \}, L)}
+        {\ienvL \vdash l \rightarrow L \quad \ienvL, \ienvP \vdash e \rightarrow_e (\icstr, L_e)}
+        {where $L_\ia = \ienvL \, \ia$ \\
+          and $c = " \, L_e \sqsubseteq L \sqcup L_\ia \, "$}
+\end{trules}
+
+\subsection{Function call}
+The final type of expression is a function call.
+There are two rules regarding function calls.
+One for functions that have label definitions and one for those that do not.
+
+To represent function calls for functions with labels we require an additional transition system that can aid in determining the return label of a function call.
+The systems is as follows:
 
 $(\mathbb{L}, \rightarrow_F, \mathbb{L})$,
 
 where transitions are of the form $\ienvL \vdash L_1 \rightarrow_F L_2$.
 %policy, var, const, low, up, join, meet
+
+Below are the rules for each type of label.
+The effect of applying this transition system to a label is that its constant labels are replaced with other labels.
+We can use this to replace the constant labels in a functions return label with the labels of its arguments.
 
 \begin{trules}
   \trule {POLICY}
@@ -290,20 +369,32 @@ where transitions are of the form $\ienvL \vdash L_1 \rightarrow_F L_2$.
          {}
 \end{trules}
 
+Using the system above we can handle function calls.
+Though only functions that are defined using out syntax (with explicit or implicit labeling) will make use of it.
+The label value of a function call for functions that do not have a return label will evaluate to the join of the arguments labels.
+This allows for the use of functions that have not been written with DLM in mind.
+
 \ctrule {FUN-CALL-LIB}
-        {\ienvL, \ienvP \vdash f \tk ( e_1 \tk , e_2 \tk , \dots \tk , e_n \tk ) \rightarrow_e (\icstr', L')}
+        {\ienvL, \ienvP \vdash f \tk{<{}<{}<} p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{>{}>{}>} \tk ( e_1 \tk , e_2 \tk , \dots \tk , e_n \tk ) \rightarrow_e (\icstr', L')}
         {\ienvL, \ienvP \vdash e_1 \rightarrow_e (\icstr_1, L_{e_1}) \quad e_2 \rightarrow_e (\icstr_2, L_{e_2})
           \dots e_n \rightarrow_e (\icstr_n, L_{e_n})}
-        {if $\ienvL \, f = \emptyset$ \\
-          and $L' = \mathlarger\sqcupl_{i=1}^n L_{e_i}$ \\
+        {if $\ienvL \, f = \emptyset$ and \\
+          where $L' = \mathlarger\sqcupl_{i=1}^n L_{e_i}$ \\
           and $\icstr' = \bigcup\limits_{i=1}^n \icstr_i$}
+
+The rule below describes how constant labels in the return label of a function are replaced by the label of the expression arguments.
+This is done using the $\ienvL'$ environment.
+For each parameter that is not defined as a constant (those that have an explicit label) a constraint is added, ensuring that the argument is no more restrictive than the parameter.
+
 \ctrule {FUN-CALL}
         {\ienvL, \ienvP \vdash f \tk{<{}<{}<} p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{>{}>{}>} \tk ( e_1 \tk , e_2 \tk , \dots \tk , e_n \tk ) \rightarrow_e (\icstr_a \cup \icstr_p, L_f')}
         {\begin{gathered}
           \ienvL, \ienvP \vdash e_1 \rightarrow_e (\icstr_1, L_{e_1}) \quad e_2 \rightarrow_e (\icstr_2, L_{e_2}) \quad \dots \quad e_n \rightarrow_e (\icstr_n, L_{e_n}) \\
           \ienvL' \vdash L_f \rightarrow_F L_f'
         \end{gathered}}
-        {where $L_f = \ienvL \, f$ \\
+        {
+          if $\ienvL \, f \neq \emptyset$ and \\
+          where $L_f = \ienvL \, f$ \\
           and $((L_1, x_1), (L_2, x_2), \dots, (L_n, x_n)) = \ienvP \, f$ \\
           and $\ienvL' = \ienvL[x_1 \mapsto L_{e_1}, x_2 \mapsto L_{e_2}, \dots, x_n \mapsto L_{e_n}]$ \\
           and $\icstr_a = \bigcup\limits_{i=1}^n \icstr_i$ \\
