@@ -91,6 +91,10 @@ $(\Gamma_e, \rightarrow_e, T_e)$, with
 Where transitions are of the form $\ienvL, \ienvP \vdash e \rightarrow_e (\icstr, L)$.
 
 \subsection{Label declarations}
+The first set of rules will handle the translation of all label declarations.
+Note that these rules do not provide an $\mathbb{L}$ value for an undeclared label.
+As the label value for an undeclared label depends on its context, $\varepsilon$ is simply passed through on evaluation.
+
 \begin{trules}
   \ctrule{LABEL}
         {\ienvL \vdash \tk{\{\{} pol \tk{\}\}} \rightarrow_L L}
@@ -113,7 +117,8 @@ Where transitions are of the form $\ienvL, \ienvP \vdash e \rightarrow_e (\icstr
 \end{trules}
 
 \subsection{Program}
-
+The rules for programs can be split in two groups; those that are simple and the one that is not.
+Note however that variable declaration is only this simple because the actual evaluation is deferred to the $\rightarrow_S$ transition system, which is detailed in \Cref{semantic:statements}.
 \begin{trules}
 \ctrule {PROG-COMP}
         {\argpart{P_1 \; P_2, \ienvL, \ienvP}{P}{(\ienvL_2, \icstr_1 \cup \icstr_2, \ienvP_2)}}
@@ -127,6 +132,19 @@ Where transitions are of the form $\ienvL, \ienvP \vdash e \rightarrow_e (\icstr
         {\ienvP \vdash \argpart{D_V, \ienvL}{S}{(\ienvL_1, \icstr)}}
         {}
 \end{trules}
+
+\mikkelin{Vi har lavet en let blanding af $'$ og sub-script i den her regel.
+Det er endnu ikke afklaret hvad vores løsning bliver.}
+Function declaration (along with function call) can easily be considered the most complex semantic rule(s).
+Specifically the many different label environments in function declarations can render to rule complex.
+
+In a function declarations return label $l_f$ it is possible to reference the parameters of that function.
+To achieve this the $env_L'$ environment is constructed from the parameters.
+
+When evaluating the statements of the function a reference to the functions return label is required; this is included in $env_L'''$ along with a label reference for the declared function itself.
+The latter allows for recursion.
+
+Finally $env_L''$ represents the label environment exposed to other functions that might call the function.
 
 \ctrule {FUNC-DECL}
         {\argpart{T_f \, l_f \, f \tk ( T_1 \, l_1 \, x_1 \tk , T_2 \, l_2 \, x_2 \tk , \dots \tk , T_n \, l_n \, x_n \tk ) S, \ienvL, \ienvP}{P}{(\ienvL'', \icstr, \ienvP')}}
@@ -147,7 +165,7 @@ Where transitions are of the form $\ienvL, \ienvP \vdash e \rightarrow_e (\icstr
           and $\ienvL''' = \ienvL'[f \mapsto L_f', \ifb \mapsto L_f']$\\
           and $\ienvP' = \ienvP[f \mapsto ((L_{x_1}, x_1), (L_{x_2}, x_2), \dots, (L_{x_n}, x_n))]$}
 
-\subsection{Statements}
+\subsection{Statements}\label{semantic:statements}
 \begin{trules}
   \ctrule{VAR-DECL-EXPR}
         {\ienvP \vdash \argpart {T \, l \, x \tk = e, \ienvL} {S} {(\ienvL[x \mapsto L_x], \icstr \cup \{ c \})} }
