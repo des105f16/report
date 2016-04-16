@@ -139,12 +139,12 @@ Function declaration (along with function call) can easily be considered the mos
 Specifically the many different label environments in function declarations can render to rule complex.
 
 In a function declarations return label $l_f$ it is possible to reference the parameters of that function.
-To achieve this the $env_L'$ environment is constructed from the parameters.
+To achieve this the $\ienvL'$ environment is constructed from the parameters.
 
-When evaluating the statements of the function a reference to the functions return label is required; this is included in $env_L'''$ along with a label reference for the declared function itself.
+When evaluating the statements of the function a reference to the functions return label is required; this is included in $\ienvL'''$ along with a label reference for the declared function itself.
 The latter allows for recursion.
 
-Finally $env_L''$ represents the label environment exposed to other functions that might call the function.
+Finally $\ienvL''$ represents the label environment exposed to other functions that might call the function.
 
 \ctrule {FUNC-DECL}
         {\argpart{T_f \, l_f \, f \tk ( T_1 \, l_1 \, x_1 \tk , T_2 \, l_2 \, x_2 \tk , \dots \tk , T_n \, l_n \, x_n \tk ) S, \ienvL, \ienvP}{P}{(\ienvL'', \icstr, \ienvP')}}
@@ -326,12 +326,22 @@ Asides from that the rules are exactly the same.
           and $c = " \, L_e \sqsubseteq L \sqcup L_\ia \, "$}
 \end{trules}
 
-\subsubsection{Function call}
+\subsection{Function call}
+The final type of expression is a function call.
+There are two rules regarding function calls.
+One for functions that have label definitions and one for those that do not.
+
+To represent function calls for functions with labels we require an additional transition system that can aid in determining the return label of a function call.
+The systems is as follows:
 
 $(\mathbb{L}, \rightarrow_F, \mathbb{L})$,
 
 where transitions are of the form $\ienvL \vdash L_1 \rightarrow_F L_2$.
 %policy, var, const, low, up, join, meet
+
+Below are the rules for each type of label.
+The effect of applying this transition system to a label is that its constant labels are replaced with other labels.
+We can use this to replace the constant labels in a functions return label with the labels of its arguments.
 
 \begin{trules}
   \trule {POLICY}
@@ -359,6 +369,11 @@ where transitions are of the form $\ienvL \vdash L_1 \rightarrow_F L_2$.
          {}
 \end{trules}
 
+Using the system above we can handle function calls.
+Though only functions that are defined using out syntax (with explicit or implicit labeling) will make use of it.
+The label value of a function call for functions that do not have a return label will evaluate to the join of the arguments labels.
+This allows for the use of functions that have not been written with DLM in mind.
+
 \ctrule {FUN-CALL-LIB}
         {\ienvL, \ienvP \vdash f \tk{<{}<{}<} p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{>{}>{}>} \tk ( e_1 \tk , e_2 \tk , \dots \tk , e_n \tk ) \rightarrow_e (\icstr', L')}
         {\ienvL, \ienvP \vdash e_1 \rightarrow_e (\icstr_1, L_{e_1}) \quad e_2 \rightarrow_e (\icstr_2, L_{e_2})
@@ -366,6 +381,11 @@ where transitions are of the form $\ienvL \vdash L_1 \rightarrow_F L_2$.
         {if $\ienvL \, f = \emptyset$ and \\
           where $L' = \mathlarger\sqcupl_{i=1}^n L_{e_i}$ \\
           and $\icstr' = \bigcup\limits_{i=1}^n \icstr_i$}
+
+The rule below describes how constant labels in the return label of a function are replaced by the label of the expression arguments.
+This is done using the $\ienvL'$ environment.
+For each parameter that is not defined as a constant (those that have an explicit label) a constraint is added, ensuring that the argument is no more restrictive than the parameter.
+
 \ctrule {FUN-CALL}
         {\ienvL, \ienvP \vdash f \tk{<{}<{}<} p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{>{}>{}>} \tk ( e_1 \tk , e_2 \tk , \dots \tk , e_n \tk ) \rightarrow_e (\icstr_a \cup \icstr_p, L_f')}
         {\begin{gathered}
