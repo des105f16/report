@@ -1,15 +1,18 @@
 % !TEX root = ../master.tex
 \section{Semantics}
+The following section presents the set of formal rules that define how constraints are extracted from a program.
+To do this we define the environments we require for our rules and then the transition systems in which the rules exist.
 
-\subsection{Semantics for determining labels}
+\myparagraph{Label environment}
 The label environment is called $\iEnvL$ and is defined by:
 \[
   \iEnvL = \iVar \cup \iFun \cup \ia \cup \ib \cup \ifb \rightharpoonup \mathbb{L}
 \]
 
-\noindent where $\ia$ is the authority label, $\ib$ the block label, and $\ifb$ the function block label.
+where $\ia$ is the authority label, $\ib$ the block label (also known as the program counter), and $\ifb$ the function block label.
+The latter is used to refer to the label of a function, when the body of that function is evaluated.
 
-\noindent $\mathbb{L}$ is the set of all possible labels, with the six types of labels: \\
+$\mathbb{L}$ is the set of all possible labels, with the six types of labels: \\
 
 \begin{tabular}{rl}
   \textbf{Policy labels}    & Like those described earlier \\
@@ -20,50 +23,72 @@ The label environment is called $\iEnvL$ and is defined by:
   \textbf{Join/meet labels} & Combinations of the above-mentioned labels
 \end{tabular}
 
-\paragraph{}\noindent
+\myparagraph{Function parameters environment}
+An environment is used to store the collection of parameters and their labels, such that this information can be applied when calling a function.
 The function parameters environment is called $\iEnvP$ and is defined by:
 \[
   %\iEnvP = \iFun \rightharpoonup \mathbf{P}(\iVar \times \mathbb{L})
   \iEnvP = \iFun \rightharpoonup (\iVar \times \mathbb{L})_1 \cup (\iVar \times \mathbb{L})_2 \cup \dots \cup (\iVar \times \mathbb{L})_n
 \]
 
-\paragraph{}\noindent
-$\iCstr$ is a set of constraints where each $c \in \iCstr$ is on the form:
+\myparagraph{Constraint set}
+In order to capture the set of constraints in a program, we require a definition for a set of constraints.
+We use $\iCstr$ to denote a set of constraints where each $c \in \iCstr$ is on the form:
 \[ L_1 \sqsubseteq L_2 \; | \; L_1, L_2 \in \mathbb{L} \]
 
+\myparagraph{Program transition system}
+For the syntactical category $\iProg$ we provide the following transition system.
+The system handles the declaration of global variables and functions.
+The $\iCstr$ defined in the system output represents the collection of all constraints in that program.
+\mikkelin{Hvordan definerer vi et ``entry-point''?}
 
-\subsubsection{Transision systems}
 $(\Gamma_P, \rightarrow_P, T_P)$, with
 \begin{align*}
-  \Gamma_P  & = (\iProg \times \iEnvL \times \iEnvP) \\
-            & \cup (\iDecv \times \iEnvL \times \iEnvP) \\
-            & \cup (\iDecf \times \iEnvL \times \iEnvP) \\
-            & \cup (\iEnvL \times \iCstr \times \iEnvP) \\
+  \Gamma_P  & = (\iProg \times \iEnvL \times \iEnvP) \cup (\iEnvL \times \iCstr \times \iEnvP) \\
   T_P       & = (\iEnvL \times \iCstr \times \iEnvP)
 \end{align*}
 
-\paragraph{}\noindent
+\myparagraph{Statement transition system}
+For the syntactical category $\iStm$ we provide the following transition system.
+The system evaluates statements, effectively extracting any constraints therein.
+As functions can only be declared in the global scope, the $\iEnvP$ is not directly a part of the transition system.
+
 $(\Gamma_S, \rightarrow_S, T_S)$, with
 \begin{align*}
   \Gamma_S & = (\iStm \times \iEnvL) \cup (\iEnvL \times \iCstr) \\
   T_S & = (\iEnvL \times \iCstr)
 \end{align*}
 
-\noindent
-Where rules are on the form:
+Where transitions are on the form:
 \[ \ienvP \vdash \argpart{S, \ienvL}{S}{(\ienvL, \icstr)} \]
 
-\paragraph{}\noindent
+\myparagraph{Label transition system}
+For the syntactical category $\iLbl$ and $\iPol$ we provide the following transition system.
+The system translates the literals used for label declarations into actual labels.
+
+Note the use of $\varepsilon$, which allows for missing label declarations to be passed through the transition system.
+
 $(\Gamma_L, \rightarrow_L, T_L)$, with
 \begin{align*}
   \Gamma_L & = \iLbl \cup \iPol \cup \mathbb{L} \cup \varepsilon \\
   T_L & = \mathbb{L} \cup \varepsilon
 \end{align*}
 
-\noindent
-Where rules are one of the following two forms:
+Where transitions are one of the following two forms:
 \[ \ienvL \vdash l \rightarrow_L L \]
 \[ \ienvL \vdash l \rightarrow_L \varepsilon \]
+
+\myparagraph{Expression transition system}
+For the syntactical category $\iExp$ we provide the following transition system.
+The system evaluates expressions and returns any constraints in an expression along with the label value of that expression.
+
+$(\Gamma_e, \rightarrow_e, T_e)$, with
+\begin{align*}
+  \Gamma_e =  & \;      \iExp \cup (\iCstr \times \mathbb{L}) \\
+  T_e =       & \; (\iCstr \times \mathbb{L})
+\end{align*}
+
+Where transitions are of the form $\ienvL, \ienvP \vdash e \rightarrow_e (\icstr, L)$.
 
 \subsubsection{Label declarations}
 \begin{trules}
@@ -213,12 +238,6 @@ Where rules are one of the following two forms:
           and $L_\ia' = L_\ia \sqcup \mathlarger\sqcupl_{i=1}^k \, \{ p_i \rightarrow \emptyset \}$}
 
 \subsection{Semantics for deriving labels for expressions}
-$(\Gamma_e, \rightarrow_e, T_e)$, with
-\begin{align*}
-  \Gamma_e =  & \;      \iExp \cup (\iCstr \times \mathbb{L}) \\
-  T_e =       & \; (\iCstr \times \mathbb{L})
-\end{align*}
-Where transitions are of the form $\ienvL, \ienvP \vdash e \rightarrow_e (\icstr, L)$.
 
 \subsubsection{Declassification}
 \begin{trules}
