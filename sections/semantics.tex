@@ -268,7 +268,8 @@ This structure represents the similarity in the feature they are handling, be it
 \myparagraph{Acts for statements}
 Finally the acts for statements have identical rules.
 This is because the difference between the two only exists at runtime.
-The $L_a$ label that is stored in the label environment is used for implicit declassification when evaluating expressions.
+The $L_a$ label represents the effective authority on execution.
+This is stored in the label environment to be used for implicit declassification when evaluating expressions.
 
 \begin{trules}
   \ctrule{ACTS-THIS}
@@ -284,18 +285,8 @@ The $L_a$ label that is stored in the label environment is used for implicit dec
 \end{trules}
 
 \subsection{Expressions}
+Most rules for expression evaluation produce no constraints and have a simple definition in terms of the label they return.
 \begin{trules}
-  \ctrule{DEC}
-        {\ienvL, \ienvP \vdash \tk{<|} e \tk{|>} \rightarrow_e (\icstr \cup \{ c \}, L_d)}
-        {\ienvL, \ienvP \vdash e \rightarrow_e (\icstr, L_e)}
-        {where $L_\ia = \ienvL \, \ia$ \\
-          and $L_{d} = next$ \\
-          and $c = " \, L_e \sqsubseteq L_d \sqcup L_\ia \, "$}
-  \ctrule{DEC-EXPL}
-        {\ienvL, \ienvP \vdash \tk{<|} e \tk , l \tk{|>} \rightarrow_e (\icstr \cup \{ c \}, L)}
-        {\ienvL \vdash l \rightarrow L \quad \ienvL, \ienvP \vdash e \rightarrow_e (\icstr, L_e)}
-        {where $L_\ia = \ienvL \, \ia$ \\
-          and $c = " \, L_e \sqsubseteq L \sqcup L_\ia \, "$}
   \trule  {VAR}
           {\ienvL, \ienvP \vdash x \rightarrow_e (\emptyset, L)}
           {where $\ienvL \, x = L$}
@@ -314,6 +305,25 @@ The $L_a$ label that is stored in the label environment is used for implicit dec
           {\ienvL, \ienvP \vdash \tk ( e \tk ) \rightarrow_e (\icstr, L)}
           {\ienvL, \ienvP \vdash e \rightarrow_e (\icstr, L)}
           {}
+\end{trules}
+
+\myparagraph{Declassification}
+The two rules for declassification shows some of the simplicity that is part of inference.
+Either an explicit label is defined for declassification or one (represented by the variable label $L_d$) will be inferred.
+Asides from that the rules are exactly the same.
+
+\begin{trules}
+  \ctrule{DEC}
+        {\ienvL, \ienvP \vdash \tk{<|} e \tk{|>} \rightarrow_e (\icstr \cup \{ c \}, L_d)}
+        {\ienvL, \ienvP \vdash e \rightarrow_e (\icstr, L_e)}
+        {where $L_\ia = \ienvL \, \ia$ \\
+          and $L_{d} = next$ \\
+          and $c = " \, L_e \sqsubseteq L_d \sqcup L_\ia \, "$}
+  \ctrule{DEC-EXPL}
+        {\ienvL, \ienvP \vdash \tk{<|} e \tk , l \tk{|>} \rightarrow_e (\icstr \cup \{ c \}, L)}
+        {\ienvL \vdash l \rightarrow L \quad \ienvL, \ienvP \vdash e \rightarrow_e (\icstr, L_e)}
+        {where $L_\ia = \ienvL \, \ia$ \\
+          and $c = " \, L_e \sqsubseteq L \sqcup L_\ia \, "$}
 \end{trules}
 
 \subsubsection{Function call}
