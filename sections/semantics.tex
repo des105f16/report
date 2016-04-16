@@ -114,6 +114,7 @@ Where transitions are of the form $\ienvL, \ienvP \vdash e \rightarrow_e (\icstr
 
 \subsection{Program}
 
+\begin{trules}
 \ctrule {PROG-COMP}
         {\argpart{P_1 \; P_2, \ienvL, \ienvP}{P}{(\ienvL_2, \icstr_1 \cup \icstr_2, \ienvP_2)}}
         {\begin{gathered}
@@ -121,11 +122,11 @@ Where transitions are of the form $\ienvL, \ienvP \vdash e \rightarrow_e (\icstr
           \argpart{P_2, \ienvL_1, \ienvP_1}{P}{(\ienvL_2, \icstr_2, \ienvP_2)}
         \end{gathered}}
         {}
-
 \ctrule {PROG-VAR-DECL}
         {\argpart {D_V} {P} {(\ienvL_1, \icstr, \ienvP)} }
         {\ienvP \vdash \argpart{D_V, \ienvL}{S}{(\ienvL_1, \icstr)}}
         {}
+\end{trules}
 
 \ctrule {FUNC-DECL}
         {\argpart{T_f \, l_f \, f \tk ( T_1 \, l_1 \, x_1 \tk , T_2 \, l_2 \, x_2 \tk , \dots \tk , T_n \, l_n \, x_n \tk ) S, \ienvL, \ienvP}{P}{(\ienvL'', \icstr, \ienvP')}}
@@ -167,8 +168,6 @@ Where transitions are of the form $\ienvL, \ienvP \vdash e \rightarrow_e (\icstr
           \end{cases}$ \\
           and $L_\ib = \ienvL \, \ib$ \\
           and $c = "\bot \sqcup L_\ib \sqsubseteq L_x"$ }
-\end{trules}
-
   \trule{EMPTY}
         {\ienvP \vdash \argpart{\varepsilon, \ienvL}{S}{(\ienvL, \emptyset)}}
         {}
@@ -222,7 +221,6 @@ Where transitions are of the form $\ienvL, \ienvP \vdash e \rightarrow_e (\icstr
   \trule{RET}
         {\ienvP \vdash \argpart{\tk{return}, \ienvL}{S}{(\ienvL, \emptyset)}}
         {}
-\begin{trules}
   \ctrule{ACTS-THIS}
         {\ienvP \vdash \argpart{\tk{this} \tk{-{}->?} p_1 \tk , p_2 \tk , \dots \tk , p_k \; S, \ienvL}{S}{(\ienvL, \icstr)}}
         {\ienvP \vdash \argpart{S, \ienvL[\ia \mapsto L_\ia']}{S}{(\ienvL_1, \icstr)}}
@@ -248,9 +246,6 @@ Where transitions are of the form $\ienvL, \ienvP \vdash e \rightarrow_e (\icstr
         {\ienvL \vdash l \rightarrow L \quad \ienvL, \ienvP \vdash e \rightarrow_e (\icstr, L_e)}
         {where $L_\ia = \ienvL \, \ia$ \\
           and $c = " \, L_e \sqsubseteq L \sqcup L_\ia \, "$}
-\end{trules}
-
-\begin{trules}
   \trule  {VAR-AKA-THE-ØL-RULE}
           {\ienvL, \ienvP \vdash x \rightarrow_e (\emptyset, L)}
           {where $\ienvL \, x = L$}
