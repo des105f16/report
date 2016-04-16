@@ -117,7 +117,7 @@ As the label value for an undeclared label depends on its context, $\varepsilon$
 \end{trules}
 
 \subsection{Program}
-The rules for programs can be split in two groups; those that are simple and the one that is not.
+The rules for programs can be split in two groups; the two that are simple and the one that is not.
 Note however that variable declaration is only this simple because the actual evaluation is deferred to the $\rightarrow_S$ transition system, which is detailed in \Cref{semantic:statements}.
 \begin{trules}
 \ctrule {PROG-COMP}
@@ -166,6 +166,28 @@ Finally $env_L''$ represents the label environment exposed to other functions th
           and $\ienvP' = \ienvP[f \mapsto ((L_{x_1}, x_1), (L_{x_2}, x_2), \dots, (L_{x_n}, x_n))]$}
 
 \subsection{Statements}\label{semantic:statements}
+For statement evaluation we first cover a few simple rules.
+The expression statement allows us to perform function calls where we are not interested in the return value.
+
+\begin{trules}
+  \trule{EMPTY}
+        {\ienvP \vdash \argpart{\varepsilon, \ienvL}{S}{(\ienvL, \emptyset)}}
+        {}
+  \ctrule{EXPR}
+        {\ienvP \vdash \argpart{e, \ienvL}{S}{(\ienvL, \icstr)}}
+        {\ienvL, \ienvP \vdash e \rightarrow_e (\icstr, L_e)}
+        {}
+  \ctrule{COMP}
+        {\ienvP \vdash \argpart{S_1 \; S_2, \ienvL}{S}{(\ienvL_2, \icstr_1 \cup \icstr_2)}}
+        {\ienvP \vdash \argpart{S_1, \ienvL}{S}{(\ienvL_1, \icstr_1)} \quad
+          \ienvP \vdash \argpart{S_2, \ienvL_1}{S}{(\ienvL_2, \icstr_2)}}
+        {}
+\end{trules}
+
+\myparagraph{Variable declarations}
+New labels are introduced when declaring variables.
+A variable declaration without initialization uses $\bot$ as the label value for the missing initialization value.
+
 \begin{trules}
   \ctrule{VAR-DECL-EXPR}
         {\ienvP \vdash \argpart {T \, l \, x \tk = e, \ienvL} {S} {(\ienvL[x \mapsto L_x], \icstr \cup \{ c \})} }
@@ -186,18 +208,13 @@ Finally $env_L''$ represents the label environment exposed to other functions th
           \end{cases}$ \\
           and $L_\ib = \ienvL \, \ib$ \\
           and $c = "\bot \sqcup L_\ib \sqsubseteq L_x"$ }
-  \trule{EMPTY}
-        {\ienvP \vdash \argpart{\varepsilon, \ienvL}{S}{(\ienvL, \emptyset)}}
-        {}
-  \ctrule{EXPR}
-        {\ienvP \vdash \argpart{e, \ienvL}{S}{(\ienvL, \icstr)}}
-        {\ienvL, \ienvP \vdash e \rightarrow_e (\icstr, L_e)}
-        {}
-  \ctrule{COMP}
-        {\ienvP \vdash \argpart{S_1 \; S_2, \ienvL}{S}{(\ienvL_2, \icstr_1 \cup \icstr_2)}}
-        {\ienvP \vdash \argpart{S_1, \ienvL}{S}{(\ienvL_1, \icstr_1)} \quad
-          \ienvP \vdash \argpart{S_2, \ienvL_1}{S}{(\ienvL_2, \icstr_2)}}
-        {}
+\end{trules}
+
+\myparagraph{Control flow}
+The control flow constructs (while and if) define constraints that will allow inference to determine their label basic blocks.
+These constraints allows for propagation of label constraints and are effectively the implementation of implicit flows.
+
+\begin{trules}
   \ctrule{WHILE}
         {\ienvP \vdash \argpart{\tk{while} \tk ( e \tk ) S, \ienvL}{S}{(\ienvL, \icstr_1 \cup \icstr_2 \cup \{ c \})}}
         {\ienvL_1, \ienvP \vdash e \rightarrow_e (\icstr_1, L_e) \quad
@@ -225,6 +242,13 @@ Finally $env_L''$ represents the label environment exposed to other functions th
             and $L_{if} = next$ \\
             and $\ienvL_1 = \ienvL[\ib \mapsto L_{if}]$ \\
             and $c = " \, L_e \sqcup L_\ib \sqsubseteq L_{if} \, "$}
+\end{trules}
+
+\myparagraph{Assignments and return statements}
+It should be noticed that the constraints constructed for declarations, assignments and return statements have a similar structure.
+This structure represents the similarity in the feature they are handling, be it assignment to a variables value or to the return value of a function.
+
+\begin{trules}
   \ctrule{ASS}
         {\ienvP \vdash \argpart{x \tk = e, \ienvL}{S}{(\ienvL, \icstr \cup \{ c \})}}
         {\ienvL, \ienvP \vdash e \rightarrow_e (\icstr, L_e)}
@@ -239,6 +263,14 @@ Finally $env_L''$ represents the label environment exposed to other functions th
   \trule{RET}
         {\ienvP \vdash \argpart{\tk{return}, \ienvL}{S}{(\ienvL, \emptyset)}}
         {}
+\end{trules}
+
+\myparagraph{Acts for statements}
+Finally the acts for statements have identical rules.
+This is because the difference between the two only exists at runtime.
+The $L_a$ label that is stored in the label environment is used for implicit declassification when evaluating expressions.
+
+\begin{trules}
   \ctrule{ACTS-THIS}
         {\ienvP \vdash \argpart{\tk{this} \tk{-{}->?} p_1 \tk , p_2 \tk , \dots \tk , p_k \; S, \ienvL}{S}{(\ienvL, \icstr)}}
         {\ienvP \vdash \argpart{S, \ienvL[\ia \mapsto L_\ia']}{S}{(\ienvL_1, \icstr)}}
