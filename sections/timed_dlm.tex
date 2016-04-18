@@ -3,7 +3,30 @@
 \newcommand{\tat}{\;@\;} % timed at (@)
 \newcommand{\tdor}{\;||\;} % timed dlm or (||)
 
-\section{Timed DLM}
+\section{Timed Decentralized Label Model}
+The Timed Decentralized Label Model (TDLM) is an extension to the original Decentralized Label Model \cite{pedersen2015}.
+TDLM uses the concepts of DLM, including principal hierarchies and differing confidentiality and integrity, and extends the security labels with time policies.
+These time policies are attached to read or write policies, adding clock-based time-access restrictions to labeled data.
+
+\subsection{Key Concepts}
+The overall idea is that \emph{clock comparisons} rules are added to the policiy of some label.
+These comparisons are logical comparisons of some \emph{clock variables}, or constant values, which must hold before data can be read.
+
+The time-extended policies are on the form: $\{ o: r_1, r_2, \dots, r_n \}$, where $o$ or any reader $r_i$ can have an attached clock comparison.
+If a clock comparison is added to the owner of a policy, it applies to any reader in that policy.
+The policy given below simply states that the principal $r_1$ is not allowed to read the attached value until the clock variable $x$ is greater than 500 ms.
+  \[ \{ o : r_1(x > 500), r_2, r_3 \} \]
+There are no \emph{clock variable parameters} attached to $x$, so no reset rules have been defined, meaning that once 500 ms has passed $r_1$ may read infinitely many times, or until $x$ is reset elsewhere.
+
+Extending on the previous example, we now have that $x$ includes some simple reset rules.
+  \[ \{ o : r_1(x[1000;0] > 500), r_2, r_3 \} \]
+Here we have specified that once the clock reaches an \emph{upper limit}, in this case 1000, it is reset to its \emph{reset value} 0.
+Now, $r_1$ has a 500 ms window every second to read the value as much as possible.
+
+Alternatively, and not excluding the use of the previous reset method, we can add reset events to a clock variable, which will reset the its value whenever the event is triggered.
+  \[ \{ o : r_1(x[?xreset;0] > 500)[*xreset], r_2, r_3 \} \]
+$[?xreset]$ names a reset event name for $x$, while $[*xreset]$ triggers the event $xreset$ any time $r_1$ reads the attacked value.
+Now, instead of resetting every 1 second, $x$ is reset to 0 any time that $r_1$ reads the attached value, effectively doing so that $r_1$ must wait at least 500 ms between each read.
 
 \subsection{Comparison}
 
