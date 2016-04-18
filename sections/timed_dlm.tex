@@ -1,3 +1,16 @@
 % !TEX root = ../master.tex
 
+\newcommand{\tat}{\;@\;} % timed at (@)
+\newcommand{\tdor}{\;||\;} % timed dlm or (||)
+
 \section{Timed DLM}
+
+\subsection{Comparison}
+
+\begin{tabular}{|l|l|}
+  \hline
+  Timed DLM & CTIF \\ \hline
+  $\{s_i : u_i, e_j (x[?reset : 1]^{\{ !s_i: \}} > 90)[*reset]; !s_i: \}$ & $\{s \rightarrow u, e \tat e: 90d \}$ \\ \hline
+  ??? & $\{ chkr \rightarrow u \tat 10m * 3 \}$ \\ \hline
+
+\end{tabular}
