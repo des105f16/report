@@ -4,13 +4,13 @@
 \newcommand{\tdor}{\;||\;} % timed dlm or (||)
 
 \section{Timed Decentralized Label Model}
-The Timed Decentralized Label Model (TDLM) is an extension to the original Decentralized Label Model \cite{pedersen2015}.
-TDLM uses the concepts of DLM, including principal hierarchies and differing confidentiality and integrity, and extends the security labels with time policies.
-These time policies are attached to read or write policies, adding clock-based time-access restrictions to labeled data.
+The Timed Decentralized Label Model (TDLM) is an extension to the original DLM which uses the concepts of DLM and extends the security labels with time policies. \cite{pedersen2015}.
+The TDLM time policies are attached to read or write policies, adding time-based access restrictions to labeled data.
+As opposed to \thetool, it also employs differing between read and write policies, as well as principal hierarchies.
+What we are interested in is the usage of TDLM and what kinds of policies can be expressed.
+Therefore we will first explore its usage and afterwards point out its shortcomings.
 
 \subsection{Key Concepts}
-The overall idea is that \emph{clock comparisons} rules are added to the policiy of some label.
-These comparisons are logical comparisons of some \emph{clock variables}, or constant values, which must hold before data can be read.
 
 The time-extended policies are on the form: $\{ o: r_1, r_2, \dots, r_n \}$, where $o$ or any reader $r_i$ can have an attached clock comparison.
 If a clock comparison is added to the owner of a policy, it applies to any reader in that policy.
