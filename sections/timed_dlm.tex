@@ -1,0 +1,48 @@
+% !TEX root = ../master.tex
+
+\newcommand{\tat}{\;@\;} % timed at (@)
+\newcommand{\tdor}{\;||\;} % timed dlm or (||)
+\newcommand{\tdand}{\;\&\&\;} % timed dlm and (&&)
+
+\section{Timed Decentralized Label Model}
+The Timed Decentralized Label Model (TDLM) is an extension to the original DLM which uses the concepts of DLM and extends the security labels with time policies. \cite{pedersen2015}.
+The TDLM time policies are attached to read or write policies, adding time-based access restrictions to labeled data.
+As opposed to \thetool, it also employs differing between read and write policies, as well as principal hierarchies, these will however not be addressed for time being.
+What we are interested in is the usage of TDLM and what kinds of policies can be expressed.
+Therefore we will first explore its usage and afterwards point out its shortcomings.
+
+\subsection{Usage}
+The overall idea is that \emph{clock comparisons} rules can be added to the policies of labels.
+These rules are logical comparisons of some \emph{clock variables}, or constant values, which must hold before data can be read by the concerned principal.
+
+\subsubsection{Clock comparisons}
+Clock comparisons can be added to any principal in a policy and time policies may differ between principals.
+If a clock comparison is added to the \emph{owner} of a policy, it applies to all \emph{readers} in that policy.
+In the following label, a simple time restriction, containing a clock comparison, is added to the read rights of principal $r_1$:
+  \[ \{ o : r_1(x > 500), r_2, r_3 \} \]
+The policy simply states that the principal $r_1$ is not allowed to read the attached value until the clock variable $x$ is greater than 500 ms.
+There are no \emph{clock variable parameters} attached to $x$ (see below), so no reset rules have been defined, meaning that once 500 ms has passed $r_1$ may read infinitely many times, or until $x$ is reset elsewhere.
+The other readers $r_2$ and $r_3$ have no time restrictions.
+
+\subsubsection{Upper limit and reset value}
+Extending on the previous example, we now have that $x$ includes some simple reset rules:
+  \[ \{ o : r_1(x[1000;0] > 500), r_2, r_3 \} \]
+Here we have specified that once the clock reaches an \emph{upper limit}, in this case 1000, it is reset to its \emph{reset value} of 0.
+Now, $r_1$ has a 500 ms window every second in which it can read the attached value.
+
+\subsubsection{Reset events}
+Alternatively, and not excluding the use of the previous reset method, we can add reset events to a clock variable:
+  \[ \{ o : r_1(x[?xreset] > 500)[*xreset], r_2, r_3 \} \]
+Here we have substituted the upper limit with a reset event $xreset$, which will reset clock variable $x$ whenever the event is triggered.\footnote{Note that there is an implicit reset value of 0 if no value is given.}
+$?xreset$ names a reset event name for $x$, while $*xreset$ triggers the event $xreset$ any time $r_1$ reads the attacked value.
+Now, instead of resetting every 1 second, $x$ is reset to 0 any time that $r_1$ reads the attached value, effectively limiting $r_1$ to wait at least 500 ms between each read.
+
+\subsection{Comparison}
+
+\begin{tabular}{|l|l|}
+  \hline
+  Timed DLM & CTIF \\ \hline
+  $\{s_i : u_i, e_j (x[?reset : 1]^{\{ !s_i: \}} > 90)[*reset]; !s_i: \}$ & $\{s \rightarrow u, e \tat e: 90d \}$ \\ \hline
+  ??? & $\{ chkr \rightarrow u \tat 10m * 3 \}$ \\ \hline
+
+\end{tabular}
