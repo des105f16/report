@@ -72,6 +72,44 @@ This is known as the \emph{effective reader set}, which is the intersection of \
   $$readers(L_1) = \{r1,r2\} \cap \{r2, r3\} = \{r2\}$$
 \end{example}
 
+\subsubsection{Composite labels}
+We can construct composite labels by either joining or meeting two labels.
+A composite label $L_1 \sqcup L_2$ or $L_1 \sqcap L_2$ represents nodes in a composite label structure.
+To employ these labels similarly to the previously defined labels, we define the owner and reader sets of the composite labels:
+
+\begin{definition}{Label Join}
+The join operation is denoted by the operator $\sqcup$ and represents the least restrictive label that is as restrictive as either operand:
+  \begin{align*}
+    owners(L_1 \sqcup L_2) &= owners(L_1) \cup owners(L_2) \\
+    readers(L_1 \sqcup L_2, o) &= readers(L_1, o) \cap readers(L_2, o)
+  \end{align*}
+\end{definition}
+\begin{definition}{Label Meet}
+The meet operation is denoted by the operator $\sqcap$ and represents the most restrictive label that is no more restrictive than either operand:
+  \begin{align*}
+    owners(L_1 \sqcap L_2) &= owners(L_1) \cap owners(L_2) \\
+    readers(L_1 \sqcap L_2, o) &= readers(L_1, o) \cup readers(L_2, o)
+  \end{align*}
+\end{definition}
+
+The line below describes the effect of joining or meeting one label with another one, which is to make labels increasingly restrictive (join) or non-restrictive (meet).
+The line provides an abstract representation of the operations in that each arrow represents zero, one or many steps.
+
+\begin{center}
+  \begin{tikzpicture}[inner sep=0]
+    \node (vJoin) at (-3,0) {$\bot$};
+    \node[circle, fill, minimum height=1mm] (vMid) at (0,0) {};
+    \node (vMeet) at (3,0) {$\top$};
+    \node [above = 2mm] at (vMid) {$L$};
+    \draw [-triangle 45] (vMid) -- (vJoin) node [midway, above = 1mm] {$\sqcap$};
+    \draw [-triangle 45] (vMid) -- (vMeet) node [midway, above = 1mm,] {$\sqcup$};
+  \end{tikzpicture}
+\end{center}
+
+Label composition is an integral part of DLM.
+Label joins allows for label evaluation of expressions, as described in \cref{semantics} and provides the means for representing implicit flows via scope blocks, as described in \cref{dlm:implicit_flows}.
+Additionally when inferring labels, the meet operation allows us to infer the most restrictive label that agrees with the preexisting labels.
+
 \subsubsection{Label comparison}
 As mentioned above, labels provide restrictions on which principals can read from the slots that the labels ``protect''.
 In order to check that security policies are enforced throughout a program, we need to be able to compare how restrictive labels are.
@@ -87,52 +125,7 @@ To do this we introduce the ``at most as restrictive as''-relation ($\sqsubseteq
 
 We can employ this definition to determine if two labels are equal:
 If $L_1 \sqsubseteq L_2$ and $L_2 \sqsubseteq L_1$ then we must have that $L_1 = L_2$.
-
-\subsubsection{Composite labels}
-We can construct composite labels by either joining or meeting two labels.
-Below we provide definitions for these operations, such that they can be applied 
-\begin{definition}{Label Join Rule}
-The join operation is denoted by the operator $\sqcup$ and represents the least restrictive label that is as restrictive as either operand:
-  \begin{align*}
-    owners(L_1 \sqcup L_2) &= owners(L_1) \cup owners(L_2) \\
-    readers(L_1 \sqcup L_2, o) &= readers(L_1, o) \cap readers(L_2, o)
-  \end{align*}
-
-\end{definition}
-
-
-Similarly the meet operation, denoted by $\sqcap$, represents the most restrictive label that is no more restrictive than either operand.
-
-
-
-In order to compare composite labels, such as those for arithmetical expressions, we need to be able to create and use a ``joined label''.
-This is also needed when we consider implicit flows via scope blocks, as will be described in \cref{dlm:implicit_flows}.
-The result of a label join is the least restrictive label that maintains all flow restrictions.
-Since each label is a set of policies, the definition of label join ($\sqcup$) is simply:
-
-\begin{definition}{Label Join Rule}
-$$L_1 \sqcup L_2$$
-  \[
-    L_1 \sqcup L_2 = L_1 \cup L_2
-  \]
-\end{definition}
-
-\begin{example}{Joining of two labels}
-  If we have the two initializations:
-  \begin{lstlisting}[style=dlmc]
-int {{a->z,y}} val1 = 4;
-int {{b->x,w}} val2 = 8;
-  \end{lstlisting}
-  The joined label of the expression\\
-  \begin{lstlisting}[style=dlmc]
-val1 + val2
-  \end{lstlisting}
-  is
-  \begin{lstlisting}[style=dlmc]
-{{a->z,y; b->x,w}}
-  \end{lstlisting}
-  Since we have the implicit least restrictive policies for $b$ and $a$ in \dlmc{val1} and \dlmc{val2} respectively.
-\end{example}
+Note however that 
 
 \subsubsection{Security class lattice}
 By having this relationship between labels, we can see the set of all our labels as a partially-ordered set: a \emph{lattice}.
