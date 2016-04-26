@@ -7,14 +7,14 @@
 \newcommand{\dlmpc}{$\underline{pc}$}
 \newcommand{\mathcomment}[1]{\color{green!50!black}{#1}}
 
-\section{The Decentralized Label Model}
+\chapter{The Decentralized Label Model}
 The Decentralized Label Model \cite{myers1997, myers1998, myers2000} is a model for ensuring information flow control in a system.
 This is done by annotating source code with security policies, in the form of labels attached to data-holding constructs.
 This section will present the necessary information needed to understand the implementation of \thetool.
 The descriptions and definitions in this section are based on \cite{myers1997, myers1998, myers2000}.
 Throughout the examples, we will use the same grammar as that used by \thetool. \mikkel{Remember to write something about the grammar/parser...}
 
-\subsection{Labels and Policies}
+\section{Labels and Policies}
 Throughout a program, values are declared, initialized, and assigned to variables and other value-holders.
 Value-holders are collectively known as \emph{slots}, which cover constructs such as variables, structs, and other storage locations.
 In order to ensure that a certain assignment is legal, such that no information is unintentionally leaked, we assign \emph{labels} to slots so that their ``security'' can be compared.
@@ -32,7 +32,7 @@ In this report only read policies will be considered.
 Due to the relation between the two types of policies, we note that write policies can be ensured in a fashion similar to read policies.
 Because of this we choose to simplify the scope of the report such that it only discusses read policies.
 
-\subsubsection{Principals}
+\myparagraph{Principals}
 In the following, we employ the concept of \emph{principals}.
 A principal (or \emph{subject}, \emph{agent}) is an entity in a system that represents some interest.
 In short, principals represent real-world users or the authority under which a program/system runs.
@@ -41,7 +41,7 @@ Principals can exists in a \emph{principal hierarchy}, that describe more comple
 In the following we make use of the special set of principals; $*$.
 This set represents all principals in a system.
 
-\subsubsection{Labels}
+\myparagraph{Labels}
 A label can be described as a set of policies, where a policy consists of an owner principal $o$ and a set of reader principals $r_1, r_2, \dots, r_n$.
 Formally we provide the following, equivalent definition:
 \begin{definition}{Labels}
@@ -54,7 +54,7 @@ We describe how this is done in \cref{dlm:auth_and_declass}.
 If an owner is not part of its own policies reader set, that owner is not allowed to read from the slot associated with the label.
 He is however still allowed to change his policy.
 
-\subsubsection{The effective reader set}
+\myparagraph{The effective reader set}
 To ensure that the policies of all owners in a label are enforced, only readers that the all ``agree'' on can read from the slot associated with the label.
 This is known as the \emph{effective reader set}, which is the intersection of \emph{all} reader sets of a label:
 \begin{definition}{The effective reader set}
@@ -72,6 +72,9 @@ This is known as the \emph{effective reader set}, which is the intersection of \
   Thus the effective reader set is
   $$readers(L_1) = \{r1,r2\} \cap \{r2, r3\} = \{r2\}$$
 \end{example}
+
+\section{Labels as partially ordered set}
+\mikkelin{Describe why we have an interest in labels being partially ordered and then proceed to define it.}
 
 \subsection{Composite labels}
 We can construct composite labels by either joining or meeting two labels.
@@ -113,7 +116,7 @@ To do this we introduce the ``at most as restrictive as''-relation ($\sqsubseteq
 We can employ this definition to determine if two labels are equal:
 If $L_1 \sqsubseteq L_2$ and $L_2 \sqsubseteq L_1$ then we must have that $L_1 = L_2$.
 
-\subsubsection{Security class lattice}
+\myparagraph{Security class lattice}
 By having this relationship between labels, we can see the set of all our labels as a partially-ordered set: a \emph{lattice}.
 This means that we have a hierarchy in which the shared parent of every two individual elements is the result of a join of the two labels.
 Similarly a shared child of two elements is the result of a meet of those labels.
@@ -151,7 +154,7 @@ Dual to the bottom element, we also have the most restrictive label: the top ele
   \end{center}
 \end{figure}
 
-\subsection{Implicit flows}\label{dlm:implicit_flows}
+\section{Implicit flows}\label{dlm:implicit_flows}
 When assigning a value to a slot, possibly from another slot, it is an explicit flow.
 In addition to explicit flows, it is also possible to have implicit flows throughout a program, due to conditional control structures (such as loops).
 For whatever assignments we would do inside a block (or within a deeper block hierarchy) we need to take the predicates of these blocks into consideration.
@@ -228,4 +231,4 @@ return -1;
   While we still leak some information about \dlmc{cond}, we now do it explicitly.
 \end{example}
 
-\subsection{Label-checking and inference}
+\section{Label-checking and inference}
