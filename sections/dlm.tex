@@ -128,7 +128,7 @@ Dual to the bottom element, we also have the most restrictive label: the top ele
     \node (l2) at (1,0) {$L_2$};
 
     \node (meet) at (0,-1) {\small $L_1$ {\LARGE $\! \sqcap \!$} $L_2$};
-    \node (bot) at (0,-2) {$\bot$};
+    \node (bot) at (0,-2) {$\bot$s};
 
     \node (join) at (0,1) {\small $L_1$ {\LARGE $\! \sqcup \!$} $L_2$};
     \node (top) at (0,2) {$\top$};
@@ -175,15 +175,18 @@ return val;               // $\mathcomment{\bot}$
 
 \subsection{Authority and declassification}\label{dlm:auth_and_declass}
 In order to avoid mishaps by setting certain policies too lax, so that certain flows are permitted, we can temporarily set some policies to be more strict, and then only relax (\emph{declassify}) them when we really need to.
-In order to do this, we need the concept of \emph{authority}.
-At any point during running a program, it will have a \emph{true authority}, which is the maximal authority by which the program can carry out operations.
-Whenever we call a function, we can do this with a certain authority, corresponding to running that method with the authority of a specific principal.
+In order to do this, the concept of \emph{authority} is introduced.
+
+At any point during execution of a program, it will have a \emph{true authority}, which is the maximal authority by which the program can carry out operations.
+Whenever we call a function, we can do this with a certain authority, corresponding to running that method with the authority of a specific principal or principals.
 However, in order to take advantage of this given authority, we need to explicitly claim it.
 This is done by using the \dlmactsfor\dlmc{(a, b) \{ stmts \}} statement, where $a$ is the principal (typically the function itself) trying to obtain the authority of $b$.
 Only after calling this function will we obtain the \emph{effective authority} to act for $b$, enabling us to carry out the statements within the \dlmactsfor~ block that would normally only be permissible for $b$ itself.
 
-If the check passed, then we will inside the \dlmactsfor~ block now have the ability to carry out operations that normally would be permissible only to $b$ itself.
-Most importantly, we can do declassification -- deliberately and explicitly relaxing the security policies in which $b$ is owner.
+If the check passed, the \dlmc{stmt} block will be executed under the the newly established authority.
+If the check fails, the block is not executed.
+
+With $b$ in the effective authority we can perform declassification -- deliberately and explicitly relaxing the security policies in which $b$ is owner.
 This is done by calling the \dlmdeclassify\dlmc{(v, l)} function, with a slot $v$ and a new label $l$ as inputs, returning the value $v$ relabeled to $l$.
 The relabeling by declassification rule (the inference rule) is defined as follows:
 
@@ -194,7 +197,7 @@ The relabeling by declassification rule (the inference rule) is defined as follo
   {
     \splitfrac
     {
-      L_A = \mathlarger\sqcupl_{p \in P} \{p \rightarrow \}
+      L_A = \mathlarger\sqcupl_{p \in P} \{p \rightarrow \emptyset \}
     }
     {
       L_1 \sqsubseteq L_2 \sqcup L_A
