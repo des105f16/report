@@ -122,16 +122,34 @@ Dual to the bottom element, we also have the most restrictive label: the top ele
 The line below describes the effect of joining or meeting one label with another one, which is to make labels increasingly restrictive (join) or non-restrictive (meet).
 The line provides an abstract representation of the operations in that each arrow represents zero, one or many steps.
 
-\begin{center}
-  \begin{tikzpicture}[inner sep=0]
-    \node (vJoin) at (-3,0) {$\bot$};
-    \node[circle, fill, minimum height=1mm] (vMid) at (0,0) {};
-    \node (vMeet) at (3,0) {$\top$};
-    \node [above = 2mm] at (vMid) {$L$};
-    \draw [-triangle 45] (vMid) -- (vJoin) node [midway, above = 1mm] {$\sqcap$};
-    \draw [-triangle 45] (vMid) -- (vMeet) node [midway, above = 1mm,] {$\sqcup$};
+\begin{figure}
+  \begin{center}
+  \begin{tikzpicture}[inner sep=1mm, >=latex]
+    \node (l1) at (-1,0) {$L_1$};
+    \node (l2) at (1,0) {$L_2$};
+
+    \node (meet) at (0,-1) {\small $L_1$ {\LARGE $\! \sqcap \!$} $L_2$};
+    \node (bot) at (0,-2) {$\bot$};
+
+    \node (join) at (0,1) {\small $L_1$ {\LARGE $\! \sqcup \!$} $L_2$};
+    \node (top) at (0,2) {$\top$};
+
+    \draw[->] (l1) edge (join);
+    \draw[->] (l2) edge (join);
+    \draw[->] (l1) edge (meet);
+    \draw[->] (l2) edge (meet);
+
+    \draw[->, dashed, gray] (l1) edge [bend left] (top);
+    \draw[->, dashed, gray] (join) edge (top);
+    \draw[->, dashed, gray] (l2) edge [bend right] (top);
+
+    \draw[->, dashed, gray] (l1) edge [bend right] (bot);
+    \draw[->, dashed, gray] (meet) edge (bot);
+    \draw[->, dashed, gray] (l2) edge [bend left] (bot);
   \end{tikzpicture}
-\end{center}
+  \caption{Abstraction of security lattice}
+  \end{center}
+\end{figure}
 
 \subsection{Implicit flows}\label{dlm:implicit_flows}
 When assigning a value to a slot, possibly from another slot, it is an explicit flow.
