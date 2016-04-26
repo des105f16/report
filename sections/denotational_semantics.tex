@@ -1,3 +1,48 @@
 % !TEX root = ../master.tex
 
+\newcommand{\iDec}{\mathbf{Dec}}
+
+\newcommand{\iP}{\mathcal{P}}
+\newcommand{\iD}{\mathcal{D}}
+\newcommand{\iV}{\mathcal{V}}
+\newcommand{\iF}{\mathcal{F}}
+\newcommand{\iS}{\mathcal{S}}
+\newcommand{\iE}{\mathcal{E}}
+\newcommand{\iL}{\mathcal{L}}
+\newcommand{\iO}{\mathcal{O}}
+
+\newcommand{\dblSq}[1]{[\![ #1 ]\!]}
+
 \section{Semantics}
+
+\subsection{Abstract Syntax}
+
+\subsubsection{Semantic Domains}
+In the following, $\mathcal P$ denotes the power set.
+\begin{align*}
+LV      & = v(L) \cup c(L) \cup p(L) \cup j(L) \cup \{ \bot, \top \} \\
+\iEnvL  & = \iVar \cup \iFun \cup \{ \ia, \ib, \ifb \} \rightharpoonup \mathbb{L} \\
+\iEnvP  & = \iFun \rightarrow \mathcal{P}(\iVar \times \mathbb{L}) \\
+\iCstr  & = \mathcal P (\mathbb{L} \times \mathbb{L})
+\end{align*}
+
+\subsubsection{Semantic Functions}
+\begin{align*}
+\iP & : \iProg \rightarrow \iCstr \\
+\iD & : \iDec \rightarrow \iCstr \times \iEnvL \times \iEnvP \\
+\iV & : \iDecv \rightarrow \iCstr \times \iEnvL \times \iEnvP \\
+\iF & : \iDecf \rightarrow \iCstr \times \iEnvL \times \iEnvP \\
+\iS & : \iStm \rightarrow \iCstr \times \iEnvL \\
+\iE & : \iExp \rightarrow \iCstr \times \mathbb{L} \\
+\end{align*}
+
+\subsubsection{Semantic Equations}
+\begin{align*}
+& \iP\dblSq{D} = Cstr \text{ where } \iD\dblSq{D} \; emptyCstr \; emptyEnvL \; emptyEnvP = (Cstr, EnvL, EnvP) \\
+& \iD\dblSq{D_V} \; Cstr \; EnvL \; EnvP = \iV\dblSq{D_V} \; Cstr \; EnvL \; EnvP \\
+& \iD\dblSq{D_F} \; Cstr \; EnvL \; EnvP = \iF\dblSq{D_F} \; Cstr \; EnvL \; EnvP \\
+& \iD\dblSq{D_1 \; D_2} \; Cstr \; EnvL \; EnvP = (Cstr_3, EnvL_3, EnvP_3) \\
+& \quad \text{ where } \iD\dblSq{D_2} \; Cstr_2 \; EnvL_2 \; EnvP_2  = (Cstr_3, EnvL_3, EnvP_3) \\
+& \quad \text{ and } \iD\dblSq{D_1} \; Cstr \; EnvL \; EnvP = (Cstr_2, EnvL_2, EnvP_2) \\
+& \textit{Alternatively: } \iD\dblSq{D_1 \; D_2} = \iD\dblSq{D_2} \circ \iD\dblSq{D_1}
+\end{align*}
