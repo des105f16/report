@@ -115,12 +115,11 @@ If $L_1 \sqsubseteq L_2$ and $L_2 \sqsubseteq L_1$ then we must have that $L_1 =
 
 \subsubsection{Security class lattice}
 By having this relationship between labels, we can see the set of all our labels as a partially-ordered set: a \emph{lattice}.
-This means that we have a hierarchy, in which the shared parent of every two individual elements is the result of a join of the two labels., as well as a shared child: the result of a meet of the same two labels.
-Additionally, to represent the least restrictive label of any security class lattice we have a bottom element, denoted $\bot$.
+This means that we have a hierarchy in which the shared parent of every two individual elements is the result of a join of the two labels.
+Similarly a shared child of two elements is the result of a meet of those labels.
+To represent the least restrictive label of any security class lattice we have a bottom element, denoted $\bot$.
 Dual to the bottom element, we also have the most restrictive label: the top element, denoted $\top$.
-
-The line below describes the effect of joining or meeting one label with another one, which is to make labels increasingly restrictive (join) or non-restrictive (meet).
-The line provides an abstract representation of the operations in that each arrow represents zero, one or many steps.
+\Cref{dlm:lattice_fig} illustrates this label relation.
 
 \begin{figure}
   \begin{center}
@@ -148,6 +147,7 @@ The line provides an abstract representation of the operations in that each arro
     \draw[->, dashed, gray] (l2) edge [bend left] (bot);
   \end{tikzpicture}
   \caption{Abstraction of security lattice}
+  \label{dlm:lattice_fig}
   \end{center}
 \end{figure}
 
