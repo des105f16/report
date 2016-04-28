@@ -19,9 +19,7 @@
 
 \section{Semantics}
 
-\subsection{Abstract Syntax}
-
-\subsubsection{Semantic Domains}
+\subsection{Semantic Domains}
 In the following, $\mathcal P$ denotes the power set.
 \mikaelin{Not sure what to do with LV yet...}
 \begin{align*}
@@ -31,7 +29,7 @@ In the following, $\mathcal P$ denotes the power set.
 \iCstr  & = \mathcal P (\iLV \times \iLV)
 \end{align*}
 
-\subsubsection{Semantic Functions}
+\subsection{Semantic Functions}
 \begin{align*}
 \iP & : \iProg \rightarrow \iCstr \\
 \iD & : \iDec \rightarrow \iCstr \times \iEnvL \times \iEnvP \\
@@ -42,18 +40,21 @@ In the following, $\mathcal P$ denotes the power set.
 \iL & : \iLbl \cup \iPol \rightarrow \iLV \cup \{ \varepsilon \}
 \end{align*}
 
-\subsubsection{Semantic Equations}
+\subsection{Semantic Equations}
+
+\subsubsection{Program and Declaration}
 \begin{align*}
-% PROGRAM
 & \iP\dblSq{D} = \icstr \dsWhere{\iD\dblSq{D} \; empty\icstr \; empty\ienvL \; empty\ienvP = (\icstr, \ienvL, \ienvP)} \rspace
-% DECLARATION
 & \iD\dblSq{D_V} \; \icstr \; \ienvL \; \ienvP = (\icstr_2, \ienvL_2, \ienvP) \dsWhere{\iV\dblSq{D_V} \; \icstr \; \ienvL \; \ienvP = (\icstr_2, \ienvL_2)} \rspace
 & \iD\dblSq{D_F} \; \icstr \; \ienvL \; \ienvP = \iF\dblSq{D_F} \; \icstr \; \ienvL \; \ienvP \rspace
 & \iD\dblSq{D_1 \; D_2} \; \icstr \; \ienvL \; \ienvP = (\icstr_3, \ienvL_3, \ienvP_3) \\
 & \quad \text{ where } \iD\dblSq{D_2} \; \icstr_2 \; \ienvL_2 \; \ienvP_2  = (\icstr_3, \ienvL_3, \ienvP_3) \\
 & \quad \text{ and } \iD\dblSq{D_1} \; \icstr \; \ienvL \; \ienvP = (\icstr_2, \ienvL_2, \ienvP_2) \\
-& \textit{Alternatively: } \iD\dblSq{D_1 \; D_2} = \iD\dblSq{D_2} \circ \iD\dblSq{D_1} \rspace
-% VARIABLE DECLARATION
+& \textit{Alternatively: } \iD\dblSq{D_1 \; D_2} = \iD\dblSq{D_2} \circ \iD\dblSq{D_1}
+\end{align*}
+
+\subsubsection{Variable Declaration}
+\begin{align*}
 & \iV\dblSq{T \; l \; x \tk = e} \; \icstr \; \ienvL \; \ienvP = (\icstr \cup \icstr_2 \cup \{ c \}, \ienvL[x \mapsto L_x]) \\
 & \dsWhere{\iL\dblSq{l} \; \ienvL = L} \\
 & \dsAnd{\iE\dblSq{e} \; \ienvL \; \ienvP = (\icstr_2, L_e)} \\
@@ -70,5 +71,5 @@ In the following, $\mathcal P$ denotes the power set.
     L & \quad \text{otherwise}
   \end{cases}} \\
 & \dsAnd{L_\ib = \ienvL \, \ib} \\
-& \dsAnd{c = " \, \bot \sqcup L_\ib \sqsubseteq L_x \, "} \rspace
+& \dsAnd{c = " \, \bot \sqcup L_\ib \sqsubseteq L_x \, "}
 \end{align*}
