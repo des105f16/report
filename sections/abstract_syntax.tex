@@ -24,6 +24,7 @@ In the rules below a \textit{pseudo} function $\mathcal{P}$ is used to represent
 \begin{table}
   \begin{align*}
     P       & \in \iProg \text{ -- Programs}\\
+    D       & \in \iDec \text{ -- Declarations}\\
     D_V     & \in \iDecv \text{ -- Variable declarations}\\
     x       & \in \iVar \text{ -- Variables}\\
     D_F     & \in \iDecf \text{ -- Function declarations}\\
@@ -43,7 +44,8 @@ In the rules below a \textit{pseudo} function $\mathcal{P}$ is used to represent
 
 \begin{table}
   \begin{align*}
-    P         & ::= D_V \gp D_F \gp P_1 \; P_2 \\
+    P         & ::= D \\
+    D         & ::= D_V \gp D_F \gp D_1 \; D_2 \\
     D_V       & ::= T \, l \, x \tk = e \gp T \, l x \\
     D_F       & ::= T_f \, l_f \, f \tk ( T_1 \, l_1 \, x_1 \tk , T_2 \, l_2 \, x_2 \tk , \dots \tk , T_n \, l_n \, x_n \tk ) S \\
     S         & ::= e \gp S_1 \; S_2 \gp \varepsilon \\

@@ -1,7 +1,5 @@
 % !TEX root = ../master.tex
 
-\newcommand{\iDec}{\mathbf{Dec}}
-
 \newcommand{\iP}{\mathcal{P}}
 \newcommand{\iD}{\mathcal{D}}
 \newcommand{\iV}{\mathcal{V}}
@@ -12,6 +10,10 @@
 \newcommand{\iO}{\mathcal{O}}
 
 \newcommand{\dblSq}[1]{[\![ #1 ]\!]}
+
+\newcommand{\rspace}{\\[0.5em]}
+\newcommand{\dsWhere}[1]{\quad \text{ where } #1}
+\newcommand{\dsAnd}[1]{\quad \text{ and } #1}
 
 \section{Semantics}
 
@@ -30,19 +32,40 @@ LV      & = v(L) \cup c(L) \cup p(L) \cup j(L) \cup \{ \bot, \top \} \\
 \begin{align*}
 \iP & : \iProg \rightarrow \iCstr \\
 \iD & : \iDec \rightarrow \iCstr \times \iEnvL \times \iEnvP \\
-\iV & : \iDecv \rightarrow \iCstr \times \iEnvL \times \iEnvP \\
+\iV & : \iDecv \rightarrow \iCstr \times \iEnvL \\
 \iF & : \iDecf \rightarrow \iCstr \times \iEnvL \times \iEnvP \\
 \iS & : \iStm \rightarrow \iCstr \times \iEnvL \\
 \iE & : \iExp \rightarrow \iCstr \times \mathbb{L} \\
+\iL & : \iLbl \cup \iPol \rightarrow \mathbb{L} \cup \{ \varepsilon \}
 \end{align*}
 
 \subsubsection{Semantic Equations}
 \begin{align*}
-& \iP\dblSq{D} = Cstr \text{ where } \iD\dblSq{D} \; emptyCstr \; emptyEnvL \; emptyEnvP = (Cstr, EnvL, EnvP) \\
-& \iD\dblSq{D_V} \; Cstr \; EnvL \; EnvP = \iV\dblSq{D_V} \; Cstr \; EnvL \; EnvP \\
-& \iD\dblSq{D_F} \; Cstr \; EnvL \; EnvP = \iF\dblSq{D_F} \; Cstr \; EnvL \; EnvP \\
-& \iD\dblSq{D_1 \; D_2} \; Cstr \; EnvL \; EnvP = (Cstr_3, EnvL_3, EnvP_3) \\
-& \quad \text{ where } \iD\dblSq{D_2} \; Cstr_2 \; EnvL_2 \; EnvP_2  = (Cstr_3, EnvL_3, EnvP_3) \\
-& \quad \text{ and } \iD\dblSq{D_1} \; Cstr \; EnvL \; EnvP = (Cstr_2, EnvL_2, EnvP_2) \\
-& \textit{Alternatively: } \iD\dblSq{D_1 \; D_2} = \iD\dblSq{D_2} \circ \iD\dblSq{D_1}
+% PROGRAM
+& \iP\dblSq{D} = \icstr \dsWhere{\iD\dblSq{D} \; empty\icstr \; empty\ienvL \; empty\ienvP = (\icstr, \ienvL, \ienvP)} \rspace
+% DECLARATION
+& \iD\dblSq{D_V} \; \icstr \; \ienvL \; \ienvP = (\icstr_2, \ienvL_2, \ienvP) \dsWhere{\iV\dblSq{D_V} \; \icstr \; \ienvL \; \ienvP = (\icstr_2, \ienvL_2)} \rspace
+& \iD\dblSq{D_F} \; \icstr \; \ienvL \; \ienvP = \iF\dblSq{D_F} \; \icstr \; \ienvL \; \ienvP \rspace
+& \iD\dblSq{D_1 \; D_2} \; \icstr \; \ienvL \; \ienvP = (\icstr_3, \ienvL_3, \ienvP_3) \\
+& \quad \text{ where } \iD\dblSq{D_2} \; \icstr_2 \; \ienvL_2 \; \ienvP_2  = (\icstr_3, \ienvL_3, \ienvP_3) \\
+& \quad \text{ and } \iD\dblSq{D_1} \; \icstr \; \ienvL \; \ienvP = (\icstr_2, \ienvL_2, \ienvP_2) \\
+& \textit{Alternatively: } \iD\dblSq{D_1 \; D_2} = \iD\dblSq{D_2} \circ \iD\dblSq{D_1} \rspace
+% VARIABLE DECLARATION
+& \iV\dblSq{T \; l \; x \tk = e} \; \icstr \; \ienvL \; \ienvP = (\icstr \cup \icstr_2 \cup \{ c \}, \ienvL[x \mapsto L_x]) \\
+& \dsWhere{\iL\dblSq{l} \; \ienvL = L} \\
+& \dsAnd{\iE\dblSq{e} \; \ienvL \; \ienvP = (\icstr_2, L_e)} \\
+& \dsAnd{L_x = \begin{cases}
+    v(x) & \quad \text{if } L = \varepsilon \\
+    L & \quad \text{otherwise}
+  \end{cases}} \\
+& \dsAnd{L_\ib = \ienvL \, \ib} \\
+& \dsAnd{c = " \, L_e \sqcup L_\ib \sqsubseteq L_x \, "} \rspace
+& \iV\dblSq{T \; l \; x} \; \icstr \; \ienvL \; \ienvP = (cstr \cup \{ c \}, \ienvL[x \mapsto L_x])\\
+& \dsWhere{\iL\dblSq{l} \; \ienvL = L} \\
+& \dsAnd{L_x = \begin{cases}
+    v(x) & \quad \text{if } L = \varepsilon \\
+    L & \quad \text{otherwise}
+  \end{cases}} \\
+& \dsAnd{L_\ib = \ienvL \, \ib} \\
+& \dsAnd{c = " \, \bot \sqcup L_\ib \sqsubseteq L_x \, "} \rspace
 \end{align*}
