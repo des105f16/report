@@ -9,6 +9,8 @@
 \newcommand{\iL}{\mathcal{L}}
 \newcommand{\iO}{\mathcal{O}}
 
+\newcommand{\iLV}{LV}
+
 \newcommand{\dblSq}[1]{[\![ #1 ]\!]}
 
 \newcommand{\rspace}{\\[0.5em]}
@@ -23,10 +25,10 @@
 In the following, $\mathcal P$ denotes the power set.
 \mikaelin{Not sure what to do with LV yet...}
 \begin{align*}
-LV      & = v(L) \cup c(L) \cup p(L) \cup j(L) \cup \{ \bot, \top \} \\
-\iEnvL  & = \iVar \cup \iFun \cup \{ \ia, \ib, \ifb \} \rightharpoonup \mathbb{L} \\
-\iEnvP  & = \iFun \rightarrow \mathcal{P}(\iVar \times \mathbb{L}) \\
-\iCstr  & = \mathcal P (\mathbb{L} \times \mathbb{L})
+\iLV      & = v(\iVar) \cup c(\iVar) \cup p(\mathbb{L}) \cup j(\iLV \times \iLV) \\
+\iEnvL  & = \iVar \cup \iFun \cup \{ \ia, \ib, \ifb \} \rightharpoonup \iLV \\
+\iEnvP  & = \iFun \rightarrow \mathcal{P}(\iVar \times \iLV) \\
+\iCstr  & = \mathcal P (\iLV \times \iLV)
 \end{align*}
 
 \subsubsection{Semantic Functions}
@@ -36,8 +38,8 @@ LV      & = v(L) \cup c(L) \cup p(L) \cup j(L) \cup \{ \bot, \top \} \\
 \iV & : \iDecv \rightarrow \iCstr \times \iEnvL \\
 \iF & : \iDecf \rightarrow \iCstr \times \iEnvL \times \iEnvP \\
 \iS & : \iStm \rightarrow \iCstr \times \iEnvL \\
-\iE & : \iExp \rightarrow \iCstr \times \mathbb{L} \\
-\iL & : \iLbl \cup \iPol \rightarrow \mathbb{L} \cup \{ \varepsilon \}
+\iE & : \iExp \rightarrow \iCstr \times \iLV \\
+\iL & : \iLbl \cup \iPol \rightarrow \iLV \cup \{ \varepsilon \}
 \end{align*}
 
 \subsubsection{Semantic Equations}
