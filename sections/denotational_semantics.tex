@@ -22,13 +22,20 @@
 
 \subsection{Semantic Domains}
 In the following, $\mathbb P$ denotes the power set.
-\mikaelin{Not sure what to do with LV yet...}
 \begin{align*}
 \iLV      & = v(\iVar) \cup c(\iVar) \cup p(\mathbb{L}) \cup j(\iLV \times \iLV) \\
 \iEnvL  & = \iVar \cup \iFun \cup \{ \ia, \ib, \ifb \} \rightharpoonup \iLV \\
 \iEnvP  & = \iFun \rightarrow \mathbb P (\iVar \times \iLV) \\
 \iCstr  & = \mathbb P (\iLV \times \iLV)
 \end{align*}
+
+$\iLV$~ is a set of \emph{Label Values}, which contains tagged values:
+\begin{description}
+  \item[$v$] -- Variable labels with variable identifier
+  \item[$c$] -- Constant labels with variable identifier
+  \item[$p$] -- Policy labels, as those described in \cref{dlm}
+  \item[$j$] -- Join labels, the join of two label values
+\end{description}
 
 \subsection{Semantic Functions}
 \begin{align*}
