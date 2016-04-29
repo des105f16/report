@@ -25,7 +25,7 @@ In the following, $\mathbb P$ denotes the power set.
 \begin{align*}
 \iLV      & = v(\iVar) \cup c(\iVar) \cup p(\mathbb{L}) \cup j(\iLV \times \iLV) \\
 \iEnvL  & = \iVar \cup \{ \ia, \ib \} \rightharpoonup \iLV \\
-\iEnvP  & = \iFun \cup \{ \ifb \} \rightarrow \iLV \times \mathbb P (\iLV \times \iVar) \\
+\iEnvP  & = \iFun \cup \{ \ifb \} \rightharpoonup \iLV \times \mathbb P (\iLV \times \iVar) \\
 \iCstr  & = \mathbb P (\iLV \times \iLV)
 \end{align*}
 
@@ -123,8 +123,8 @@ $\iLV$~ is a set of \emph{Label Values}, which contains tagged values:
 \subsubsection{Function call}
 \begin{align*}
 & \iE\dblSq{f \tk ( e_1 \tk , e_2 \tk , \dots \tk , e_n \tk )} \; \ienvL \; \ienvP = (cstr_a \cup cstr_p, \iLV_f') \\
-& \dsIf{\ienvP \; f \not = nil \text{ and} \text{\color{red}{ //we need a better way to do handle lookup-able function}}} \\
-& \dsWhere{replaceConstants(\iLV_f) \; \ienvL_2 = \iLV_f'} \\
+& \dsIf{\ienvP \; f = (\iLV_f, \{(\iLV_1, x_1), (\iLV_2, x_2), \dots, (\iLV_n, x_n)\}) \text{ and}} \\
+& \dsWhere{replaceConstants(\iLV_f, \ienvL_2) = \iLV_f'} \\
 & \dsAnd{\icstr_a = \bigcup\limits_{i=1}^n \icstr_i} \\
 & \dsAnd{\icstr_p = \bigcup\limits_{i=1}^n
   \begin{cases}
@@ -132,6 +132,5 @@ $\iLV$~ is a set of \emph{Label Values}, which contains tagged values:
     \{ \literal{\iLV_{e_i} \sqsubseteq \iLV_i} \} & \text{otherwise}
   \end{cases}} \\
 & \dsAnd{\iE\dblSq{e_i} \; \ienvL \; \ienvP = (cstr_i, \iLV_{e_i}) \text{ for } 0 \leq i \leq n} \\
-& \dsAnd{\ienvL_2 = \ienvL[x_1 \mapsto \iLV_{e_1}, x_2 \mapsto \iLV_{e_2}, \dots, x_n \mapsto \iLV_{e_n}]} \\
-& \dsAnd{\ienvP \; f = (\iLV_f, \{(\iLV_1, x_1), (\iLV_2, x_2), \dots, (\iLV_n, x_n)\})}
+& \dsAnd{\ienvL_2 = \ienvL[x_1 \mapsto \iLV_{e_1}, x_2 \mapsto \iLV_{e_2}, \dots, x_n \mapsto \iLV_{e_n}]}
 \end{align*}
