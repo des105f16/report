@@ -25,7 +25,7 @@ In the following, $\mathbb P$ denotes the power set.
 \begin{align*}
 \iLV      & = v(\iVar) \cup c(\iVar) \cup p(\mathbb{L}) \cup j(\iLV \times \iLV) \\
 \iEnvL  & = \iVar \cup \{ \ia, \ib \} \rightharpoonup \iLV \\
-\iEnvP  & = \iFun \cup \{ \ifb \} \rightarrow \iLV \times \mathbb P (\iVar \times \iLV) \\
+\iEnvP  & = \iFun \cup \{ \ifb \} \rightarrow \iLV \times \mathbb P (\iLV \times \iVar) \\
 \iCstr  & = \mathbb P (\iLV \times \iLV)
 \end{align*}
 
@@ -71,7 +71,7 @@ $\iLV$~ is a set of \emph{Label Values}, which contains tagged values:
 & \dsWhere{\iL\dblSq{pol_1} \; \ienvL = \iLV_1} \\
 & \dsAnd{\iL\dblSq{pol_2} \; \ienvL = \iLV_2} \rspace
 %
-& \iL\dblSq{x} \; \ienvL = \ienvL x \text{\mikaelin{Is this right?}} \rspace
+& \iL\dblSq{x} \; \ienvL = \ienvL x \rspace
 %
 & \iL\dblSq{p_0 \tk{->} p_1 \tk , p_2 \tk, \dots \tk , p_k} \; \ienvL = p(\{p_0' \rightarrow p_1', p_2', \dots, p_k'\}) \\
 & \dsWhere{p_i' = principal(p_i) \text{, for } 0 \leq i \leq k} \rspace
@@ -106,16 +106,16 @@ $\iLV$~ is a set of \emph{Label Values}, which contains tagged values:
 & \iF\dblSq{T_f \, l_f \, f \tk ( T_1 \, l_1 \, x_1 \tk , T_2 \, l_2 \, x_2 \tk , \dots \tk , T_n \, l_n \, x_n \tk ) S} \; \ienvL \; \ienvP
   =  (\icstr, \ienvL, \ienvP_2) \\
 & \dsWhere{\iS\dblSq{S} \; \ienvL_2 \; \ienvP_2 = (\icstr, \ienvL_3)} \\
-& \dsAnd{\ienvL_2 = \ienvL[x_1 \mapsto LV_1', x_2 \mapsto LV_2', \dots, x_n \mapsto LV_n']} \\
-& \dsAnd{\ienvP_2 = \ienvP[\ifb \mapsto (LV_f', \emptyset), f \mapsto (LV_f', \{(LV_1', x_1), (LV_2', x_2), \dots, (LV_n', x_n)\})]} \\
-& \dsAnd{LV_f' = \begin{cases}
-    \mathlarger\sqcupl_{i = 1}^n LV_i & \quad \text{if } LV_f = \varepsilon \\
-    LV_f & \quad \text{otherwise}
+& \dsAnd{\ienvL_2 = \ienvL[x_1 \mapsto \iLV_1', x_2 \mapsto \iLV_2', \dots, x_n \mapsto \iLV_n']} \\
+& \dsAnd{\ienvP_2 = \ienvP[\ifb \mapsto (\iLV_f', \emptyset), f \mapsto (\iLV_f', \{(\iLV_1', x_1), (\iLV_2', x_2), \dots, (\iLV_n', x_n)\})]} \\
+& \dsAnd{\iLV_f' = \begin{cases}
+    \mathlarger\sqcupl_{i = 1}^n \iLV_i & \quad \text{if } \iLV_f = \varepsilon \\
+    \iLV_f & \quad \text{otherwise}
   \end{cases}} \\
-& \dsAnd{\iL\dblSq{l_f} \; \ienvL = LV_f} \\
-& \dsAnd{LV_i' = \begin{cases}
-    c(x_i) & \quad \text{if } LV_i = \varepsilon \\
-    LV_i & \quad otherwise
+& \dsAnd{\iL\dblSq{l_f} \; \ienvL = \iLV_f} \\
+& \dsAnd{\iLV_i' = \begin{cases}
+    c(x_i) & \quad \text{if } \iLV_i = \varepsilon \\
+    \iLV_i & \quad otherwise
   \end{cases}} \\
-& \dsAnd{\iL\dblSq{l_i} \; \ienvL = LV_i \text{ for all } 0 \leq i \leq n}
+& \dsAnd{\iL\dblSq{l_i} \; \ienvL = \iLV_i \text{ for all } 0 \leq i \leq n}
 \end{align*}
