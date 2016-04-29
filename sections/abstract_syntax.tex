@@ -21,7 +21,7 @@ Principals and possibly a principal hierarchy are expected to be extracted from 
 In the rules below a \textit{pseudo} function $\mathcal{P}$ is used to represent the lookup of principal names in some system.
 \mikkel{Is this an acceptable explanation?}
 
-\begin{table}
+\begin{table}[h!]
   \begin{align*}
     P       & \in \iProg \text{ -- Programs}\\
     D       & \in \iDec \text{ -- Declarations}\\
@@ -36,13 +36,13 @@ In the rules below a \textit{pseudo} function $\mathcal{P}$ is used to represent
     pol     & \in \iPol \text{ -- Policy declaration}\\
     op_b    & \in \{ \tk + ,  \tk - ,  \tk * ,  \tk / ,  \tk \% ,  \tk{||} ,  \tk{\&\&} ,  \tk < ,  \tk > ,  \tk{==} ,  \tk{<=} ,  \tk{>=} \} \\
     op_u    & \in \{ \tk ! ,  \tk - \} \\
-    K       & \in \{ \tk{true}, \tk{false} \} \cup \mathbf{Num} \text{ -- Boolean and integer literals}
+    K       & \in \{ \tk{true}, \tk{false} \} \cup \mathbf{Num} \cup \mathbf{Chr} \cup \mathbf{Str} \text{ -- Boolean, integer, char, and string literals}
   \end{align*}
   \caption{Syntactic categories}
   \label{ctif:categories}
 \end{table}
 
-\begin{table}
+\begin{table}[h!]
   \begin{align*}
     P         & ::= D \\
     D         & ::= D_V \gp D_F \gp D_1 \; D_2 \\
