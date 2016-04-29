@@ -18,12 +18,13 @@ This is initial step of label inference and allows unlabeled C to be recognized 
 
 \paragraph{No principal declaration}
 Principals and possibly a principal hierarchy are expected to be extracted from some system information and not defined in the program code itself.
-In the rules below a \textit{pseudo} function $\mathcal{P}$ is used to represent the lookup of principal names in some system.
+In the rules below a \textit{pseudo} function $principal$ is used to represent the lookup of principal names in some system.
 \mikkel{Is this an acceptable explanation?}
 
-\begin{table}
+\begin{table}[h!]
   \begin{align*}
     P       & \in \iProg \text{ -- Programs}\\
+    D       & \in \iDec \text{ -- Declarations}\\
     D_V     & \in \iDecv \text{ -- Variable declarations}\\
     x       & \in \iVar \text{ -- Variables}\\
     D_F     & \in \iDecf \text{ -- Function declarations}\\
@@ -35,15 +36,16 @@ In the rules below a \textit{pseudo} function $\mathcal{P}$ is used to represent
     pol     & \in \iPol \text{ -- Policy declaration}\\
     op_b    & \in \{ \tk + ,  \tk - ,  \tk * ,  \tk / ,  \tk \% ,  \tk{||} ,  \tk{\&\&} ,  \tk < ,  \tk > ,  \tk{==} ,  \tk{<=} ,  \tk{>=} \} \\
     op_u    & \in \{ \tk ! ,  \tk - \} \\
-    K       & \in \{ \tk{true}, \tk{false} \} \cup \mathbf{Num} \text{ -- Boolean and integer literals}
+    K       & \in \{ \tk{true}, \tk{false} \} \cup \mathbf{Num} \cup \mathbf{Chr} \cup \mathbf{Str} \text{ -- Boolean, integer, char, and string literals}
   \end{align*}
   \caption{Syntactic categories}
   \label{ctif:categories}
 \end{table}
 
-\begin{table}
+\begin{table}[h!]
   \begin{align*}
-    P         & ::= D_V \gp D_F \gp P_1 \; P_2 \\
+    P         & ::= D \\
+    D         & ::= D_V \gp D_F \gp D_1 \; D_2 \\
     D_V       & ::= T \, l \, x \tk = e \gp T \, l x \\
     D_F       & ::= T_f \, l_f \, f \tk ( T_1 \, l_1 \, x_1 \tk , T_2 \, l_2 \, x_2 \tk , \dots \tk , T_n \, l_n \, x_n \tk ) S \\
     S         & ::= e \gp S_1 \; S_2 \gp \varepsilon \\
@@ -56,7 +58,7 @@ In the rules below a \textit{pseudo} function $\mathcal{P}$ is used to represent
               & \gp \tk{<|} e \tk , l \tk{|>} \gp \tk{<|} e \tk{|>} \\
               & \gp f \tk{<{}<{}<} p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{>{}>{}>} \tk ( e_1 \tk , e_2 \tk , \dots \tk , e_n \tk ) \\
     l         & ::= \tk{\{\{} pol \tk{\}\}} \gp \varepsilon \\
-    pol       & ::= x \gp p_0 \tk{->} p_1 \tk , p_2 \tk , \dots \tk , p_k \gp pol_1 \tk ; pol_2
+    pol       & ::= x \gp p_0 \tk{->} p_1 \tk , p_2 \tk , \dots \tk , p_k \gp pol_1 \tk ; pol_2 \gp \tk \_ \gp \tk{\^{}}
   \end{align*}
   \caption{Formation rules}
   \label{ctif:rules}
