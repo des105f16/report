@@ -33,9 +33,17 @@ $\iLV$~ is a set of \emph{Label Values}, which contains tagged values:
 \begin{description}
   \item[$v$] -- Variable labels with variable identifier
   \item[$c$] -- Constant labels with variable identifier
-  \item[$p$] -- Policy labels, as those described in \cref{dlm}
+  \item[$p$] -- Policy labels, as those described in DLM
   \item[$j$] -- Join labels, the join of two label values
 \end{description}
+
+$\iEnvL$ is the label environment, which maps variable identifiers, and the two special identifiers $\ia$ (authority) and $\ib$ (block), to label values.
+The special values are propagated through scope throughout a program.
+
+$\iEnvP$ is the function environment, which maps function identifiers, and the special identifier $\ifb$ (function block), to a tuple containing the label value of the function along with all argument label value and identifier tuples.
+The function block identifier is used for return statements so that the ``surrounding'' function label can be looked up.
+
+$\iCstr$ is a set of constraint tuples, where any $(\iLV_1, \iLV_2) \in \iCstr$ can be seen as representing a constraint: $" \; LV_1 \sqsubseteq LV_2 \; "$.
 
 \subsection{Semantic Functions}
 \begin{align*}
