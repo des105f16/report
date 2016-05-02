@@ -1,3 +1,16 @@
 % !TEX root = ../master.tex
 
 \section{Aiding Development of Secure Software}
+When developing any kind of software, developers must take many things into account.
+Even when developing software using high abstraction programming languages and/or frameworks, a lot can go wrong when having to take into account the multitudes of aspects related to a problem domain.
+This is even more so true when developing lower-level software (e.g. assembly or c), which is commonly seen in smaller devices, where performance and control is weighted higher than abstraction and assistance.
+
+Applying more tools and techniques to ensure security can be cumbersome and time-consuming, and could ultimately end up in complete omittance if it requires too much effort.
+This is why we would like to create a tool which could assist developers in gaining more insights to the security aspects of the software.
+We would like this to be as seamless as possible, which is why we imagine it as an active part of the development tools being used.
+
+We will develop a tool, bottom-up -- as to focus on the practical applications, which will give the user the ability to actively create and modify security policies while implementing his software, and receive feedback about breaches of these, in similar style of a modern IDE displaying compiler errors.
+
+This tool will be based on the security policies of DLM, with a focus on inferred labels.
+Additionally, we will introduce our simple time policies, as an extension to the DLM policies, which will be similarly usable and provide feedback as well.
+These time policies will also be inferred in a style making them as seamless to integrate into an implementation as with the non-time-constrained labels.
