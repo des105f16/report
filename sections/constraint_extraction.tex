@@ -110,15 +110,15 @@ $\iCstr$ is a set of constraint tuples, where any $(\ilv_1, \ilv_2) \in \iCstr$ 
 \subsubsection{Variable Declaration}
 \begin{align*}
   % with expression
-  & \iV\dblSq{t \; L \; x \tk = E} \; \ienvL \; \ienvF = (\icstr \cup \{ c \}, \ienvL[x \mapsto \ilv_x]) \\
-  & \dsWhere{\iL\dblSq{L} \; \ienvL = \ilv} \\
-  & \dsAnd{\iE\dblSq{E} \; \ienvL \; \ienvF = (\icstr, \ilv_E)} \\
-  & \dsAnd{\ilv_x = \begin{cases}
-  v(x) & \quad \text{if } \ilv = \varepsilon \\
-  \ilv & \quad \text{otherwise}
+  & \iV\dblSq{t \; L \; x \tk = E} \; \ienvL \; \ienvF = (\icstr_E \cup \{ c \}, \ienvL[x \mapsto \ilv_x']) \\
+  & \dsWhere{\iL\dblSq{L} \; \ienvL = \ilv_x} \\
+  & \dsAnd{\iE\dblSq{E} \; \ienvL \; \ienvF = (\icstr_E, \ilv_E)} \\
+  & \dsAnd{\ilv_x' = \begin{cases}
+  v(x) & \quad \text{if } \ilv_x = \varepsilon \\
+  \ilv_x & \quad \text{otherwise}
   \end{cases}} \\
   & \dsAnd{\ilv_\ib = \ienvL \, \ib} \\
-  & \dsAnd{c = " \, \ilv_E \sqcup \ilv_\ib \sqsubseteq \ilv_x \, "} \rspace
+  & \dsAnd{c = \literal{\ilv_E \sqcup \ilv_\ib \sqsubseteq \ilv_x}} \rspace
   % no expression
   & \iV\dblSq{t \; L \; x} \; \ienvL \; \ienvF = (\{ c \}, \ienvL[x \mapsto \ilv_x])\\
   & \dsWhere{\iL\dblSq{L} \; \ienvL = \ilv} \\
@@ -127,7 +127,7 @@ $\iCstr$ is a set of constraint tuples, where any $(\ilv_1, \ilv_2) \in \iCstr$ 
   \ilv & \quad \text{otherwise}
   \end{cases}} \\
   & \dsAnd{\ilv_\ib = \ienvL \, \ib} \\
-  & \dsAnd{c = " \, \bot \sqcup \ilv_\ib \sqsubseteq \ilv_x \, "}
+  & \dsAnd{c = \literal{\bot \sqcup \ilv_\ib \sqsubseteq \ilv_x}}
 \end{align*}
 
 \subsubsection{Function call}
