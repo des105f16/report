@@ -138,11 +138,11 @@ In order to do this, we declare an auxiliary function:
 
 with the following definition:
 
-$replaceConstants(lv, \ienvL) =$ \\
-\[ \begin{cases}
-\ienvL \; x & \quad \text{if } lv = c(x) \\
-j(replaceConstants(lv_1), replaceConstants(lv_2)) & \quad \text{if } lv = j(lv_1, lv_2) \\
-lv & \quad \text{otherwise}
+\[replaceConstants(lv, \ienvL) = \begin{cases}
+  \ienvL \; x & \quad \text{if } lv = c(x) \\
+  j(replaceConstants(lv_1), & \quad \text{if } lv = j(lv_1, lv_2) \\
+  \quad replaceConstants(lv_2)) & \\
+  lv & \quad \text{otherwise}
 \end{cases} \]
 
 \begin{align*}
