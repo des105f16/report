@@ -23,7 +23,7 @@ In the rules below a \textit{pseudo} function $principal$ is used to represent t
 
 \begin{table}[h!]
   \begin{align*}
-    P       & \in \iProg \text{ -- Programs}\\
+    R       & \in \iProg \text{ -- Programs}\\
     D       & \in \iDec \text{ -- Declarations}\\
     D_V     & \in \iDecv \text{ -- Variable declarations}\\
     x       & \in \iVar \text{ -- Variables}\\
@@ -31,12 +31,13 @@ In the rules below a \textit{pseudo} function $principal$ is used to represent t
     f       & \in \iFun \text{ -- Functions}\\
     p       & \in \iPrin \text{ -- Principals}\\
     S       & \in \iStm \text{ -- Statements}\\
-    e       & \in \iExp \text{ -- Expressions}\\
-    l       & \in \iLbl \text{ -- Label declaration}\\
-    pol     & \in \iPol \text{ -- Policy declaration}\\
+    E       & \in \iExp \text{ -- Expressions}\\
+    L       & \in \iLbl \text{ -- Label declaration}\\
+    P       & \in \iPol \text{ -- Policy declaration}\\
     op_b    & \in \{ \tk + ,  \tk - ,  \tk * ,  \tk / ,  \tk \% ,  \tk{||} ,  \tk{\&\&} ,  \tk < ,  \tk > ,  \tk{==} ,  \tk{<=} ,  \tk{>=} \} \\
     op_u    & \in \{ \tk ! ,  \tk - \} \\
-    K       & \in \{ \tk{true}, \tk{false} \} \cup \mathbf{Num} \cup \mathbf{Chr} \cup \mathbf{Str} \text{ -- Boolean, integer, char, and string literals}
+    k       & \in \{ \tk{true}, \tk{false} \} \cup \mathbf{Num} \cup \mathbf{Chr} \cup \mathbf{Str} \text{ -- Boolean, integer, char, and string literals} \\
+    t       & \in \mathbf{Types} \text{ -- C types}
   \end{align*}
   \caption{Syntactic categories}
   \label{ctif:categories}
@@ -44,21 +45,21 @@ In the rules below a \textit{pseudo} function $principal$ is used to represent t
 
 \begin{table}[h!]
   \begin{align*}
-    P         & ::= D \\
+    R         & ::= D \\
     D         & ::= D_V \gp D_F \gp D_1 \; D_2 \\
-    D_V       & ::= T \, l \, x \tk = e \gp T \, l x \\
-    D_F       & ::= T_f \, l_f \, f \tk ( T_1 \, l_1 \, x_1 \tk , T_2 \, l_2 \, x_2 \tk , \dots \tk , T_n \, l_n \, x_n \tk ) S \\
-    S         & ::= e \gp S_1 \; S_2 \gp \varepsilon \\
+    D_V       & ::= t \, l \, x \tk = E \gp t \, l x \\
+    D_F       & ::= t_f \, l_f \, f \tk ( t_1 \, l_1 \, x_1 \tk , t_2 \, l_2 \, x_2 \tk , \dots \tk , t_n \, l_n \, x_n \tk ) S \\
+    S         & ::= E \gp S_1 \; S_2 \gp \varepsilon \\
               & \gp D_V \\
-              & \gp \tk{while} \tk ( e \tk ) S \gp \tk{if} \tk ( e \tk ) S \gp \tk{if} \tk ( e \tk ) S_1 \tk{else} S_2 \\
-              & \gp x \tk = e \\
-              & \gp \tk{return} e \gp \tk{return} \\
+              & \gp \tk{while} \tk ( E \tk ) S \gp \tk{if} \tk ( E \tk ) S \gp \tk{if} \tk ( E \tk ) S_1 \tk{else} S_2 \\
+              & \gp x \tk = E \\
+              & \gp \tk{return} E \gp \tk{return} \\
               & \gp \tk{this} \tk{-{}->?} p_1 \tk , p_2 \tk , \dots \tk , p_k \; S \gp \tk{caller} \tk{-{}->?} p_1 \tk , p_2 \tk , \dots \tk , p_k \; S \\
-    e         & ::= x \gp K \gp e_1 \; op_b \; e_2 \gp op_u \; e \gp \tk ( e \tk ) \\
-              & \gp \tk{<|} e \tk , l \tk{|>} \gp \tk{<|} e \tk{|>} \\
-              & \gp f \tk{<{}<{}<} p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{>{}>{}>} \tk ( e_1 \tk , e_2 \tk , \dots \tk , e_n \tk ) \\
-    l         & ::= \tk{\{\{} pol \tk{\}\}} \gp \varepsilon \\
-    pol       & ::= x \gp p_0 \tk{->} p_1 \tk , p_2 \tk , \dots \tk , p_k \gp pol_1 \tk ; pol_2 \gp \tk \_ \gp \tk{\^{}}
+    E         & ::= x \gp k \gp E_1 \; op_b \; E_2 \gp op_u \; E \gp \tk ( E \tk ) \\
+              & \gp \tk{<|} E \tk , l \tk{|>} \gp \tk{<|} E \tk{|>} \\
+              & \gp f \tk{<{}<{}<} p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{>{}>{}>} \tk ( E_1 \tk , E_2 \tk , \dots \tk , E_n \tk ) \\
+    L         & ::= \tk{\{\{} P \tk{\}\}} \gp \varepsilon \\
+    P       & ::= x \gp p_0 \tk{->} p_1 \tk , p_2 \tk , \dots \tk , p_k \gp P_1 \tk ; P_2 \gp \tk \_ \gp \tk{\^{}}
   \end{align*}
   \caption{Formation rules}
   \label{ctif:rules}
