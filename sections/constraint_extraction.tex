@@ -130,6 +130,18 @@ $\iCstr$ is a set of constraint tuples, where any $(\ilv_1, \ilv_2) \in \iCstr$ 
   & \dsAnd{c = \literal{\bot \sqcup \ilv_\ib \sqsubseteq \ilv_x}}
 \end{align*}
 
+\subsubsection{Statements}
+
+\begin{align*}
+& \iS\dblSq{\varepsilon} \; \ienvL \; \ienvF = (\emptyset, \ienvL) \rspace
+%
+& \iS\dblSq{E} \; \ienvL \; \ienvF = (\icstr, \ienvL) \dsWhere{\iE\dblSq{E} \; \ienvL \; \ienvF = (\icstr, \ilv)} \rspace
+%
+& \iS\dblSq{S_1 \; S_2} \; \ienvL \; \ienvF = (\icstr \cup \icstr_2, \ienvL_3) \\
+& \dsWhere{\iS\dblSq{S_2} \; \ienvL_2 \; \ienvF = (\icstr_2, \ienvL_3)} \\
+& \dsAnd{\iS\dblSq{S_1} \; \ienvL \; \ienvF = (\icstr, \ienvL_2)}
+\end{align*}
+
 \subsubsection{Function call}
 In order to evaluate function calls, where the function declaration uses constant parameters, we need to replace these constants with the corresponding argument label.
 In order to do this, we declare an auxiliary function:
