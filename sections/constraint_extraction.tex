@@ -49,25 +49,24 @@ $\iCstr$ is a set of constraint tuples, where any $(\ilv_1, \ilv_2) \in \iCstr$ 
 \subsection{Semantic Functions}
 \begin{align*}
 \iR & : \iProg \rightarrow \iCstr \\
-\iD & : \iDec \rightarrow \iCstr \times \iEnvL \times \iEnvP \\
-\iV & : \iDecv \rightarrow \iCstr \times \iEnvL \\
-\iF & : \iDecf \rightarrow \iCstr \times \iEnvL \times \iEnvP \\
-\iS & : \iStm \rightarrow \iCstr \times \iEnvL \\
-\iE & : \iExp \rightarrow \iCstr \times \iLV \\
-\iL & : \iLbl \cup \iPol \rightarrow \iLV \cup \{ \varepsilon \}
+\iD & : \iDec \rightarrow (\iEnvL \times \iEnvP \rightarrow \iCstr \times \iEnvL \times \iEnvP) \\
+\iV & : \iDecv \rightarrow (\iEnvL \times \iEnvP \rightarrow \iCstr \times \iEnvL) \\
+\iF & : \iDecf \rightarrow (\iEnvL \times \iEnvP \rightarrow \iCstr \times \iEnvL \times \iEnvP) \\
+\iS & : \iStm \rightarrow (\iEnvL \times \iEnvP \rightarrow \iCstr \times \iEnvL) \\
+\iE & : \iExp \rightarrow (\iEnvL \times \iEnvP \rightarrow \iCstr \times \iLV) \\
+\iL & : (\iLbl \cup \iPol) \rightarrow (\iEnvL \rightarrow \iLV \cup \{ \varepsilon \})
 \end{align*}
 
 \subsection{Semantic Equations}
 
 \subsubsection{Program and Declaration}
 \begin{align*}
-& \iR\dblSq{D} = \icstr \dsWhere{\iD\dblSq{D} \; empty\icstr \; empty\ienvL \; empty\ienvP = (\icstr, \ienvL, \ienvP)} \rspace
-& \iD\dblSq{D_V} \; \icstr \; \ienvL \; \ienvP = (\icstr_2, \ienvL_2, \ienvP) \dsWhere{\iV\dblSq{D_V} \; \icstr \; \ienvL \; \ienvP = (\icstr_2, \ienvL_2)} \rspace
-& \iD\dblSq{D_F} \; \icstr \; \ienvL \; \ienvP = \iF\dblSq{D_F} \; \icstr \; \ienvL \; \ienvP \rspace
-& \iD\dblSq{D_1 \; D_2} \; \icstr \; \ienvL \; \ienvP = (\icstr_3, \ienvL_3, \ienvP_3) \\
-& \quad \text{ where } \iD\dblSq{D_2} \; \icstr_2 \; \ienvL_2 \; \ienvP_2  = (\icstr_3, \ienvL_3, \ienvP_3) \\
-& \quad \text{ and } \iD\dblSq{D_1} \; \icstr \; \ienvL \; \ienvP = (\icstr_2, \ienvL_2, \ienvP_2) \\
-& \textit{Alternatively: } \iD\dblSq{D_1 \; D_2} = \iD\dblSq{D_2} \circ \iD\dblSq{D_1}
+& \iR\dblSq{D} = \icstr \dsWhere{\iD\dblSq{D} (empty\ienvL, empty\ienvP) = (\icstr, \ienvL, \ienvP)} \rspace
+& \iD\dblSq{D_V} \; \ienvL \; \ienvP = (\icstr, \ienvL_2, \ienvP) \dsWhere{\iV\dblSq{D_V} \; \ienvL \; \ienvP = (\icstr, \ienvL_2)} \rspace
+& \iD\dblSq{D_F} \; \ienvL \; \ienvP = (\icstr, \ienvL_2, \ienvP_2) \dsWhere{\iF\dblSq{D_F} \; \ienvL \; \ienvP = (\icstr, \ienvL_2, \ienvP_2)} \rspace
+& \iD\dblSq{D_1 \; D_2} \; \ienvL \; \ienvP = (\icstr \cup \icstr_2, \ienvL_3, \ienvP_3) \\
+& \quad \text{ where } \iD\dblSq{D_2} \; \ienvL_2 \; \ienvP_2 = (\icstr_2, \ienvL_3, \ienvP_3) \\
+& \quad \text{ and } \iD\dblSq{D_1} \ienvL \; \ienvP = (\icstr, \ienvL_2, \ienvP_2)
 \end{align*}
 
 \subsubsection{Label}
@@ -92,9 +91,9 @@ $\iCstr$ is a set of constraint tuples, where any $(\ilv_1, \ilv_2) \in \iCstr$ 
 \subsubsection{Variable Declaration}
 \begin{align*}
 % with expression
-& \iV\dblSq{t \; L \; x \tk = E} \; \icstr \; \ienvL \; \ienvP = (\icstr \cup \icstr_2 \cup \{ c \}, \ienvL[x \mapsto \ilv_x]) \\
+& \iV\dblSq{t \; L \; x \tk = E} \; \ienvL \; \ienvP = (\icstr \cup \{ c \}, \ienvL[x \mapsto \ilv_x]) \\
 & \dsWhere{\iL\dblSq{L} \; \ienvL = \ilv} \\
-& \dsAnd{\iE\dblSq{E} \; \ienvL \; \ienvP = (\icstr_2, \ilv_E)} \\
+& \dsAnd{\iE\dblSq{E} \; \ienvL \; \ienvP = (\icstr, \ilv_E)} \\
 & \dsAnd{\ilv_x = \begin{cases}
     v(x) & \quad \text{if } \ilv = \varepsilon \\
     \ilv & \quad \text{otherwise}
@@ -102,7 +101,7 @@ $\iCstr$ is a set of constraint tuples, where any $(\ilv_1, \ilv_2) \in \iCstr$ 
 & \dsAnd{\ilv_\ib = \ienvL \, \ib} \\
 & \dsAnd{c = " \, \ilv_E \sqcup \ilv_\ib \sqsubseteq \ilv_x \, "} \rspace
 % no expression
-& \iV\dblSq{t \; L \; x} \; \icstr \; \ienvL \; \ienvP = (cstr \cup \{ c \}, \ienvL[x \mapsto \ilv_x])\\
+& \iV\dblSq{t \; L \; x} \; \ienvL \; \ienvP = (\{ c \}, \ienvL[x \mapsto \ilv_x])\\
 & \dsWhere{\iL\dblSq{L} \; \ienvL = \ilv} \\
 & \dsAnd{\ilv_x = \begin{cases}
     v(x) & \quad \text{if } \ilv = \varepsilon \\
