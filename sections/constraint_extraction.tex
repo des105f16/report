@@ -152,7 +152,7 @@ with the following definition:
 & \dsAnd{\icstr_p = \bigcup\limits_{i=1}^n
   \begin{cases}
     \emptyset &\text{if } \ilv_i \in c(\iVar)\\
-    \{ c(\ilv_{E_i}, \ilv_i) \} & \text{otherwise}
+    \{ \literal{\ilv_{E_i} \sqsubseteq \ilv_i} \} & \text{otherwise}
   \end{cases}} \\
 & \dsAnd{\iE\dblSq{E_i} \; \ienvL \; \ienvF = (cstr_i, \ilv_{E_i}) \text{ for } 0 \leq i \leq n} \\
 & \dsAnd{\ienvL_2 = \ienvL[x_1 \mapsto \ilv_{E_1}, x_2 \mapsto \ilv_{E_2}, \dots, x_n \mapsto \ilv_{E_n}]}
