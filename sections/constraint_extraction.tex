@@ -50,7 +50,7 @@ $\iCstr$ is a set of constraint tuples, where any $(\ilv_1, \ilv_2) \in \iCstr$ 
 \begin{align*}
 \iR & : \iProg \rightarrow \iCstr \\
 \iD & : \iDec \rightarrow (\iEnvL \times \iEnvF \rightarrow \iCstr \times \iEnvL \times \iEnvF) \\
-\iF & : \iDecf \rightarrow (\iEnvL \times \iEnvF \rightarrow \iCstr \times \iEnvL \times \iEnvF) \\
+\iF & : \iDecf \rightarrow (\iEnvL \times \iEnvF \rightarrow \iCstr \times \iEnvF) \\
 \iV & : \iDecv \rightarrow (\iEnvL \times \iEnvF \rightarrow \iCstr \times \iEnvL) \\
 \iS & : \iStm \rightarrow (\iEnvL \times \iEnvF \rightarrow \iCstr \times \iEnvL) \\
 \iE & : \iExp \rightarrow (\iEnvL \times \iEnvF \rightarrow \iCstr \times \iLV) \\
@@ -62,7 +62,7 @@ $\iCstr$ is a set of constraint tuples, where any $(\ilv_1, \ilv_2) \in \iCstr$ 
 \subsubsection{Program and Declaration}
 \begin{align*}
 & \iR\dblSq{D} = \icstr \dsWhere{\iD\dblSq{D} \; empty\ienvL \; empty\ienvF = (\icstr, \ienvL, \ienvF)} \rspace
-& \iD\dblSq{D_F} \; \ienvL \; \ienvF = (\icstr, \ienvL_2, \ienvF_2) \dsWhere{\iF\dblSq{D_F} \; \ienvL \; \ienvF = (\icstr, \ienvL_2, \ienvF_2)} \rspace
+& \iD\dblSq{D_F} \; \ienvL \; \ienvF = (\icstr, \ienvL, \ienvF_2) \dsWhere{\iF\dblSq{D_F} \; \ienvL \; \ienvF = (\icstr, \ienvF_2)} \rspace
 & \iD\dblSq{D_V} \; \ienvL \; \ienvF = (\icstr, \ienvL_2, \ienvF) \dsWhere{\iV\dblSq{D_V} \; \ienvL \; \ienvF = (\icstr, \ienvL_2)} \rspace
 & \iD\dblSq{D_1 \; D_2} \; \ienvL \; \ienvF = (\icstr \cup \icstr_2, \ienvL_3, \ienvF_3) \\
 & \quad \text{ where } \iD\dblSq{D_2} \; \ienvL_2 \; \ienvF_2 = (\icstr_2, \ienvL_3, \ienvF_3) \\
