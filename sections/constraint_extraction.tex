@@ -1,6 +1,6 @@
 % !TEX root = ../master.tex
 
-\newcommand{\iP}{\mathcal{P}}
+\newcommand{\iR}{\mathcal{R}}
 \newcommand{\iD}{\mathcal{D}}
 \newcommand{\iV}{\mathcal{V}}
 \newcommand{\iF}{\mathcal{F}}
@@ -9,7 +9,8 @@
 \newcommand{\iL}{\mathcal{L}}
 \newcommand{\iO}{\mathcal{O}}
 
-\newcommand{\iLV}{LV}
+\newcommand{\iLV}{\mathbf{LV}}
+\newcommand{\ilv}{lv}
 
 \newcommand{\dblSq}[1]{[\![ #1 ]\!]}
 
@@ -23,7 +24,7 @@
 \subsection{Semantic Domains}
 In the following, $\mathbb P$ denotes the power set.
 \begin{align*}
-\iLV      & = v(\iVar) \cup c(\iVar) \cup p(\mathbb{L}) \cup j(\iLV \times \iLV) \\
+\iLV    & = v(\iVar) \cup c(\iVar) \cup p(\mathbb{L}) \cup j(\iLV \times \iLV) \\
 \iEnvL  & = \iVar \cup \{ \ia, \ib \} \rightharpoonup \iLV \\
 \iEnvP  & = \iFun \cup \{ \ifb \} \rightharpoonup \iLV \times \mathbb P (\iLV \times \iVar) \\
 \iCstr  & = \mathbb P (\iLV \times \iLV)
@@ -43,11 +44,11 @@ The special values are propagated through scope throughout a program.
 $\iEnvP$ is the function environment, which maps function identifiers, and the special identifier $\ifb$ (function block), to a tuple containing the label value of the function along with all argument label value and identifier tuples.
 The function block identifier is used for return statements so that the ``surrounding'' function label can be looked up.
 
-$\iCstr$ is a set of constraint tuples, where any $(\iLV_1, \iLV_2) \in \iCstr$ can be seen as representing a constraint: $" \; LV_1 \sqsubseteq LV_2 \; "$.
+$\iCstr$ is a set of constraint tuples, where any $(\ilv_1, \ilv_2) \in \iCstr$ can be seen as representing a constraint: $" \; LV_1 \sqsubseteq LV_2 \; "$.
 
 \subsection{Semantic Functions}
 \begin{align*}
-\iP & : \iProg \rightarrow \iCstr \\
+\iR & : \iProg \rightarrow \iCstr \\
 \iD & : \iDec \rightarrow \iCstr \times \iEnvL \times \iEnvP \\
 \iV & : \iDecv \rightarrow \iCstr \times \iEnvL \\
 \iF & : \iDecf \rightarrow \iCstr \times \iEnvL \times \iEnvP \\
@@ -60,7 +61,7 @@ $\iCstr$ is a set of constraint tuples, where any $(\iLV_1, \iLV_2) \in \iCstr$ 
 
 \subsubsection{Program and Declaration}
 \begin{align*}
-& \iP\dblSq{D} = \icstr \dsWhere{\iD\dblSq{D} \; empty\icstr \; empty\ienvL \; empty\ienvP = (\icstr, \ienvL, \ienvP)} \rspace
+& \iR\dblSq{D} = \icstr \dsWhere{\iD\dblSq{D} \; empty\icstr \; empty\ienvL \; empty\ienvP = (\icstr, \ienvL, \ienvP)} \rspace
 & \iD\dblSq{D_V} \; \icstr \; \ienvL \; \ienvP = (\icstr_2, \ienvL_2, \ienvP) \dsWhere{\iV\dblSq{D_V} \; \icstr \; \ienvL \; \ienvP = (\icstr_2, \ienvL_2)} \rspace
 & \iD\dblSq{D_F} \; \icstr \; \ienvL \; \ienvP = \iF\dblSq{D_F} \; \icstr \; \ienvL \; \ienvP \rspace
 & \iD\dblSq{D_1 \; D_2} \; \icstr \; \ienvL \; \ienvP = (\icstr_3, \ienvL_3, \ienvP_3) \\
@@ -75,9 +76,9 @@ $\iCstr$ is a set of constraint tuples, where any $(\iLV_1, \iLV_2) \in \iCstr$ 
 %
 & \iL\dblSq{\tk{\{\{} pol \tk{\}\}}} \; \ienvL = \iL\dblSq{pol} \; \ienvL \rspace
 %
-& \iL\dblSq{pol_1 \tk ; pol_2} \; \ienvL = j(\iLV_1, \iLV_2) \\
-& \dsWhere{\iL\dblSq{pol_1} \; \ienvL = \iLV_1} \\
-& \dsAnd{\iL\dblSq{pol_2} \; \ienvL = \iLV_2} \rspace
+& \iL\dblSq{pol_1 \tk ; pol_2} \; \ienvL = j(\ilv_1, \ilv_2) \\
+& \dsWhere{\iL\dblSq{pol_1} \; \ienvL = \ilv_1} \\
+& \dsAnd{\iL\dblSq{pol_2} \; \ienvL = \ilv_2} \rspace
 %
 & \iL\dblSq{x} \; \ienvL = \ienvL x \rspace
 %
@@ -90,42 +91,44 @@ $\iCstr$ is a set of constraint tuples, where any $(\iLV_1, \iLV_2) \in \iCstr$ 
 
 \subsubsection{Variable Declaration}
 \begin{align*}
-& \iV\dblSq{T \; l \; x \tk = e} \; \icstr \; \ienvL \; \ienvP = (\icstr \cup \icstr_2 \cup \{ c \}, \ienvL[x \mapsto L_x]) \\
-& \dsWhere{\iL\dblSq{l} \; \ienvL = L} \\
-& \dsAnd{\iE\dblSq{e} \; \ienvL \; \ienvP = (\icstr_2, L_e)} \\
-& \dsAnd{L_x = \begin{cases}
-    v(x) & \quad \text{if } L = \varepsilon \\
-    L & \quad \text{otherwise}
+% with expression
+& \iV\dblSq{t \; L \; x \tk = E} \; \icstr \; \ienvL \; \ienvP = (\icstr \cup \icstr_2 \cup \{ c \}, \ienvL[x \mapsto \ilv_x]) \\
+& \dsWhere{\iL\dblSq{L} \; \ienvL = \ilv} \\
+& \dsAnd{\iE\dblSq{E} \; \ienvL \; \ienvP = (\icstr_2, \ilv_E)} \\
+& \dsAnd{\ilv_x = \begin{cases}
+    v(x) & \quad \text{if } \ilv = \varepsilon \\
+    \ilv & \quad \text{otherwise}
   \end{cases}} \\
-& \dsAnd{L_\ib = \ienvL \, \ib} \\
-& \dsAnd{c = " \, L_e \sqcup L_\ib \sqsubseteq L_x \, "} \rspace
-& \iV\dblSq{T \; l \; x} \; \icstr \; \ienvL \; \ienvP = (cstr \cup \{ c \}, \ienvL[x \mapsto L_x])\\
-& \dsWhere{\iL\dblSq{l} \; \ienvL = L} \\
-& \dsAnd{L_x = \begin{cases}
-    v(x) & \quad \text{if } L = \varepsilon \\
-    L & \quad \text{otherwise}
+& \dsAnd{\ilv_\ib = \ienvL \, \ib} \\
+& \dsAnd{c = " \, \ilv_E \sqcup \ilv_\ib \sqsubseteq \ilv_x \, "} \rspace
+% no expression
+& \iV\dblSq{t \; L \; x} \; \icstr \; \ienvL \; \ienvP = (cstr \cup \{ c \}, \ienvL[x \mapsto \ilv_x])\\
+& \dsWhere{\iL\dblSq{L} \; \ienvL = \ilv} \\
+& \dsAnd{\ilv_x = \begin{cases}
+    v(x) & \quad \text{if } \ilv = \varepsilon \\
+    \ilv & \quad \text{otherwise}
   \end{cases}} \\
-& \dsAnd{L_\ib = \ienvL \, \ib} \\
-& \dsAnd{c = " \, \bot \sqcup L_\ib \sqsubseteq L_x \, "}
+& \dsAnd{\ilv_\ib = \ienvL \, \ib} \\
+& \dsAnd{c = " \, \bot \sqcup \ilv_\ib \sqsubseteq \ilv_x \, "}
 \end{align*}
 
 \subsubsection{Function Declarations}
 \begin{align*}
-& \iF\dblSq{T_f \, l_f \, f \tk ( T_1 \, l_1 \, x_1 \tk , T_2 \, l_2 \, x_2 \tk , \dots \tk , T_n \, l_n \, x_n \tk ) S} \; \ienvL \; \ienvP
+& \iF\dblSq{t_f \, L_f \, f \tk ( t_1 \, l_1 \, x_1 \tk , t_2 \, l_2 \, x_2 \tk , \dots \tk , t_n \, l_n \, x_n \tk ) S} \; \ienvL \; \ienvP
   =  (\icstr, \ienvL, \ienvP_2) \\
 & \dsWhere{\iS\dblSq{S} \; \ienvL_2 \; \ienvP_2 = (\icstr, \ienvL_3)} \\
-& \dsAnd{\ienvL_2 = \ienvL[x_1 \mapsto \iLV_1', x_2 \mapsto \iLV_2', \dots, x_n \mapsto \iLV_n']} \\
-& \dsAnd{\ienvP_2 = \ienvP[\ifb \mapsto (\iLV_f', \emptyset), f \mapsto (\iLV_f', \{(\iLV_1', x_1), (\iLV_2', x_2), \dots, (\iLV_n', x_n)\})]} \\
-& \dsAnd{\iLV_f' = \begin{cases}
-    \mathlarger\sqcupl_{i = 1}^n \iLV_i & \quad \text{if } \iLV_f = \varepsilon \\
-    \iLV_f & \quad \text{otherwise}
+& \dsAnd{\ienvL_2 = \ienvL[x_1 \mapsto \ilv_1', x_2 \mapsto \ilv_2', \dots, x_n \mapsto \ilv_n']} \\
+& \dsAnd{\ienvP_2 = \ienvP[\ifb \mapsto (\ilv_f', \emptyset), f \mapsto (\ilv_f', \{(\ilv_1', x_1), (\ilv_2', x_2), \dots, (\ilv_n', x_n)\})]} \\
+& \dsAnd{\ilv_f' = \begin{cases}
+    \mathlarger\sqcupl_{i = 1}^n \ilv_i & \quad \text{if } \ilv_f = \varepsilon \\
+    \ilv_f & \quad \text{otherwise}
   \end{cases}} \\
-& \dsAnd{\iL\dblSq{l_f} \; \ienvL = \iLV_f} \\
-& \dsAnd{\iLV_i' = \begin{cases}
-    c(x_i) & \quad \text{if } \iLV_i = \varepsilon \\
-    \iLV_i & \quad otherwise
+& \dsAnd{\iL\dblSq{L_f} \; \ienvL = \ilv_f} \\
+& \dsAnd{\ilv_i' = \begin{cases}
+    c(x_i) & \quad \text{if } \ilv_i = \varepsilon \\
+    \ilv_i & \quad otherwise
   \end{cases}} \\
-& \dsAnd{\iL\dblSq{l_i} \; \ienvL = \iLV_i \text{ for all } 0 \leq i \leq n}
+& \dsAnd{\iL\dblSq{L_i} \; \ienvL = \ilv_i \text{ for all } 0 \leq i \leq n}
 \end{align*}
 
 \subsubsection{Function call}
@@ -143,15 +146,15 @@ lv & \quad \text{otherwise}
 \end{cases} \]
 
 \begin{align*}
-& \iE\dblSq{f \tk ( e_1 \tk , e_2 \tk , \dots \tk , e_n \tk )} \; \ienvL \; \ienvP = (cstr_a \cup cstr_p, \iLV_f') \\
-& \dsIf{\ienvP \; f = (\iLV_f, \{(\iLV_1, x_1), (\iLV_2, x_2), \dots, (\iLV_n, x_n)\}) \text{ and}} \\
-& \dsWhere{replaceConstants(\iLV_f, \ienvL_2) = \iLV_f'} \\
+& \iE\dblSq{f \tk ( E_1 \tk , E_2 \tk , \dots \tk , E_n \tk )} \; \ienvL \; \ienvP = (cstr_a \cup cstr_p, \ilv_f') \\
+& \dsIf{\ienvP \; f = (\ilv_f, \{(\ilv_1, x_1), (\ilv_2, x_2), \dots, (\ilv_n, x_n)\}) \text{ and}} \\
+& \dsWhere{replaceConstants(\ilv_f, \ienvL_2) = \ilv_f'} \\
 & \dsAnd{\icstr_a = \bigcup\limits_{i=1}^n \icstr_i} \\
 & \dsAnd{\icstr_p = \bigcup\limits_{i=1}^n
   \begin{cases}
-    \emptyset &\text{if } \iLV_i \in c(\iVar)\\
-    \{ \literal{\iLV_{e_i} \sqsubseteq \iLV_i} \} & \text{otherwise}
+    \emptyset &\text{if } \ilv_i \in c(\iVar)\\
+    \{ c(\ilv_{E_i}, \ilv_i) \} & \text{otherwise}
   \end{cases}} \\
-& \dsAnd{\iE\dblSq{e_i} \; \ienvL \; \ienvP = (cstr_i, \iLV_{e_i}) \text{ for } 0 \leq i \leq n} \\
-& \dsAnd{\ienvL_2 = \ienvL[x_1 \mapsto \iLV_{e_1}, x_2 \mapsto \iLV_{e_2}, \dots, x_n \mapsto \iLV_{e_n}]}
+& \dsAnd{\iE\dblSq{E_i} \; \ienvL \; \ienvP = (cstr_i, \ilv_{E_i}) \text{ for } 0 \leq i \leq n} \\
+& \dsAnd{\ienvL_2 = \ienvL[x_1 \mapsto \ilv_{E_1}, x_2 \mapsto \ilv_{E_2}, \dots, x_n \mapsto \ilv_{E_n}]}
 \end{align*}
