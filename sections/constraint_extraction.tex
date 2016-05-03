@@ -25,8 +25,8 @@
 In the following, $\mathbb P$ denotes the power set.
 \begin{align*}
 \iLV    & = v(\iVar) \cup c(\iVar) \cup p(\mathbb{L}) \cup j(\iLV \times \iLV) \\
+\iEnvF  & = \iFun \cup \{ \ifb \} \rightharpoonup \iLV \times \mathbb P (\iLV \times \iVar) \\
 \iEnvL  & = \iVar \cup \{ \ia, \ib \} \rightharpoonup \iLV \\
-\iEnvP  & = \iFun \cup \{ \ifb \} \rightharpoonup \iLV \times \mathbb P (\iLV \times \iVar) \\
 \iCstr  & = \mathbb P (\iLV \times \iLV)
 \end{align*}
 
@@ -41,7 +41,7 @@ $\iLV$~ is a set of \emph{Label Values}, which contains tagged values:
 $\iEnvL$ is the label environment, which maps variable identifiers, and the two special identifiers $\ia$ (authority) and $\ib$ (block), to label values.
 The special values are propagated through scope throughout a program.
 
-$\iEnvP$ is the function environment, which maps function identifiers, and the special identifier $\ifb$ (function block), to a tuple containing the label value of the function along with all argument label value and identifier tuples.
+$\iEnvF$ is the function environment, which maps function identifiers, and the special identifier $\ifb$ (function block), to a tuple containing the label value of the function along with all argument label value and identifier tuples.
 The function block identifier is used for return statements so that the ``surrounding'' function label can be looked up.
 
 $\iCstr$ is a set of constraint tuples, where any $(\ilv_1, \ilv_2) \in \iCstr$ can be seen as representing a constraint: $" \; LV_1 \sqsubseteq LV_2 \; "$.
@@ -49,11 +49,11 @@ $\iCstr$ is a set of constraint tuples, where any $(\ilv_1, \ilv_2) \in \iCstr$ 
 \subsection{Semantic Functions}
 \begin{align*}
 \iR & : \iProg \rightarrow \iCstr \\
-\iD & : \iDec \rightarrow (\iEnvL \times \iEnvP \rightarrow \iCstr \times \iEnvL \times \iEnvP) \\
-\iV & : \iDecv \rightarrow (\iEnvL \times \iEnvP \rightarrow \iCstr \times \iEnvL) \\
-\iF & : \iDecf \rightarrow (\iEnvL \times \iEnvP \rightarrow \iCstr \times \iEnvL \times \iEnvP) \\
-\iS & : \iStm \rightarrow (\iEnvL \times \iEnvP \rightarrow \iCstr \times \iEnvL) \\
-\iE & : \iExp \rightarrow (\iEnvL \times \iEnvP \rightarrow \iCstr \times \iLV) \\
+\iD & : \iDec \rightarrow (\iEnvL \times \iEnvF \rightarrow \iCstr \times \iEnvL \times \iEnvF) \\
+\iF & : \iDecf \rightarrow (\iEnvL \times \iEnvF \rightarrow \iCstr \times \iEnvL \times \iEnvF) \\
+\iV & : \iDecv \rightarrow (\iEnvL \times \iEnvF \rightarrow \iCstr \times \iEnvL) \\
+\iS & : \iStm \rightarrow (\iEnvL \times \iEnvF \rightarrow \iCstr \times \iEnvL) \\
+\iE & : \iExp \rightarrow (\iEnvL \times \iEnvF \rightarrow \iCstr \times \iLV) \\
 \iL & : (\iLbl \cup \iPol) \rightarrow (\iEnvL \rightarrow \iLV \cup \{ \varepsilon \})
 \end{align*}
 
@@ -61,12 +61,12 @@ $\iCstr$ is a set of constraint tuples, where any $(\ilv_1, \ilv_2) \in \iCstr$ 
 
 \subsubsection{Program and Declaration}
 \begin{align*}
-& \iR\dblSq{D} = \icstr \dsWhere{\iD\dblSq{D} (empty\ienvL, empty\ienvP) = (\icstr, \ienvL, \ienvP)} \rspace
-& \iD\dblSq{D_V} \; \ienvL \; \ienvP = (\icstr, \ienvL_2, \ienvP) \dsWhere{\iV\dblSq{D_V} \; \ienvL \; \ienvP = (\icstr, \ienvL_2)} \rspace
-& \iD\dblSq{D_F} \; \ienvL \; \ienvP = (\icstr, \ienvL_2, \ienvP_2) \dsWhere{\iF\dblSq{D_F} \; \ienvL \; \ienvP = (\icstr, \ienvL_2, \ienvP_2)} \rspace
-& \iD\dblSq{D_1 \; D_2} \; \ienvL \; \ienvP = (\icstr \cup \icstr_2, \ienvL_3, \ienvP_3) \\
-& \quad \text{ where } \iD\dblSq{D_2} \; \ienvL_2 \; \ienvP_2 = (\icstr_2, \ienvL_3, \ienvP_3) \\
-& \quad \text{ and } \iD\dblSq{D_1} \ienvL \; \ienvP = (\icstr, \ienvL_2, \ienvP_2)
+& \iR\dblSq{D} = \icstr \dsWhere{\iD\dblSq{D} (empty\ienvL, empty\ienvF) = (\icstr, \ienvL, \ienvF)} \rspace
+& \iD\dblSq{D_V} \; \ienvL \; \ienvF = (\icstr, \ienvL_2, \ienvF) \dsWhere{\iV\dblSq{D_V} \; \ienvL \; \ienvF = (\icstr, \ienvL_2)} \rspace
+& \iD\dblSq{D_F} \; \ienvL \; \ienvF = (\icstr, \ienvL_2, \ienvF_2) \dsWhere{\iF\dblSq{D_F} \; \ienvL \; \ienvF = (\icstr, \ienvL_2, \ienvF_2)} \rspace
+& \iD\dblSq{D_1 \; D_2} \; \ienvL \; \ienvF = (\icstr \cup \icstr_2, \ienvL_3, \ienvF_3) \\
+& \quad \text{ where } \iD\dblSq{D_2} \; \ienvL_2 \; \ienvF_2 = (\icstr_2, \ienvL_3, \ienvF_3) \\
+& \quad \text{ and } \iD\dblSq{D_1} \ienvL \; \ienvF = (\icstr, \ienvL_2, \ienvF_2)
 \end{align*}
 
 \subsubsection{Label}
@@ -88,36 +88,13 @@ $\iCstr$ is a set of constraint tuples, where any $(\ilv_1, \ilv_2) \in \iCstr$ 
 & \iL\dblSq{\tk{\^{}}} \; \ienvL = p(\top)
 \end{align*}
 
-\subsubsection{Variable Declaration}
-\begin{align*}
-% with expression
-& \iV\dblSq{t \; L \; x \tk = E} \; \ienvL \; \ienvP = (\icstr \cup \{ c \}, \ienvL[x \mapsto \ilv_x]) \\
-& \dsWhere{\iL\dblSq{L} \; \ienvL = \ilv} \\
-& \dsAnd{\iE\dblSq{E} \; \ienvL \; \ienvP = (\icstr, \ilv_E)} \\
-& \dsAnd{\ilv_x = \begin{cases}
-    v(x) & \quad \text{if } \ilv = \varepsilon \\
-    \ilv & \quad \text{otherwise}
-  \end{cases}} \\
-& \dsAnd{\ilv_\ib = \ienvL \, \ib} \\
-& \dsAnd{c = " \, \ilv_E \sqcup \ilv_\ib \sqsubseteq \ilv_x \, "} \rspace
-% no expression
-& \iV\dblSq{t \; L \; x} \; \ienvL \; \ienvP = (\{ c \}, \ienvL[x \mapsto \ilv_x])\\
-& \dsWhere{\iL\dblSq{L} \; \ienvL = \ilv} \\
-& \dsAnd{\ilv_x = \begin{cases}
-    v(x) & \quad \text{if } \ilv = \varepsilon \\
-    \ilv & \quad \text{otherwise}
-  \end{cases}} \\
-& \dsAnd{\ilv_\ib = \ienvL \, \ib} \\
-& \dsAnd{c = " \, \bot \sqcup \ilv_\ib \sqsubseteq \ilv_x \, "}
-\end{align*}
-
 \subsubsection{Function Declarations}
 \begin{align*}
-& \iF\dblSq{t_f \, L_f \, f \tk ( t_1 \, l_1 \, x_1 \tk , t_2 \, l_2 \, x_2 \tk , \dots \tk , t_n \, l_n \, x_n \tk ) S} \; \ienvL \; \ienvP
-  =  (\icstr, \ienvL, \ienvP_2) \\
-& \dsWhere{\iS\dblSq{S} \; \ienvL_2 \; \ienvP_2 = (\icstr, \ienvL_3)} \\
+& \iF\dblSq{t_f \, L_f \, f \tk ( t_1 \, l_1 \, x_1 \tk , t_2 \, l_2 \, x_2 \tk , \dots \tk , t_n \, l_n \, x_n \tk ) S} \; \ienvL \; \ienvF
+  =  (\icstr, \ienvL, \ienvF_2) \\
+& \dsWhere{\iS\dblSq{S} \; \ienvL_2 \; \ienvF_2 = (\icstr, \ienvL_3)} \\
 & \dsAnd{\ienvL_2 = \ienvL[x_1 \mapsto \ilv_1', x_2 \mapsto \ilv_2', \dots, x_n \mapsto \ilv_n']} \\
-& \dsAnd{\ienvP_2 = \ienvP[\ifb \mapsto (\ilv_f', \emptyset), f \mapsto (\ilv_f', \{(\ilv_1', x_1), (\ilv_2', x_2), \dots, (\ilv_n', x_n)\})]} \\
+& \dsAnd{\ienvF_2 = \ienvF[\ifb \mapsto (\ilv_f', \emptyset), f \mapsto (\ilv_f', \{(\ilv_1', x_1), (\ilv_2', x_2), \dots, (\ilv_n', x_n)\})]} \\
 & \dsAnd{\ilv_f' = \begin{cases}
     \mathlarger\sqcupl_{i = 1}^n \ilv_i & \quad \text{if } \ilv_f = \varepsilon \\
     \ilv_f & \quad \text{otherwise}
@@ -128,6 +105,29 @@ $\iCstr$ is a set of constraint tuples, where any $(\ilv_1, \ilv_2) \in \iCstr$ 
     \ilv_i & \quad otherwise
   \end{cases}} \\
 & \dsAnd{\iL\dblSq{L_i} \; \ienvL = \ilv_i \text{ for all } 0 \leq i \leq n}
+\end{align*}
+
+\subsubsection{Variable Declaration}
+\begin{align*}
+  % with expression
+  & \iV\dblSq{t \; L \; x \tk = E} \; \ienvL \; \ienvF = (\icstr \cup \{ c \}, \ienvL[x \mapsto \ilv_x]) \\
+  & \dsWhere{\iL\dblSq{L} \; \ienvL = \ilv} \\
+  & \dsAnd{\iE\dblSq{E} \; \ienvL \; \ienvF = (\icstr, \ilv_E)} \\
+  & \dsAnd{\ilv_x = \begin{cases}
+  v(x) & \quad \text{if } \ilv = \varepsilon \\
+  \ilv & \quad \text{otherwise}
+  \end{cases}} \\
+  & \dsAnd{\ilv_\ib = \ienvL \, \ib} \\
+  & \dsAnd{c = " \, \ilv_E \sqcup \ilv_\ib \sqsubseteq \ilv_x \, "} \rspace
+  % no expression
+  & \iV\dblSq{t \; L \; x} \; \ienvL \; \ienvF = (\{ c \}, \ienvL[x \mapsto \ilv_x])\\
+  & \dsWhere{\iL\dblSq{L} \; \ienvL = \ilv} \\
+  & \dsAnd{\ilv_x = \begin{cases}
+  v(x) & \quad \text{if } \ilv = \varepsilon \\
+  \ilv & \quad \text{otherwise}
+  \end{cases}} \\
+  & \dsAnd{\ilv_\ib = \ienvL \, \ib} \\
+  & \dsAnd{c = " \, \bot \sqcup \ilv_\ib \sqsubseteq \ilv_x \, "}
 \end{align*}
 
 \subsubsection{Function call}
@@ -145,8 +145,8 @@ with the following definition:
 \end{cases} \]
 
 \begin{align*}
-& \iE\dblSq{f \tk ( E_1 \tk , E_2 \tk , \dots \tk , E_n \tk )} \; \ienvL \; \ienvP = (cstr_a \cup cstr_p, \ilv_f') \\
-& \dsIf{\ienvP \; f = (\ilv_f, \{(\ilv_1, x_1), (\ilv_2, x_2), \dots, (\ilv_n, x_n)\}) \text{ and}} \\
+& \iE\dblSq{f \tk ( E_1 \tk , E_2 \tk , \dots \tk , E_n \tk )} \; \ienvL \; \ienvF = (cstr_a \cup cstr_p, \ilv_f') \\
+& \dsIf{\ienvF \; f = (\ilv_f, \{(\ilv_1, x_1), (\ilv_2, x_2), \dots, (\ilv_n, x_n)\}) \text{ and}} \\
 & \dsWhere{replaceConstants(\ilv_f, \ienvL_2) = \ilv_f'} \\
 & \dsAnd{\icstr_a = \bigcup\limits_{i=1}^n \icstr_i} \\
 & \dsAnd{\icstr_p = \bigcup\limits_{i=1}^n
@@ -154,6 +154,6 @@ with the following definition:
     \emptyset &\text{if } \ilv_i \in c(\iVar)\\
     \{ c(\ilv_{E_i}, \ilv_i) \} & \text{otherwise}
   \end{cases}} \\
-& \dsAnd{\iE\dblSq{E_i} \; \ienvL \; \ienvP = (cstr_i, \ilv_{E_i}) \text{ for } 0 \leq i \leq n} \\
+& \dsAnd{\iE\dblSq{E_i} \; \ienvL \; \ienvF = (cstr_i, \ilv_{E_i}) \text{ for } 0 \leq i \leq n} \\
 & \dsAnd{\ienvL_2 = \ienvL[x_1 \mapsto \ilv_{E_1}, x_2 \mapsto \ilv_{E_2}, \dots, x_n \mapsto \ilv_{E_n}]}
 \end{align*}
