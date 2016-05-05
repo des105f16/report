@@ -166,40 +166,47 @@ $\iCstr$ is a set of constraint tuples, where any $(\ilv_1, \ilv_2) \in \iCstr$ 
 
 \subsubsection{Control flow}
 
-\begin{align*}
-& \iS\dblSq{\varepsilon} \; \ienvL \; \ienvF = (\emptyset, \ienvL) \seSpace
+\begin{semanticequations}
+% Empty
+&\semeq{\iS}{\varepsilon}{\ienvL \; \ienvF}{(\emptyset, \ienvL)} \seSpace
+% Expression
+\csemeq{\iS}{E}{\ienvL \; \ienvF}{(\icstr, \ienvL)}{
+  \seWhere{\semeq{\iE}{E}{\ienvL \; \ienvF}{(\icstr, \ilv)}}
+} \seSpace
+% Composite Statements
+\csemeq{\iS}{S_1 \; S_2}{\ienvL \; \ienvF}{(\icstr \cup \icstr_2, \ienvL_3)}{
+  \seWhere{\semeq{\iS}{S_2}{\ienvL_2 \; \ienvF}{(\icstr_2, \ienvL_3)}} \\
+  \seAnd{\semeq{\iS}{S_1}{\ienvL \; \ienvF}{(\icstr, \ienvL_2)}}
+} \seSpace
+% While
+\csemeq{\iS}{\tk{while} \tk ( E \tk ) S}{\ienvL \; \ienvF}{(\icstr_E \cup \icstr_S \cup \{ c \}, \ienvL)}{
+  \seWhere{\semeq{\iE}{E}{\ienvL_2 \; \ienvF}{(\icstr_E, \ilv_E)}} \\
+  \seAnd{\semeq{\iS}{S}{\ienvL_2 \; \ienvF}{(\icstr_S, \ienvL_3)}} \\
+  \seAnd{c = \literal{\ilv_E \sqcup \ilv_\ib \sqsubseteq \ilv_w}} \\
+  \seAnd{\ienvL_2 = \ienvL[\ib \mapsto \ilv_w]} \\
+  \seAnd{\ienvL \; \ib = \ilv_\ib} \\
+  \seAnd{\ilv_w = v(next)}
+} \seSpace
+% If
+\csemeq{\iS}{\tk{if} \tk ( E \tk ) S}{\ienvL \; \ienvF}{(\ienvL, \icstr_E \cup \icstr_S \cup \{ c \})}{
+  \seWhere{\semeq{\iE}{E}{\ienvL \; \ienvF}{(\icstr_E, \ilv_E)}} \\
+  \seAnd{\semeq{\iS}{S}{\ienvL_2 \; \ienvF}{(\icstr_S, \ienvL_3)}} \\
+  \seAnd{c = \literal{\ilv_E \sqcup \ilv_\ib \sqsubseteq \ilv_{if}}} \\
+  \seAnd{\ienvL_2 = \ienvL[\ib \mapsto \ilv_{if}]} \\
+  \seAnd{\ienvL \; \ib = \ilv_\ib} \\
+  \seAnd{\ilv_{if} = v(next)}
+} \seSpace
 %
-& \iS\dblSq{E} \; \ienvL \; \ienvF = (\icstr, \ienvL) \seWhere{\iE\dblSq{E} \; \ienvL \; \ienvF = (\icstr, \ilv)} \seSpace
-%
-& \iS\dblSq{S_1 \; S_2} \; \ienvL \; \ienvF = (\icstr \cup \icstr_2, \ienvL_3) \\
-& \seWhere{\iS\dblSq{S_2} \; \ienvL_2 \; \ienvF = (\icstr_2, \ienvL_3)} \\
-& \seAnd{\iS\dblSq{S_1} \; \ienvL \; \ienvF = (\icstr, \ienvL_2)} \seSpace
-%
-& \iS\dblSq{\tk{while} \tk ( E \tk ) S} \; \ienvL \; \ienvF = (\icstr_E \cup \icstr_S \cup \{ c \}, \ienvL) \\
-& \seWhere{\iE\dblSq{E} \; \ienvL_2 \; \ienvF = (\icstr_E, \ilv_E)} \\
-& \seAnd{\iS\dblSq{S} \; \ienvL_2 \; \ienvF = (\icstr_S, \ienvL_3)} \\
-& \seAnd{c = \literal{\ilv_E \sqcup \ilv_\ib \sqsubseteq \ilv_w}} \\
-& \seAnd{\ienvL_2 = \ienvL[\ib \mapsto \ilv_w]} \\
-& \seAnd{\ienvL \; \ib = \ilv_\ib} \\
-& \seAnd{\ilv_w = v(next)} \seSpace
-%
-& \iS\dblSq{\tk{if} \tk ( E \tk ) S} \; \ienvL \; \ienvF = (\ienvL, \icstr_E \cup \icstr_S \cup \{ c \}) \\
-& \seWhere{\iE\dblSq{E} \; \ienvL \; \ienvF = (\icstr_E, \ilv_E)} \\
-& \seAnd{\iS\dblSq{S} \; \ienvL_2 \; \ienvF = (\icstr_S, \ienvL_3)} \\
-& \seAnd{c = \literal{\ilv_E \sqcup \ilv_\ib \sqsubseteq \ilv_{if}}} \\
-& \seAnd{\ienvL_2 = \ienvL[\ib \mapsto \ilv_{if}]} \\
-& \seAnd{\ienvL \; \ib = \ilv_\ib} \\
-& \seAnd{\ilv_{if} = v(next)} \seSpace
-%
-& \iS\dblSq{\tk{if} \tk ( E \tk ) S_1 \tk{else} S_2} \; \ienvL \; \ienvF = (\ienvL, \icstr_E \cup \icstr_{S_1} \cup \icstr_{S_2} \cup \{ c \}) \\
-& \seWhere{\iE\dblSq{E} \; \ienvL \; \ienvF = (\icstr_E, \ilv_E)} \\
-& \seAnd{\iS\dblSq{S_1} \; \ienvL_2 \; \ienvF = (\icstr_{S_1}, \ienvL_3)} \\
-& \seAnd{\iS\dblSq{S_2} \; \ienvL_2 \; \ienvF = (\icstr_{S_2}, \ienvL_4)} \\
-& \seAnd{c = \literal{\ilv_E \sqcup \ilv_\ib \sqsubseteq \ilv_{if}}} \\
-& \seAnd{\ienvL_2 = \ienvL[\ib \mapsto \ilv_{if}]} \\
-& \seAnd{\ienvL \; \ib = \ilv_\ib} \\
-& \seAnd{\ilv_{if} = v(next)}
-\end{align*}
+\csemeq{\iS}{\tk{if} \tk ( E \tk ) S_1 \tk{else} S_2}{\ienvL \; \ienvF}{(\ienvL, \icstr_E \cup \icstr_{S_1} \cup \icstr_{S_2} \cup \{ c \})}{
+  \seWhere{\semeq{\iE}{E}{\ienvL \; \ienvF}{(\icstr_E, \ilv_E)}} \\
+  \seAnd{\semeq{\iS}{S_1}{\ienvL_2 \; \ienvF}{(\icstr_{S_1}, \ienvL_3)}} \\
+  \seAnd{\semeq{\iS}{S_2}{\ienvL_2 \; \ienvF}{(\icstr_{S_2}, \ienvL_4)}} \\
+  \seAnd{c = \literal{\ilv_E \sqcup \ilv_\ib \sqsubseteq \ilv_{if}}} \\
+  \seAnd{\ienvL_2 = \ienvL[\ib \mapsto \ilv_{if}]} \\
+  \seAnd{\ienvL \; \ib = \ilv_\ib} \\
+  \seAnd{\ilv_{if} = v(next)}
+}
+\end{semanticequations}
 
 \subsubsection{Assignment and return statements}
 \begin{align*}
