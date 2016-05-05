@@ -292,3 +292,22 @@ with the following definition:
 % Parentheses
 &\semeq{\iE}{\tk ( E \tk )}{\ienvL \; \ienvF}{semeq{\iE}{E}{\ienvL \; \ienvF}{}}
 \end{semanticequations}
+
+\subsubsection{Declassification}
+
+\begin{semanticequations}
+% Implicit Label
+\csemeq{\iE}{\tk{<|} E \tk{|>}}{\ienvL \; \ienvF}{(\icstr \cup \{ c \}, \ilv_d)}{
+  \seWhere{\semeq{\iE}{E}{\ienvL \; \ienvF}{(\icstr, \ilv_E)}} \\
+  \seAnd{c = \literal{\ilv_E \sqsubseteq \ilv_d \sqcup \ilv_\ia}} \\
+  \seAnd{\ilv_d = v(next)} \\
+  \seAnd{\ilv_\ia = \ienvL \; \ia}
+} \seSpace
+% Explicit Label
+\csemeq{\iE}{\tk{<|} E \tk , L \tk{|>}}{\ienvL \; \ienvF}{(\icstr \cup \{ c \}, \ilv)}{
+  \seWhere{\semeq{\iE}{E}{\ienvL \; \ienvF}{(\icstr, \ilv_E)}} \\
+  \seAnd{c = \literal{\ilv_E \sqsubseteq \ilv \sqcup \ilv_\ia}} \\
+  \seAnd{\ilv = \semeq{\iL}{L}{\ienvL}{}} \\
+  \seAnd{\ilv_\ia = \ienvL \; \ia}
+}
+\end{semanticequations}
