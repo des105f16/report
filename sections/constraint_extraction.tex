@@ -99,21 +99,24 @@ $\iCstr$ is a set of constraint tuples, where any $(\ilv_1, \ilv_2) \in \iCstr$ 
 \subsubsection{Label}
 \begin{semanticequations}
 % Empty
-\semeq{\iL}{\varepsilon}{\ienvL}{\varepsilon} \seSpace
+&\semeq{\iL}{\varepsilon}{\ienvL}{\varepsilon} \seSpace
 % Policy
-\semeq{\iL}{\tk{\{\{} pol \tk{\}\}}}{\ienvL}{\semeq{\iL}{pol}{\ienvL}{}} \seSpace
+&\semeq{\iL}{\tk{\{\{} pol \tk{\}\}}}{\ienvL}{semeq{\iL}{pol}{\ienvL}} \seSpace % gives error when using semeq commands
 % Composite Policy
-& \iL\dblSq{pol_1 \tk ; pol_2} \; \ienvL = j(\ilv_1, \ilv_2) \\
-& \seWhere{\iL\dblSq{pol_1} \; \ienvL = \ilv_1} \\
-& \seAnd{\iL\dblSq{pol_2} \; \ienvL = \ilv_2} \seSpace
-%
-& \iL\dblSq{x} \; \ienvL = \ienvL \; x \seSpace
-%
-& \iL\dblSq{p_0 \tk{->} p_1 \tk , p_2 \tk, \dots \tk , p_k} \; \ienvL = p(\{p_0' \rightarrow p_1', p_2', \dots, p_k'\}) \\
-& \seWhere{p_i' = principal(p_i) \text{, for } 0 \leq i \leq k} \seSpace
-%
-& \iL\dblSq{\tk \_} \; \ienvL = p(\bot) \seSpace
-& \iL\dblSq{\tk{\^{}}} \; \ienvL = p(\top)
+\csemeq{\iL}{pol_1 \tk ; pol_2}{\ienvL}{j(\ilv_1, \ilv_2)}{
+  \seWhere{\semeq{\iL}{pol_1}{\ienvL}{\ilv_1}} \\
+  \seAnd{\semeq{\iL}{pol_2}{\ienvL}{\ilv_2}}
+} \seSpace
+% Variable
+&\semeq{\iL}{x}{\ienvL}{\ienvL \; x} \seSpace
+% Principal Policy
+\csemeq{\iL}{p_0 \tk{->} p_1 \tk , p_2 \tk, \dots \tk , p_k}{\ienvL}{p(\{p_0' \rightarrow p_1', p_2', \dots, p_k'\})}{
+  \seWhere{p_i' = principal(p_i) \text{, for } 0 \leq i \leq k}
+} \seSpace
+% Bottom
+&\semeq{\iL}{\tk \_}{\ienvL}{p(\bot)} \seSpace
+% Top
+&\semeq{\iL}{\tk{\^{}}}{\ienvL}{p(\top)}
 \end{semanticequations}
 
 \subsubsection{Function Declarations}
