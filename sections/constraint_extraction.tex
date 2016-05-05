@@ -242,16 +242,16 @@ with the following definition:
   lv & \quad \text{otherwise}
 \end{cases} \]
 
-\begin{align*}
-& \iE\dblSq{f \tk ( E_1 \tk , E_2 \tk , \dots \tk , E_n \tk )} \; \ienvL \; \ienvF = (cstr_a \cup cstr_p, \ilv_f') \\
-& \seIf{\ienvF \; f = (\ilv_f, \{(\ilv_1, x_1), (\ilv_2, x_2), \dots, (\ilv_n, x_n)\}) \text{ and}} \\
-& \seWhere{replaceConstants(\ilv_f, \ienvL_2) = \ilv_f'} \\
-& \seAnd{\icstr_a = \bigcup\limits_{i=1}^n \icstr_i} \\
-& \seAnd{\icstr_p = \bigcup\limits_{i=1}^n
-  \begin{cases}
+\begin{semanticequations}
+\csemeq{\iE}{f \tk ( E_1 \tk , E_2 \tk , \dots \tk , E_n \tk )}{\ienvL \; \ienvF}{(cstr_a \cup cstr_p, \ilv_f')}{
+  \seIf{\ienvF \; f = (\ilv_f, \{(\ilv_1, x_1), (\ilv_2, x_2), \dots, (\ilv_n, x_n)\}) \text{ and}} \\
+  \seWhere{replaceConstants(\ilv_f, \ienvL_2) = \ilv_f'} \\
+  \seAnd{\icstr_a = \bigcup\limits_{i=1}^n \icstr_i} \\
+  \seAnd{\icstr_p = \bigcup\limits_{i=1}^n \begin{cases}
     \emptyset &\text{if } \ilv_i \in c(\iVar)\\
     \{ \literal{\ilv_{E_i} \sqsubseteq \ilv_i} \} & \text{otherwise}
-  \end{cases}} \\
-& \seAnd{\iE\dblSq{E_i} \; \ienvL \; \ienvF = (cstr_i, \ilv_{E_i}) \text{ for } 0 \leq i \leq n} \\
-& \seAnd{\ienvL_2 = \ienvL[x_1 \mapsto \ilv_{E_1}, x_2 \mapsto \ilv_{E_2}, \dots, x_n \mapsto \ilv_{E_n}]}
-\end{align*}
+    \end{cases}} \\
+  \seAnd{\semeq{\iE}{E_i}{\ienvL \; \ienvF}{(cstr_i, \ilv_{E_i}) \text{ for } 0 \leq i \leq n}} \\
+  \seAnd{\ienvL_2 = \ienvL[x_1 \mapsto \ilv_{E_1}, x_2 \mapsto \ilv_{E_2}, \dots, x_n \mapsto \ilv_{E_n}]}
+}
+\end{semanticequations}
