@@ -75,21 +75,34 @@ $\iCstr$ is a set of constraint tuples, where any $(\ilv_1, \ilv_2) \in \iCstr$ 
 \subsection{Semantic Equations}
 
 \subsubsection{Program and Declaration}
-\begin{align*}
-& \iR\dblSq{D} = \icstr \dsWhere{\iD\dblSq{D} \; empty\ienvL \; empty\ienvF = (\icstr, \ienvL, \ienvF)} \rspace
-& \iD\dblSq{D_F} \; \ienvL \; \ienvF = (\icstr, \ienvL, \ienvF_2) \dsWhere{\iF\dblSq{D_F} \; \ienvL \; \ienvF = (\icstr, \ienvF_2)} \rspace
-& \iD\dblSq{D_V} \; \ienvL \; \ienvF = (\icstr, \ienvL_2, \ienvF) \dsWhere{\iV\dblSq{D_V} \; \ienvL \; \ienvF = (\icstr, \ienvL_2)} \rspace
-& \iD\dblSq{D_1 \; D_2} \; \ienvL \; \ienvF = (\icstr \cup \icstr_2, \ienvL_3, \ienvF_3) \\
-& \quad \text{ where } \iD\dblSq{D_2} \; \ienvL_2 \; \ienvF_2 = (\icstr_2, \ienvL_3, \ienvF_3) \\
-& \quad \text{ and } \iD\dblSq{D_1} \ienvL \; \ienvF = (\icstr, \ienvL_2, \ienvF_2)
-\end{align*}
+
+\begin{semanticequations}
+% Program
+\csemeq{\iR}{D}{}{\icstr}{
+  \seWhere{\semeq{\iD}{D}{empty\ienvL \; empty\ienvF}{(\icstr, \ienvL, \ienvF)}}
+} \seSpace
+% Function Declaration
+\csemeq{\iD}{D_F}{\ienvL \; \ienvF}{(\icstr, \ienvL, \ienvF_2)}{
+  \seWhere{\semeq{\iF}{D_F}{\ienvL \; \ienvF}{(\icstr, \ienvF_2)}}
+} \seSpace
+% Variable Declaration
+\csemeq{\iD}{D_V}{\ienvL \; \ienvF}{(\icstr, \ienvL_2, \ienvF)}{
+  \seWhere{\semeq{\iV}{D_V}{\ienvL \; \ienvF}{(\icstr, \ienvL_2)}}
+} \seSpace
+% Composite Declaration
+\csemeq{\iD}{D_1 \; D_2}{\ienvL \; \ienvF}{(\icstr \cup \icstr_2, \ienvL_3, \ienvF_3)}{
+  \seWhere{\semeq{\iD}{D_2}{\ienvL_2 \; \ienvF_2}{(\icstr_2, \ienvL_3, \ienvF_3)}} \\
+  \seAnd{\semeq{\iD}{D_1}{\ienvL \; \ienvF}{(\icstr, \ienvL_2, \ienvF_2}}
+}
+\end{semanticequations}
 
 \subsubsection{Label}
-\begin{align*}
-& \iL\dblSq{\varepsilon} \; \ienvL = \varepsilon \seSpace
-%
-& \iL\dblSq{\tk{\{\{} pol \tk{\}\}}} \; \ienvL = \iL\dblSq{pol} \; \ienvL \seSpace
-%
+\begin{semanticequations}
+% Empty
+\semeq{\iL}{\varepsilon}{\ienvL}{\varepsilon} \seSpace
+% Policy
+\semeq{\iL}{\tk{\{\{} pol \tk{\}\}}}{\ienvL}{\semeq{\iL}{pol}{\ienvL}{}} \seSpace
+% Composite Policy
 & \iL\dblSq{pol_1 \tk ; pol_2} \; \ienvL = j(\ilv_1, \ilv_2) \\
 & \seWhere{\iL\dblSq{pol_1} \; \ienvL = \ilv_1} \\
 & \seAnd{\iL\dblSq{pol_2} \; \ienvL = \ilv_2} \seSpace
@@ -101,7 +114,7 @@ $\iCstr$ is a set of constraint tuples, where any $(\ilv_1, \ilv_2) \in \iCstr$ 
 %
 & \iL\dblSq{\tk \_} \; \ienvL = p(\bot) \seSpace
 & \iL\dblSq{\tk{\^{}}} \; \ienvL = p(\top)
-\end{align*}
+\end{semanticequations}
 
 \subsubsection{Function Declarations}
 \begin{align*}
