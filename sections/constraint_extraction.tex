@@ -139,7 +139,15 @@ $\iCstr$ is a set of constraint tuples, where any $(\ilv_1, \ilv_2) \in \iCstr$ 
 %
 & \iS\dblSq{S_1 \; S_2} \; \ienvL \; \ienvF = (\icstr \cup \icstr_2, \ienvL_3) \\
 & \dsWhere{\iS\dblSq{S_2} \; \ienvL_2 \; \ienvF = (\icstr_2, \ienvL_3)} \\
-& \dsAnd{\iS\dblSq{S_1} \; \ienvL \; \ienvF = (\icstr, \ienvL_2)}
+& \dsAnd{\iS\dblSq{S_1} \; \ienvL \; \ienvF = (\icstr, \ienvL_2)} \rspace
+%
+& \iS\dblSq{\tk{while} \tk ( E \tk ) S} \; \ienvL \; \ienvF = (\icstr_E \cup \icstr_S \cup \{ c \}, \ienvL) \\
+& \dsWhere{\iE\dblSq{E} \; \ienvL_2 \; \ienvF = (\icstr_E, \ilv_E)} \\
+& \dsAnd{\iS\dblSq{S} \; \ienvL_2 \; \ienvF = (\icstr_S, \ienvL_3)} \\
+& \dsAnd{c = \literal{\ilv_E \sqcup \ilv_\ib \sqsubseteq \ilv_w}} \\
+& \dsAnd{\ienvL_2 = \ienvL[\ib \mapsto \ilv_w]} \\
+& \dsAnd{\ienvL \; \ib = \ilv_\ib} \\
+& \dsAnd{\ilv_w = v(next)}
 \end{align*}
 
 \subsubsection{Function call}
