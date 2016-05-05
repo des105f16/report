@@ -1,0 +1,323 @@
+% !TEX root = ../master.tex
+
+\newcommand{\iR}{\mathcal{R}}
+\newcommand{\iD}{\mathcal{D}}
+\newcommand{\iV}{\mathcal{V}}
+\newcommand{\iF}{\mathcal{F}}
+\newcommand{\iS}{\mathcal{S}}
+\newcommand{\iE}{\mathcal{E}}
+\newcommand{\iL}{\mathcal{L}}
+\newcommand{\iO}{\mathcal{O}}
+
+\newcommand{\iLV}{\mathbf{LV}}
+\newcommand{\ilv}{lv}
+
+\newcommand{\dblSq}[1]{[\![ #1 ]\!]}
+
+\newcommand{\seSpace}{\\[1em]} % Equation Space
+\newcommand{\seWhere}[1]{& \quad \text{ where } #1 \nonumber}
+\newcommand{\seAnd}[1]{& \quad \text{ and } #1 \nonumber}
+\newcommand{\seIf}[1]{& \quad \text{ if } #1 \nonumber}
+
+\newenvironment{semanticequations}{%
+  \align%
+}{%
+  \endalign%
+}
+
+\newcommand{\semeq}[4]{% Semantic Equation: #1 Function name, #2 Pattern match, #3 Arguments, #4 Result
+#1 [\![#2]\!] \ifthenelse{\equal{#3}{}}{}{\; #3} \ifthenelse{\equal{#4}{}}{}{= #4} \nonumber
+}
+
+\newcommand{\csemeq}[5]{% Conditional Semantic Equation: #1 Function name, #2 Pattern match, #3 Arguments, #4 Result, #5 Conditions
+& \semeq{#1}{#2}{#3}{#4} \\
+#5 \nonumber
+}
+
+\section{Constraint Extraction}
+
+\subsection{Semantic Domains}
+In the following, $\mathbb P$ denotes the power set.
+\begin{align*}
+\iLV    & = v(\iVar) \cup c(\iVar) \cup p(\mathbb{L}) \cup j(\iLV \times \iLV) \\
+\iEnvF  & = \iFun \cup \{ \ifb \} \rightharpoonup \iLV \times \mathbb P (\iLV \times \iVar) \\
+\iEnvL  & = \iVar \cup \{ \ia, \ib \} \rightharpoonup \iLV \\
+\iCstr  & = \mathbb P (\iLV \times \iLV)
+\end{align*}
+
+$\iLV$~ is a set of \emph{Label Values}, which contains tagged values:
+\begin{description}
+  \item[$v$] -- Variable labels with variable identifier
+  \item[$c$] -- Constant labels with variable identifier
+  \item[$p$] -- Policy labels, as those described in DLM
+  \item[$j$] -- Join labels, the join of two label values
+\end{description}
+
+$\iEnvL$ is the label environment, which maps variable identifiers, and the two special identifiers $\ia$ (authority) and $\ib$ (block), to label values.
+The special values are propagated through scope throughout a program.
+
+$\iEnvF$ is the function environment, which maps function identifiers, and the special identifier $\ifb$ (function block), to a tuple containing the label value of the function along with all argument label value and identifier tuples.
+The function block identifier is used for return statements so that the ``surrounding'' function label can be looked up.
+
+$\iCstr$ is a set of constraint tuples, where any $(\ilv_1, \ilv_2) \in \iCstr$ can be seen as representing a constraint: $" \; LV_1 \sqsubseteq LV_2 \; "$.
+
+\subsection{Semantic Functions}
+\begin{align*}
+\iR & : \iProg \rightarrow \iCstr \\
+\iD & : \iDec \rightarrow (\iEnvL \times \iEnvF \rightarrow \iCstr \times \iEnvL \times \iEnvF) \\
+\iF & : \iDecf \rightarrow (\iEnvL \times \iEnvF \rightarrow \iCstr \times \iEnvF) \\
+\iV & : \iDecv \rightarrow (\iEnvL \times \iEnvF \rightarrow \iCstr \times \iEnvL) \\
+\iS & : \iStm \rightarrow (\iEnvL \times \iEnvF \rightarrow \iCstr \times \iEnvL) \\
+\iE & : \iExp \rightarrow (\iEnvL \times \iEnvF \rightarrow \iCstr \times \iLV) \\
+\iL & : (\iLbl \cup \iPol) \rightarrow (\iEnvL \rightarrow \iLV \cup \{ \varepsilon \})
+\end{align*}
+
+\subsection{Semantic Equations}
+
+\subsubsection{Program and Declaration}
+
+\begin{semanticequations}
+% Program
+\csemeq{\iR}{D}{}{\icstr}{
+  \seWhere{\semeq{\iD}{D}{empty\ienvL \; empty\ienvF}{(\icstr, \ienvL, \ienvF)}}
+} \seSpace
+% Function Declaration
+\csemeq{\iD}{D_F}{\ienvL \; \ienvF}{(\icstr, \ienvL, \ienvF_2)}{
+  \seWhere{\semeq{\iF}{D_F}{\ienvL \; \ienvF}{(\icstr, \ienvF_2)}}
+} \seSpace
+% Variable Declaration
+\csemeq{\iD}{D_V}{\ienvL \; \ienvF}{(\icstr, \ienvL_2, \ienvF)}{
+  \seWhere{\semeq{\iV}{D_V}{\ienvL \; \ienvF}{(\icstr, \ienvL_2)}}
+} \seSpace
+% Composite Declaration
+\csemeq{\iD}{D_1 \; D_2}{\ienvL \; \ienvF}{(\icstr \cup \icstr_2, \ienvL_3, \ienvF_3)}{
+  \seWhere{\semeq{\iD}{D_2}{\ienvL_2 \; \ienvF_2}{(\icstr_2, \ienvL_3, \ienvF_3)}} \\
+  \seAnd{\semeq{\iD}{D_1}{\ienvL \; \ienvF}{(\icstr, \ienvL_2, \ienvF_2}}
+}
+\end{semanticequations}
+
+\subsubsection{Label}
+\begin{semanticequations}
+% Empty
+&\semeq{\iL}{\varepsilon}{\ienvL}{\varepsilon} \seSpace
+% Policy
+&\semeq{\iL}{\tk{\{\{} pol \tk{\}\}}}{\ienvL}{semeq{\iL}{pol}{\ienvL}} \seSpace % gives error when using semeq commands
+% Composite Policy
+\csemeq{\iL}{pol_1 \tk ; pol_2}{\ienvL}{j(\ilv_1, \ilv_2)}{
+  \seWhere{\semeq{\iL}{pol_1}{\ienvL}{\ilv_1}} \\
+  \seAnd{\semeq{\iL}{pol_2}{\ienvL}{\ilv_2}}
+} \seSpace
+% Variable
+&\semeq{\iL}{x}{\ienvL}{\ienvL \; x} \seSpace
+% Principal Policy
+\csemeq{\iL}{p_0 \tk{->} p_1 \tk , p_2 \tk, \dots \tk , p_k}{\ienvL}{p(\{p_0' \rightarrow p_1', p_2', \dots, p_k'\})}{
+  \seWhere{p_i' = principal(p_i) \text{, for } 0 \leq i \leq k}
+} \seSpace
+% Bottom
+&\semeq{\iL}{\tk \_}{\ienvL}{p(\bot)} \seSpace
+% Top
+&\semeq{\iL}{\tk{\^{}}}{\ienvL}{p(\top)}
+\end{semanticequations}
+
+\subsubsection{Function Declarations}
+\begin{semanticequations}
+\csemeq{\iF}{t_f \, L_f \, f \tk ( t_1 \, l_1 \, x_1 \tk , t_2 \, l_2 \, x_2 \tk , \dots \tk , t_n \, l_n \, x_n \tk ) S}{\ienvL \; \ienvF}
+{(\icstr, \ienvF_2)}{
+  \seWhere{\semeq{\iS}{S}{\ienvL_2 \; \ienvF_2}{(\icstr, \ienvL_3)}} \\
+  \seAnd{\ienvL_2 = \ienvL[x_1 \mapsto \ilv_1', x_2 \mapsto \ilv_2', \dots, x_n \mapsto \ilv_n']} \\
+  \seAnd{\ienvF_2 = \ienvF[\ifb \mapsto (\ilv_f', \emptyset), f \mapsto (\ilv_f', \{(\ilv_1', x_1), (\ilv_2', x_2), \dots, (\ilv_n', x_n)\})]} \\
+  \seAnd{\ilv_f' = \begin{cases}
+    \mathlarger\sqcupl_{i = 1}^n \ilv_i' & \quad \text{if } \ilv_f = \varepsilon \\
+    \ilv_f & \quad \text{otherwise}
+  \end{cases}} \\
+  \seAnd{\iL\dblSq{L_f} \; \ienvL = \ilv_f} \\
+  \seAnd{\ilv_i' = \begin{cases}
+    c(x_i) & \quad \text{if } \ilv_i = \varepsilon \\
+    \ilv_i & \quad otherwise
+  \end{cases}} \\
+  \seAnd{\iL\dblSq{L_i} \; \ienvL = \ilv_i \text{ for all } 0 \leq i \leq n}
+}
+\end{semanticequations}
+
+\subsubsection{Variable Declaration}
+\begin{semanticequations}
+% With Expression
+\csemeq{\iV}{t \; L \; x \tk = E}{\ienvL \; \ienvF}{(\icstr_E \cup \{ c \}, \ienvL[x \mapsto \ilv_x'])}{
+  \seWhere{\semeq{\iL}{L}{\ienvL}{\ilv_x}} \\
+  \seAnd{\semeq{\iE}{E}{\ienvL \; \ienvF}{(\icstr_E, \ilv_E)}} \\
+  \seAnd{\ilv_x' = \begin{cases}
+    v(x) & \quad \text{if } \ilv_x = \varepsilon \\
+    \ilv_x & \quad \text{otherwise}
+    \end{cases}} \\
+  \seAnd{\ilv_\ib = \ienvL \, \ib} \\
+  \seAnd{c = \literal{\ilv_E \sqcup \ilv_\ib \sqsubseteq \ilv_x}}
+} \seSpace
+% No Expression
+\csemeq{\iV}{t \; L \; x}{\ienvL \; \ienvF}{(\{ c \}, \ienvL[x \mapsto \ilv_x])}{
+  \seWhere{\semeq{\iL}{L}{\ienvL}{\ilv}} \\
+  \seAnd{\ilv_x = \begin{cases}
+    v(x) & \quad \text{if } \ilv = \varepsilon \\
+    \ilv & \quad \text{otherwise}
+    \end{cases}} \\
+  \seAnd{\ilv_\ib = \ienvL \, \ib} \\
+  \seAnd{c = \literal{\bot \sqcup \ilv_\ib \sqsubseteq \ilv_x}}
+}
+\end{semanticequations}
+
+\subsubsection{Control flow}
+
+\begin{semanticequations}
+% Empty
+&\semeq{\iS}{\varepsilon}{\ienvL \; \ienvF}{(\emptyset, \ienvL)} \seSpace
+% Expression
+\csemeq{\iS}{E}{\ienvL \; \ienvF}{(\icstr, \ienvL)}{
+  \seWhere{\semeq{\iE}{E}{\ienvL \; \ienvF}{(\icstr, \ilv)}}
+} \seSpace
+% Composite Statements
+\csemeq{\iS}{S_1 \; S_2}{\ienvL \; \ienvF}{(\icstr \cup \icstr_2, \ienvL_3)}{
+  \seWhere{\semeq{\iS}{S_2}{\ienvL_2 \; \ienvF}{(\icstr_2, \ienvL_3)}} \\
+  \seAnd{\semeq{\iS}{S_1}{\ienvL \; \ienvF}{(\icstr, \ienvL_2)}}
+} \seSpace
+% While
+\csemeq{\iS}{\tk{while} \tk ( E \tk ) S}{\ienvL \; \ienvF}{(\icstr_E \cup \icstr_S \cup \{ c \}, \ienvL)}{
+  \seWhere{\semeq{\iE}{E}{\ienvL_2 \; \ienvF}{(\icstr_E, \ilv_E)}} \\
+  \seAnd{\semeq{\iS}{S}{\ienvL_2 \; \ienvF}{(\icstr_S, \ienvL_3)}} \\
+  \seAnd{c = \literal{\ilv_E \sqcup \ilv_\ib \sqsubseteq \ilv_w}} \\
+  \seAnd{\ienvL_2 = \ienvL[\ib \mapsto \ilv_w]} \\
+  \seAnd{\ienvL \; \ib = \ilv_\ib} \\
+  \seAnd{\ilv_w = v(next)}
+} \seSpace
+% If
+\csemeq{\iS}{\tk{if} \tk ( E \tk ) S}{\ienvL \; \ienvF}{(\ienvL, \icstr_E \cup \icstr_S \cup \{ c \})}{
+  \seWhere{\semeq{\iE}{E}{\ienvL \; \ienvF}{(\icstr_E, \ilv_E)}} \\
+  \seAnd{\semeq{\iS}{S}{\ienvL_2 \; \ienvF}{(\icstr_S, \ienvL_3)}} \\
+  \seAnd{c = \literal{\ilv_E \sqcup \ilv_\ib \sqsubseteq \ilv_{if}}} \\
+  \seAnd{\ienvL_2 = \ienvL[\ib \mapsto \ilv_{if}]} \\
+  \seAnd{\ienvL \; \ib = \ilv_\ib} \\
+  \seAnd{\ilv_{if} = v(next)}
+} \seSpace
+%
+\csemeq{\iS}{\tk{if} \tk ( E \tk ) S_1 \tk{else} S_2}{\ienvL \; \ienvF}{(\ienvL, \icstr_E \cup \icstr_{S_1} \cup \icstr_{S_2} \cup \{ c \})}{
+  \seWhere{\semeq{\iE}{E}{\ienvL \; \ienvF}{(\icstr_E, \ilv_E)}} \\
+  \seAnd{\semeq{\iS}{S_1}{\ienvL_2 \; \ienvF}{(\icstr_{S_1}, \ienvL_3)}} \\
+  \seAnd{\semeq{\iS}{S_2}{\ienvL_2 \; \ienvF}{(\icstr_{S_2}, \ienvL_4)}} \\
+  \seAnd{c = \literal{\ilv_E \sqcup \ilv_\ib \sqsubseteq \ilv_{if}}} \\
+  \seAnd{\ienvL_2 = \ienvL[\ib \mapsto \ilv_{if}]} \\
+  \seAnd{\ienvL \; \ib = \ilv_\ib} \\
+  \seAnd{\ilv_{if} = v(next)}
+}
+\end{semanticequations}
+
+\subsubsection{Assignment and return statements}
+\begin{semanticequations}
+% Assignment
+\csemeq{\iS}{x \tk = E}{\ienvL \; \ienvF}{(\ienvL, \icstr \cup \{ c \})}{
+  \seWhere{\semeq{\iE}{E}{\ienvL \; \ienvF}{(\icstr, \ilv_E)}} \\
+  \seAnd{c = \literal{\ilv_E \sqcup \ilv_\ib \sqsubseteq \ilv_x}} \\
+  \seAnd{\ilv_x = \ienvL \; x} \\
+  \seAnd{\ilv_\ib = \ienvL_\ib}
+} \seSpace
+% Empty Return
+&\semeq{\iS}{\tk{return}}{\ienvL \; \ienvF}{(\emptyset, \ienvL)} \seSpace
+% Return With Expression
+\csemeq{\iS}{\tk{return} E}{\ienvL \; \ienvF}{(\ienvL, \icstr \cup \{ c \})}{
+  \seWhere{\semeq{\iE}{E}{\ienvL \; \ienvF}{(\icstr, \ilv_E)}} \\
+  \seAnd{c = \literal{\ilv_E \sqcup \ilv_\ib \sqsubseteq \ilv_\ifb}} \\
+  \seAnd{\ilv_\ifb = \ienvL \; \ifb} \\
+  \seAnd{\ilv_\ib = \ienvL_\ib}
+}
+\end{semanticequations}
+
+\subsubsection{Function call}
+
+\begin{semanticequations}
+\csemeq{\iE}{f \tk{<{}<{}<} p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{>{}>{}>} \tk ( E_1 \tk , E_2 \tk , \dots E_n \tk )}{\ienvL \; \ienvF}{(\icstr_E, \ilv_f)}{
+  \seIf{\ienvF \; f = undefined} \text{ and} \\
+  \seWhere{\icstr_E = \bigcup_{i=1}^n \; \icstr_i} \\
+  \seAnd{\ilv_f = \sqcupl_{i=1}^n \; \ilv_i} \\
+  \seAnd{\semeq{\iE}{E_i}{\ienvL \; \ienvF}{(\icstr_i, \ilv_i)} \text{ for } 0 \leq i \leq n}
+}
+\end{semanticequations}
+
+In order to evaluate function calls, where the function declaration uses constant parameters, we need to replace these constants with the corresponding argument label.
+In order to do this, we declare an auxiliary function:
+\[ replaceConstants : \iLV \times \iEnvL \rightarrow \iLV \]
+
+with the following definition:
+
+\[replaceConstants(lv, \ienvL) = \begin{cases}
+  \ienvL \; x & \quad \text{if } lv = c(x) \\
+  j(replaceConstants(lv_1), & \quad \text{if } lv = j(lv_1, lv_2) \\
+  \quad replaceConstants(lv_2)) & \\
+  lv & \quad \text{otherwise}
+\end{cases} \]
+
+\begin{semanticequations}
+\csemeq{\iE}{f \tk ( E_1 \tk , E_2 \tk , \dots \tk , E_n \tk )}{\ienvL \; \ienvF}{(cstr_a \cup cstr_p, \ilv_f')}{
+  \seIf{\ienvF \; f = (\ilv_f, \{(\ilv_1, x_1), (\ilv_2, x_2), \dots, (\ilv_n, x_n)\}) \text{ and}} \\
+  \seWhere{replaceConstants(\ilv_f, \ienvL_2) = \ilv_f'} \\
+  \seAnd{\icstr_a = \bigcup\limits_{i=1}^n \icstr_i} \\
+  \seAnd{\icstr_p = \bigcup\limits_{i=1}^n \begin{cases}
+    \emptyset &\text{if } \ilv_i \in c(\iVar)\\
+    \{ \literal{\ilv_{E_i} \sqsubseteq \ilv_i} \} & \text{otherwise}
+    \end{cases}} \\
+  \seAnd{\semeq{\iE}{E_i}{\ienvL \; \ienvF}{(cstr_i, \ilv_{E_i}) \text{ for } 0 \leq i \leq n}} \\
+  \seAnd{\ienvL_2 = \ienvL[x_1 \mapsto \ilv_{E_1}, x_2 \mapsto \ilv_{E_2}, \dots, x_n \mapsto \ilv_{E_n}]}
+}
+\end{semanticequations}
+
+\subsubsection{Acts for statements}
+
+\begin{semanticequations}
+% this Keyword
+\csemeq{\iS}{\tk{this} \tk{-{}->?} p_1 \tk , p_2 \tk , \dots \tk , p_k \; S}{\ienvL \; \ienvF}{(\icstr, \ienvL)}{
+  \seWhere{\semeq{\iS}{S}{\ienvL[\ia \mapsto \ilv_\ia'] \; \ienvF}{(\icstr, \ienvL_2)}} \\
+  \seAnd{\ilv_\ia' = \ilv_\ia \sqcup \sqcupl_{i=1}^k \{ p_i \rightarrow \emptyset \}} \\
+  \seAnd{\ilv_\ia = \ienvL \; \ia}
+} \seSpace
+% caller Keyword
+\csemeq{\iS}{\tk{caller} \tk{-{}->?} p_1 \tk , p_2 \tk , \dots \tk , p_k \; S}{\ienvL \; \ienvF}{(\icstr, \ienvL)}{
+  \seWhere{\semeq{\iS}{S}{\ienvL[\ia \mapsto \ilv_\ia'] \; \ienvF}{(\icstr, \ienvL_2)}} \\
+  \seAnd{\ilv_\ia' = \ilv_\ia \sqcup \sqcupl_{i=1}^k \{ p_i \rightarrow \emptyset \}} \\
+  \seAnd{\ilv_\ia = \ienvL \; \ia}
+}
+\end{semanticequations}
+
+\subsubsection{Expressions}
+
+\begin{semanticequations}
+% Variable
+\csemeq{\iE}{x}{\ienvL \; \ienvF}{(\emptyset, \ilv)}{
+  \seWhere{\ilv = \ienvL \; x}
+} \seSpace
+% Constant
+&\semeq{\iE}{k}{\ienvL \; \ienvF}{(\emptyset, p(\bot))} \seSpace
+% Binary Operator
+\csemeq{\iE}{E_1 \; op_b \; E_2}{\ienvL \, \ienvF}{(\icstr_1 \cup \icstr_2, \ilv_1 \sqcup \ilv_2)}{
+  \seWhere{\semeq{\iE}{E_1}{\ienvL \; \ienvF}{(\icstr_1, \ilv_1)}} \\
+  \seAnd{\semeq{\iE}{E_2}{\ienvL \; \ienvF}{(\icstr_2, \ilv_2)}}
+} \seSpace
+% Unary Operator
+&\semeq{\iE}{op_u \; E}{\ienvL \; \ienvF}{semeq{\iE}{E}{\ienvL \; \ienvF}{}} \seSpace % gives error when using semeq command
+% Parentheses
+&\semeq{\iE}{\tk ( E \tk )}{\ienvL \; \ienvF}{semeq{\iE}{E}{\ienvL \; \ienvF}{}}
+\end{semanticequations}
+
+\subsubsection{Declassification}
+
+\begin{semanticequations}
+% Implicit Label
+\csemeq{\iE}{\tk{<|} E \tk{|>}}{\ienvL \; \ienvF}{(\icstr \cup \{ c \}, \ilv_d)}{
+  \seWhere{\semeq{\iE}{E}{\ienvL \; \ienvF}{(\icstr, \ilv_E)}} \\
+  \seAnd{c = \literal{\ilv_E \sqsubseteq \ilv_d \sqcup \ilv_\ia}} \\
+  \seAnd{\ilv_d = v(next)} \\
+  \seAnd{\ilv_\ia = \ienvL \; \ia}
+} \seSpace
+% Explicit Label
+\csemeq{\iE}{\tk{<|} E \tk , L \tk{|>}}{\ienvL \; \ienvF}{(\icstr \cup \{ c \}, \ilv)}{
+  \seWhere{\semeq{\iE}{E}{\ienvL \; \ienvF}{(\icstr, \ilv_E)}} \\
+  \seAnd{c = \literal{\ilv_E \sqsubseteq \ilv \sqcup \ilv_\ia}} \\
+  \seAnd{\ilv = \semeq{\iL}{L}{\ienvL}{}} \\
+  \seAnd{\ilv_\ia = \ienvL \; \ia}
+}
+\end{semanticequations}
