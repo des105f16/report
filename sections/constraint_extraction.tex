@@ -255,3 +255,20 @@ with the following definition:
   \seAnd{\ienvL_2 = \ienvL[x_1 \mapsto \ilv_{E_1}, x_2 \mapsto \ilv_{E_2}, \dots, x_n \mapsto \ilv_{E_n}]}
 }
 \end{semanticequations}
+
+\subsubsection{Acts for statements}
+
+\begin{semanticequations}
+% this Keyword
+\csemeq{\iS}{\tk{this} \tk{-{}->?} p_1 \tk , p_2 \tk , \dots \tk , p_k \; S}{\ienvL \; \ienvF}{(\icstr, \ienvL)}{
+  \seWhere{\semeq{\iS}{S}{\ienvL[\ia \mapsto \ilv_\ia'] \; \ienvF}{(\icstr, \ienvL_2)}} \\
+  \seAnd{\ilv_\ia' = \ilv_\ia \sqcup \sqcupl_{i=1}^k \{ p_i \rightarrow \emptyset \}} \\
+  \seAnd{\ilv_\ia = \ienvL \; \ia}
+} \seSpace
+% caller Keyword
+\csemeq{\iS}{\tk{caller} \tk{-{}->?} p_1 \tk , p_2 \tk , \dots \tk , p_k \; S}{\ienvL \; \ienvF}{(\icstr, \ienvL)}{
+  \seWhere{\semeq{\iS}{S}{\ienvL[\ia \mapsto \ilv_\ia'] \; \ienvF}{(\icstr, \ienvL_2)}} \\
+  \seAnd{\ilv_\ia' = \ilv_\ia \sqcup \sqcupl_{i=1}^k \{ p_i \rightarrow \emptyset \}} \\
+  \seAnd{\ilv_\ia = \ienvL \; \ia}
+}
+\end{semanticequations}
