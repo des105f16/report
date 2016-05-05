@@ -229,6 +229,16 @@ $\iCstr$ is a set of constraint tuples, where any $(\ilv_1, \ilv_2) \in \iCstr$ 
 \end{semanticequations}
 
 \subsubsection{Function call}
+
+\begin{semanticequations}
+\csemeq{\iE}{f \tk{<{}<{}<} p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{>{}>{}>} \tk ( E_1 \tk , E_2 \tk , \dots E_n \tk )}{\ienvL \; \ienvF}{(\icstr_E, \ilv_f)}{
+  \seIf{\ienvF \; f = undefined} \text{ and} \\
+  \seWhere{\icstr_E = \bigcup_{i=1}^n \; \icstr_i} \\
+  \seAnd{\ilv_f = \sqcupl_{i=1}^n \; \ilv_i} \\
+  \seAnd{\semeq{\iE}{E_i}{\ienvL \; \ienvF}{(\icstr_i, \ilv_i)} \text{ for } 0 \leq i \leq n}
+}
+\end{semanticequations}
+
 In order to evaluate function calls, where the function declaration uses constant parameters, we need to replace these constants with the corresponding argument label.
 In order to do this, we declare an auxiliary function:
 \[ replaceConstants : \iLV \times \iEnvL \rightarrow \iLV \]
