@@ -120,23 +120,24 @@ $\iCstr$ is a set of constraint tuples, where any $(\ilv_1, \ilv_2) \in \iCstr$ 
 \end{semanticequations}
 
 \subsubsection{Function Declarations}
-\begin{align*}
-& \iF\dblSq{t_f \, L_f \, f \tk ( t_1 \, l_1 \, x_1 \tk , t_2 \, l_2 \, x_2 \tk , \dots \tk , t_n \, l_n \, x_n \tk ) S} \; \ienvL \; \ienvF
-  =  (\icstr, \ienvF_2) \\
-& \seWhere{\iS\dblSq{S} \; \ienvL_2 \; \ienvF_2 = (\icstr, \ienvL_3)} \\
-& \seAnd{\ienvL_2 = \ienvL[x_1 \mapsto \ilv_1', x_2 \mapsto \ilv_2', \dots, x_n \mapsto \ilv_n']} \\
-& \seAnd{\ienvF_2 = \ienvF[\ifb \mapsto (\ilv_f', \emptyset), f \mapsto (\ilv_f', \{(\ilv_1', x_1), (\ilv_2', x_2), \dots, (\ilv_n', x_n)\})]} \\
-& \seAnd{\ilv_f' = \begin{cases}
+\begin{semanticequations}
+\csemeq{\iF}{t_f \, L_f \, f \tk ( t_1 \, l_1 \, x_1 \tk , t_2 \, l_2 \, x_2 \tk , \dots \tk , t_n \, l_n \, x_n \tk ) S}{\ienvL \; \ienvF}
+{(\icstr, \ienvF_2)}{
+  \seWhere{\semeq{\iS}{S}{\ienvL_2 \; \ienvF_2}{(\icstr, \ienvL_3)}} \\
+  \seAnd{\ienvL_2 = \ienvL[x_1 \mapsto \ilv_1', x_2 \mapsto \ilv_2', \dots, x_n \mapsto \ilv_n']} \\
+  \seAnd{\ienvF_2 = \ienvF[\ifb \mapsto (\ilv_f', \emptyset), f \mapsto (\ilv_f', \{(\ilv_1', x_1), (\ilv_2', x_2), \dots, (\ilv_n', x_n)\})]} \\
+  \seAnd{\ilv_f' = \begin{cases}
     \mathlarger\sqcupl_{i = 1}^n \ilv_i' & \quad \text{if } \ilv_f = \varepsilon \\
     \ilv_f & \quad \text{otherwise}
   \end{cases}} \\
-& \seAnd{\iL\dblSq{L_f} \; \ienvL = \ilv_f} \\
-& \seAnd{\ilv_i' = \begin{cases}
+  \seAnd{\iL\dblSq{L_f} \; \ienvL = \ilv_f} \\
+  \seAnd{\ilv_i' = \begin{cases}
     c(x_i) & \quad \text{if } \ilv_i = \varepsilon \\
     \ilv_i & \quad otherwise
   \end{cases}} \\
-& \seAnd{\iL\dblSq{L_i} \; \ienvL = \ilv_i \text{ for all } 0 \leq i \leq n}
-\end{align*}
+  \seAnd{\iL\dblSq{L_i} \; \ienvL = \ilv_i \text{ for all } 0 \leq i \leq n}
+}
+\end{semanticequations}
 
 \subsubsection{Variable Declaration}
 \begin{align*}
