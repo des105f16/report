@@ -272,3 +272,23 @@ with the following definition:
   \seAnd{\ilv_\ia = \ienvL \; \ia}
 }
 \end{semanticequations}
+
+\subsubsection{Expressions}
+
+\begin{semanticequations}
+% Variable
+\csemeq{\iE}{x}{\ienvL \; \ienvF}{(\emptyset, \ilv)}{
+  \seWhere{\ilv = \ienvL \; x}
+} \seSpace
+% Constant
+&\semeq{\iE}{k}{\ienvL \; \ienvF}{(\emptyset, p(\bot))} \seSpace
+% Binary Operator
+\csemeq{\iE}{E_1 \; op_b \; E_2}{\ienvL \, \ienvF}{(\icstr_1 \cup \icstr_2, \ilv_1 \sqcup \ilv_2)}{
+  \seWhere{\semeq{\iE}{E_1}{\ienvL \; \ienvF}{(\icstr_1, \ilv_1)}} \\
+  \seAnd{\semeq{\iE}{E_2}{\ienvL \; \ienvF}{(\icstr_2, \ilv_2)}}
+} \seSpace
+% Unary Operator
+&\semeq{\iE}{op_u \; E}{\ienvL \; \ienvF}{semeq{\iE}{E}{\ienvL \; \ienvF}{}} \seSpace % gives error when using semeq command
+% Parentheses
+&\semeq{\iE}{\tk ( E \tk )}{\ienvL \; \ienvF}{semeq{\iE}{E}{\ienvL \; \ienvF}{}}
+\end{semanticequations}
