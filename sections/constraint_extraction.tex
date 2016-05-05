@@ -130,7 +130,7 @@ $\iCstr$ is a set of constraint tuples, where any $(\ilv_1, \ilv_2) \in \iCstr$ 
   & \dsAnd{c = \literal{\bot \sqcup \ilv_\ib \sqsubseteq \ilv_x}}
 \end{align*}
 
-\subsubsection{Statements}
+\subsubsection{Control flow}
 
 \begin{align*}
 & \iS\dblSq{\varepsilon} \; \ienvL \; \ienvF = (\emptyset, \ienvL) \rspace
@@ -166,6 +166,9 @@ $\iCstr$ is a set of constraint tuples, where any $(\ilv_1, \ilv_2) \in \iCstr$ 
 & \dsAnd{\ienvL \; \ib = \ilv_\ib} \\
 & \dsAnd{\ilv_{if} = v(next)}
 \end{align*}
+
+\subsubsection{Assignment and return statements}
+
 
 \subsubsection{Function call}
 In order to evaluate function calls, where the function declaration uses constant parameters, we need to replace these constants with the corresponding argument label.
