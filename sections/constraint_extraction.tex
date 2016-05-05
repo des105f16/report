@@ -140,27 +140,29 @@ $\iCstr$ is a set of constraint tuples, where any $(\ilv_1, \ilv_2) \in \iCstr$ 
 \end{semanticequations}
 
 \subsubsection{Variable Declaration}
-\begin{align*}
-  % with expression
-  & \iV\dblSq{t \; L \; x \tk = E} \; \ienvL \; \ienvF = (\icstr_E \cup \{ c \}, \ienvL[x \mapsto \ilv_x']) \\
-  & \seWhere{\iL\dblSq{L} \; \ienvL = \ilv_x} \\
-  & \seAnd{\iE\dblSq{E} \; \ienvL \; \ienvF = (\icstr_E, \ilv_E)} \\
-  & \seAnd{\ilv_x' = \begin{cases}
-  v(x) & \quad \text{if } \ilv_x = \varepsilon \\
-  \ilv_x & \quad \text{otherwise}
-  \end{cases}} \\
-  & \seAnd{\ilv_\ib = \ienvL \, \ib} \\
-  & \seAnd{c = \literal{\ilv_E \sqcup \ilv_\ib \sqsubseteq \ilv_x}} \seSpace
-  % no expression
-  & \iV\dblSq{t \; L \; x} \; \ienvL \; \ienvF = (\{ c \}, \ienvL[x \mapsto \ilv_x])\\
-  & \seWhere{\iL\dblSq{L} \; \ienvL = \ilv} \\
-  & \seAnd{\ilv_x = \begin{cases}
-  v(x) & \quad \text{if } \ilv = \varepsilon \\
-  \ilv & \quad \text{otherwise}
-  \end{cases}} \\
-  & \seAnd{\ilv_\ib = \ienvL \, \ib} \\
-  & \seAnd{c = \literal{\bot \sqcup \ilv_\ib \sqsubseteq \ilv_x}}
-\end{align*}
+\begin{semanticequations}
+% With Expression
+\csemeq{\iV}{t \; L \; x \tk = E}{\ienvL \; \ienvF}{(\icstr_E \cup \{ c \}, \ienvL[x \mapsto \ilv_x'])}{
+  \seWhere{\semeq{\iL}{L}{\ienvL}{\ilv_x}} \\
+  \seAnd{\semeq{\iE}{E}{\ienvL \; \ienvF}{(\icstr_E, \ilv_E)}} \\
+  \seAnd{\ilv_x' = \begin{cases}
+    v(x) & \quad \text{if } \ilv_x = \varepsilon \\
+    \ilv_x & \quad \text{otherwise}
+    \end{cases}} \\
+  \seAnd{\ilv_\ib = \ienvL \, \ib} \\
+  \seAnd{c = \literal{\ilv_E \sqcup \ilv_\ib \sqsubseteq \ilv_x}}
+} \seSpace
+% No Expression
+\csemeq{\iV}{t \; L \; x}{\ienvL \; \ienvF}{(\{ c \}, \ienvL[x \mapsto \ilv_x])}{
+  \seWhere{\semeq{\iL}{L}{\ienvL}{\ilv}} \\
+  \seAnd{\ilv_x = \begin{cases}
+    v(x) & \quad \text{if } \ilv = \varepsilon \\
+    \ilv & \quad \text{otherwise}
+    \end{cases}} \\
+  \seAnd{\ilv_\ib = \ienvL \, \ib} \\
+  \seAnd{c = \literal{\bot \sqcup \ilv_\ib \sqsubseteq \ilv_x}}
+}
+\end{semanticequations}
 
 \subsubsection{Control flow}
 
