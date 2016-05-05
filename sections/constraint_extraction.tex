@@ -147,7 +147,24 @@ $\iCstr$ is a set of constraint tuples, where any $(\ilv_1, \ilv_2) \in \iCstr$ 
 & \dsAnd{c = \literal{\ilv_E \sqcup \ilv_\ib \sqsubseteq \ilv_w}} \\
 & \dsAnd{\ienvL_2 = \ienvL[\ib \mapsto \ilv_w]} \\
 & \dsAnd{\ienvL \; \ib = \ilv_\ib} \\
-& \dsAnd{\ilv_w = v(next)}
+& \dsAnd{\ilv_w = v(next)} \rspace
+%
+& \iS\dblSq{\tk{if} \tk ( E \tk ) S} \; \ienvL \; \ienvF = (\ienvL, \icstr_E \cup \icstr_S \cup \{ c \}) \\
+& \dsWhere{\iE\dblSq{E} \; \ienvL \; \ienvF = (\icstr_E, \ilv_E)} \\
+& \dsAnd{\iS\dblSq{S} \; \ienvL_2 \; \ienvF = (\icstr_S, \ienvL_3)} \\
+& \dsAnd{c = \literal{\ilv_E \sqcup \ilv_\ib \sqsubseteq \ilv_{if}}} \\
+& \dsAnd{\ienvL_2 = \ienvL[\ib \mapsto \ilv_{if}]} \\
+& \dsAnd{\ienvL \; \ib = \ilv_\ib} \\
+& \dsAnd{\ilv_{if} = v(next)} \rspace
+%
+& \iS\dblSq{\tk{if} \tk ( E \tk ) S_1 \tk{else} S_2} \; \ienvL \; \ienvF = (\ienvL, \icstr_E \cup \icstr_{S_1} \cup \icstr_{S_2} \cup \{ c \}) \\
+& \dsWhere{\iE\dblSq{E} \; \ienvL \; \ienvF = (\icstr_E, \ilv_E)} \\
+& \dsAnd{\iS\dblSq{S_1} \; \ienvL_2 \; \ienvF = (\icstr_{S_1}, \ienvL_3)} \\
+& \dsAnd{\iS\dblSq{S_2} \; \ienvL_2 \; \ienvF = (\icstr_{S_2}, \ienvL_4)} \\
+& \dsAnd{c = \literal{\ilv_E \sqcup \ilv_\ib \sqsubseteq \ilv_{if}}} \\
+& \dsAnd{\ienvL_2 = \ienvL[\ib \mapsto \ilv_{if}]} \\
+& \dsAnd{\ienvL \; \ib = \ilv_\ib} \\
+& \dsAnd{\ilv_{if} = v(next)}
 \end{align*}
 
 \subsubsection{Function call}
