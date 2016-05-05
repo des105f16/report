@@ -168,7 +168,22 @@ $\iCstr$ is a set of constraint tuples, where any $(\ilv_1, \ilv_2) \in \iCstr$ 
 \end{align*}
 
 \subsubsection{Assignment and return statements}
-
+\begin{align*}
+%
+& \iS\dblSq{x \tk = E} \; \ienvL \; \ienvF = (\ienvL, \icstr \cup \{ c \}) \\
+& \dsWhere{\iE\dblSq{E} \; \ienvL \; \ienvF = (\icstr, \ilv_E)} \\
+& \dsAnd{c = \literal{\ilv_E \sqcup \ilv_\ib \sqsubseteq \ilv_x}} \\
+& \dsAnd{\ilv_x = \ienvL \; x} \\
+& \dsAnd{\ilv_\ib = \ienvL_\ib} \rspace
+%
+& \iS\dblSq{\tk{return}} \; \ienvL \; \ienvF = (\emptyset, \ienvL) \rspace
+%
+& \iS\dblSq{\tk{return} E} \; \ienvL \; \ienvF = (\ienvL, \icstr \cup \{ c \}) \\
+& \dsWhere{\iE\dblSq{E} \; \ienvL \; \ienvF = (\icstr, \ilv_E)} \\
+& \dsAnd{c = \literal{\ilv_E \sqcup \ilv_\ib \sqsubseteq \ilv_\ifb}} \\
+& \dsAnd{\ilv_\ifb = \ienvL \; \ifb} \\
+& \dsAnd{\ilv_\ib = \ienvL_\ib}
+\end{align*}
 
 \subsubsection{Function call}
 In order to evaluate function calls, where the function declaration uses constant parameters, we need to replace these constants with the corresponding argument label.
