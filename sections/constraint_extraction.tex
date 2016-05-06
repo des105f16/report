@@ -1,8 +1,71 @@
 % !TEX root = ../master.tex
 
 \section{Constraint Extraction}
+In this section we will give a formal definition of how labels and constraints are extracted from a \thelang~ program.
+We will first define our syntactic and semantic constituents, which will form the rules for how constraints are extracted from a \thelang~ program.
 
-\subsection{Semantic Domains}
+\subsection{Syntax}
+Below follows an abstract syntax that describes the structure of our grammar.
+The grammar is made to represent the C programming language in both structure and actual syntax.
+The latter is not directly apparent here, as some syntactical details have been removed to achieve a higher level of abstraction.
+
+\begin{table}[h]
+  \begin{align*}
+    R       & \in \iProg \text{ -- Programs}\\
+    D       & \in \iDec \text{ -- Declarations}\\
+    D_F     & \in \iDecf \text{ -- Function declarations}\\
+    f       & \in \iFun \text{ -- Functions}\\
+    D_V     & \in \iDecv \text{ -- Variable declarations}\\
+    x       & \in \iVar \text{ -- Variables}\\
+    p       & \in \iPrin \text{ -- Principals}\\
+    S       & \in \iStm \text{ -- Statements}\\
+    E       & \in \iExp \text{ -- Expressions}\\
+    L       & \in \iLbl \text{ -- Label declaration}\\
+    P       & \in \iPol \text{ -- Policy declaration}\\
+    op_b    & \in \{ \tk + ,  \tk - ,  \tk * ,  \tk / ,  \tk \% ,  \tk{||} ,  \tk{\&\&} ,  \tk < ,  \tk > ,  \tk{==} ,  \tk{<=} ,  \tk{>=} \} \\
+    op_u    & \in \{ \tk ! ,  \tk - \} \\
+    k       & \in \{ \tk{true}, \tk{false} \} \cup \mathbf{Num} \cup \mathbf{Chr} \cup \mathbf{Str} \text{ -- Boolean, integer, char, and string literals} \\
+    t       & \in \mathbf{Types} \text{ -- C types}
+  \end{align*}
+  \begin{align*}
+    R         & ::= D \\
+    D         & ::= D_F \gp D_V \gp D_1 \; D_2 \\
+    D_F       & ::= t_f \, l_f \, f \tk ( t_1 \, l_1 \, x_1 \tk , t_2 \, l_2 \, x_2 \tk , \dots \tk , t_n \, l_n \, x_n \tk ) S \\
+    D_V       & ::= t \, l \, x \tk = E \gp t \, l x \\
+    S         & ::= E \gp S_1 \; S_2 \gp \varepsilon \\
+              & \gp D_V \\
+              & \gp \tk{while} \tk ( E \tk ) S \gp \tk{if} \tk ( E \tk ) S \gp \tk{if} \tk ( E \tk ) S_1 \tk{else} S_2 \\
+              & \gp x \tk = E \\
+              & \gp \tk{return} E \gp \tk{return} \\
+              & \gp \tk{this} \tk{-{}->?} p_1 \tk , p_2 \tk , \dots \tk , p_k \; S \gp \tk{caller} \tk{-{}->?} p_1 \tk , p_2 \tk , \dots \tk , p_k \; S \\
+    E         & ::= x \gp k \gp E_1 \; op_b \; E_2 \gp op_u \; E \gp \tk ( E \tk ) \\
+              & \gp \tk{<|} E \tk , l \tk{|>} \gp \tk{<|} E \tk{|>} \\
+              & \gp f \tk{<{}<{}<} p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{>{}>{}>} \tk ( E_1 \tk , E_2 \tk , \dots \tk , E_n \tk ) \\
+    L         & ::= \tk{\{\{} P \tk{\}\}} \gp \varepsilon \\
+    P       & ::= x \gp p_0 \tk{->} p_1 \tk , p_2 \tk , \dots \tk , p_k \gp P_1 \tk ; P_2 \gp \tk \_ \gp \tk{\^{}}
+  \end{align*}
+  \caption{Syntactic domains and abstract production rules}
+  \label{ctif:rules}
+\end{table}
+
+\Cref{ctif:rules}\mikael{latex er en bitch til at placere den her...} primarily serve as a reference-point for the following sections.
+We will however briefly discuss a few details that might be of special interest:
+
+\paragraph{Simplified arithmetics}
+As the semantics, described in this section, only concerns how data \textit{flows} and not its value on execution we can simplify the possible binary and unary operations into two rules.
+Doing so provides for a less cluttered syntax and a clearer focus on the label semantics that are expressed.
+
+\paragraph{Empty labels}
+No value (represented by $\varepsilon$) can be provided for any label declaration.
+When omitting a label the semantic rules specify a \textit{default} value for the label.
+This is initial step of label inference and allows unlabeled C to be recognized and evaluated using these rules.
+
+\paragraph{No principal declaration}
+Principals and possibly a principal hierarchy are expected to be extracted from some system information and not defined in the program code itself.
+In the rules below a \textit{pseudo} function $principal$ is used to represent the lookup of principal names in some system.
+\mikkel{Is this an acceptable explanation?}
+
+\subsection{Semantic setup}
 In the following, $\mathbb P$ denotes the power set.
 \begin{align*}
 \iLV    & = v(\iVar) \cup c(\iVar) \cup p(\mathbb{L}) \cup j(\iLV \times \iLV) \\
@@ -27,7 +90,6 @@ The function block identifier is used for return statements so that the ``surrou
 
 $\iCstr$ is a set of constraint tuples, where any $(\ilv_1, \ilv_2) \in \iCstr$ can be seen as representing a constraint: $" \; LV_1 \sqsubseteq LV_2 \; "$.
 
-\subsection{Semantic Functions}
 \begin{align*}
 \iR & : \iProg \rightarrow \iCstr \\
 \iD & : \iDec \rightarrow (\iEnvL \times \iEnvF \rightarrow \iCstr \times \iEnvL \times \iEnvF) \\
@@ -38,7 +100,7 @@ $\iCstr$ is a set of constraint tuples, where any $(\ilv_1, \ilv_2) \in \iCstr$ 
 \iL & : (\iLbl \cup \iPol) \rightarrow (\iEnvL \rightarrow \iLV \cup \{ \varepsilon \})
 \end{align*}
 
-\subsection{Semantic Equations}
+\subsection{Semantic equations}
 
 \subsubsection{Program and Declaration}
 
