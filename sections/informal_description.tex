@@ -1,1 +1,43 @@
 % !TEX root = ../master.tex
+
+\section{Informal Description}
+
+\subsection{Scope}
+As we have chosen a practical approach in developing \thelang~ we have had to apply a limited scope.
+We have tried to include as many basic necessities as possible, in order to properly ascertain the usefulness of \thelang.
+
+In the following is a crude list with what is currently supported in \thelang.
+Following the list will be some elaborations where deemed necessary.
+\begin{itemize}
+  \item Variables
+  \item Simple types (int, bool, char, string)
+  \item Structs and arrays
+  \item Declaring and calling functions
+  \item Boolean and arithmetic operators
+  \item Control structures
+  \item External libraries
+\end{itemize}
+
+\subsubsection{Structs and arrays}
+It is possible to define structs consisting of simple type fields.
+However, it is not possible to define fields of other struct types -- i.e. nested structs.
+
+Arrays are limited to simple types and structs.
+Arrays are referred to as a pointer reference, and arrays alone are referred to through pointers (more about this below).
+
+\subsubsection{Boolean and arithmetic operators}
+The following boolean and arithmetic operators are allowed:
+\[ \tk +, \tk - \text{(unary and binary)}, \tk *, \tk /, \tk{\&\&}, \tk{||}, \tk{!} \]
+
+Operator precedence has no say for our compiler, as we are only interested in what operands are used in expressions.
+The actual operator precedence checks are only used for, and therefore handled by, the actual C compiler.
+
+We have chosen to leave out the \tk{++} and \tk{--} post-/pre-fix operators.
+
+\subsubsection{Control structures}
+It is possible to use \emph{if}-, \emph{if-else}-, and \emph{while}-statements.
+We have, however, chosen to leave out the \emph{for}-statement, as it is can as easily be constructed as a while-statement.
+
+\subsubsection{Pointers}
+Pointers are completely left out of \thelang, as there are many troubles associated with assuring safety when data can be accessed through pointers.
+The pointer-syntax is still being used for arrays.
