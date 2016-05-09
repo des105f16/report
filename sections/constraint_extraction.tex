@@ -190,7 +190,7 @@ As the label value for an undeclared label depends on its context, $\varepsilon$
 \label{cstr:label_policy}
 \end{table}
 
-\subsubsection{Function Declarations}
+\subsection{Function Declarations}
 Function declaration (along with function call) can easily be considered the most complex rule(s).
 Specifically, the many different function and label environments in function declarations can render the rule complex.
 
@@ -223,7 +223,7 @@ The latter allows for recursion.
 \label{cstr:functiondeclaration}
 \end{table}
 
-\subsubsection{Variable Declaration}
+\subsection{Variable Declaration}
 New labels are introduced when declaring variables.
 A variable declaration without initialization uses $\bot$ as the label value for the missing initialization value.
 
@@ -255,7 +255,7 @@ A variable declaration without initialization uses $\bot$ as the label value for
 \label{cstr:variabledeclaration}
 \end{table}
 
-\subsubsection{Statements}
+\subsection{Statements}
 For statement rules we first cover a few simple rules.
 The expression statement allows us to perform function calls where we are not interested in the return value.
 
@@ -316,7 +316,7 @@ These constraints allows for propagation of label constraints and are effectivel
 \label{cstr:controlstructures}
 \end{table}
 
-\subsubsection{Assignment and return statements}
+\subsection{Assignment and return statements}
 It should be noticed that the constraints constructed for declarations, assignments, and return statements have a similar structure.
 This structure represents the similarity in the feature they are handling, be it assignment to a variables value or to the return value of a function.
 
@@ -368,7 +368,7 @@ This is stored in the label environment to be used for implicit declassification
 \label{cstr:actsfor}
 \end{table}
 
-\subsubsection{Expressions}
+\subsection{Expressions}
 Most rules for expression evaluation produce no constraints and have a simple definition in terms of the label they return.
 
 \begin{table}[H]
@@ -393,7 +393,7 @@ Most rules for expression evaluation produce no constraints and have a simple de
 \label{cstr:expressions}
 \end{table}
 
-\subsubsection{Declassification}
+\subsection{Declassification}
 The two rules for declassification shows some of the simplicity that is part of inference.
 Either an explicit label is defined for declassification or one (represented by the variable label $\ilv_d$) will be inferred.
 Aside from that the rules are exactly the same.
@@ -419,7 +419,7 @@ Aside from that the rules are exactly the same.
 \label{cstr:declassification}
 \end{table}
 
-\subsubsection{Function call}
+\subsection{Function call}
 The final type of expression is a function call.
 There are two rules regarding function calls.
 One for functions that have label definitions and one for those that do not.
