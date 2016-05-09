@@ -368,46 +368,10 @@ This is stored in the label environment to be used for implicit declassification
 \label{cstr:actsfor}
 \end{table}
 
-\subsubsection{Function call}
-
-\begin{semanticequations}
-\csemeq{\iE}{f \tk{<{}<{}<} p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{>{}>{}>} \tk ( E_1 \tk , E_2 \tk , \dots E_n \tk )}{\ienvL \; \ienvF}{(\icstr_E, \ilv_f)}{
-  \seIf{\ienvF \; f = undefined} \text{ and} \\
-  \seWhere{\icstr_E = \bigcup_{i=1}^n \; \icstr_i} \\
-  \seAnd{\ilv_f = \sqcupl_{i=1}^n \; \ilv_i} \\
-  \seAnd{\semeq{\iE}{E_i}{\ienvL \; \ienvF}{(\icstr_i, \ilv_i)} \text{ for } 0 \leq i \leq n}
-}
-\end{semanticequations}
-
-In order to evaluate function calls, where the function declaration uses constant parameters, we need to replace these constants with the corresponding argument label.
-In order to do this, we declare an auxiliary function:
-\[ replaceConstants : \iLV \times \iEnvL \rightarrow \iLV \]
-
-with the following definition:
-
-\[replaceConstants(lv, \ienvL) = \begin{cases}
-  \ienvL \; x & \quad \text{if } lv = c(x) \\
-  j(replaceConstants(lv_1), & \quad \text{if } lv = j(lv_1, lv_2) \\
-  \quad replaceConstants(lv_2)) & \\
-  lv & \quad \text{otherwise}
-\end{cases} \]
-
-\begin{semanticequations}
-\csemeq{\iE}{f \tk ( E_1 \tk , E_2 \tk , \dots \tk , E_n \tk )}{\ienvL \; \ienvF}{(cstr_a \cup cstr_p, \ilv_f')}{
-  \seIf{\ienvF \; f = (\ilv_f, \{(\ilv_1, x_1), (\ilv_2, x_2), \dots, (\ilv_n, x_n)\}) \text{ and}} \\
-  \seWhere{replaceConstants(\ilv_f, \ienvL_2) = \ilv_f'} \\
-  \seAnd{\icstr_a = \bigcup\limits_{i=1}^n \icstr_i} \\
-  \seAnd{\icstr_p = \bigcup\limits_{i=1}^n \begin{cases}
-    \emptyset &\text{if } \ilv_i \in c(\iVar)\\
-    \{ \literal{\ilv_{E_i} \sqsubseteq \ilv_i} \} & \text{otherwise}
-    \end{cases}} \\
-  \seAnd{\semeq{\iE}{E_i}{\ienvL \; \ienvF}{(cstr_i, \ilv_{E_i}) \text{ for } 0 \leq i \leq n}} \\
-  \seAnd{\ienvL_2 = \ienvL[x_1 \mapsto \ilv_{E_1}, x_2 \mapsto \ilv_{E_2}, \dots, x_n \mapsto \ilv_{E_n}]}
-}
-\end{semanticequations}
-
 \subsubsection{Expressions}
+Most rules for expression evaluation produce no constraints and have a simple definition in terms of the label they return.
 
+\begin{table}[H]
 \begin{semanticequations}
 % Variable
 \csemeq{\iE}{x}{\ienvL \; \ienvF}{(\emptyset, \ilv)}{
@@ -425,9 +389,16 @@ with the following definition:
 % Parentheses
 &\semeq{\iE}{\tk ( E \tk )}{\ienvL \; \ienvF}{semeq{\iE}{E}{\ienvL \; \ienvF}{}}
 \end{semanticequations}
+\caption{Semantic equations for expressions}
+\label{cstr:expressions}
+\end{table}
 
 \subsubsection{Declassification}
+The two rules for declassification shows some of the simplicity that is part of inference.
+Either an explicit label is defined for declassification or one (represented by the variable label $\ilv_d$) will be inferred.
+Aside from that the rules are exactly the same.
 
+\begin{table}[H]
 \begin{semanticequations}
 % Implicit Label
 \csemeq{\iE}{\tk{<|} E \tk{|>}}{\ienvL \; \ienvF}{(\icstr \cup \{ c \}, \ilv_d)}{
@@ -444,3 +415,51 @@ with the following definition:
   \seAnd{\ilv_\ia = \ienvL \; \ia}
 }
 \end{semanticequations}
+\caption{Semantic equations for declassification}
+\label{cstr:declassification}
+\end{table}
+
+\subsubsection{Function call}
+The final type of expression is a function call.
+There are two rules regarding function calls.
+One for functions that have label definitions and one for those that do not.
+The latter is meant for externally declared functions, such as library functions.
+
+In order to evaluate function calls, where the function declaration uses constant parameters, we need to replace these constants with the corresponding argument label.
+In order to do this, we declare an auxiliary function:
+\[ replaceConstants : \iLV \times \iEnvL \rightarrow \iLV \]
+
+with the following definition:
+
+\[replaceConstants(lv, \ienvL) = \begin{cases}
+  \ienvL \; x & \quad \text{if } lv = c(x) \\
+  j(replaceConstants(lv_1), & \quad \text{if } lv = j(lv_1, lv_2) \\
+  \quad replaceConstants(lv_2)) & \\
+  lv & \quad \text{otherwise}
+\end{cases} \]
+
+\begin{table}[H]
+\begin{semanticequations}
+% library function call
+\csemeq{\iE}{f \tk{<{}<{}<} p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{>{}>{}>} \tk ( E_1 \tk , E_2 \tk , \dots E_n \tk )}{\ienvL \; \ienvF}{(\icstr_E, \ilv_f)}{
+  \seIf{\ienvF \; f = undefined} \text{ and} \\
+  \seWhere{\icstr_E = \bigcup_{i=1}^n \; \icstr_i} \\
+  \seAnd{\ilv_f = \sqcupl_{i=1}^n \; \ilv_i} \\
+  \seAnd{\semeq{\iE}{E_i}{\ienvL \; \ienvF}{(\icstr_i, \ilv_i)} \text{ for } 0 \leq i \leq n}
+} \seSpace
+% declared function call
+\csemeq{\iE}{f \tk ( E_1 \tk , E_2 \tk , \dots \tk , E_n \tk )}{\ienvL \; \ienvF}{(cstr_a \cup cstr_p, \ilv_f')}{
+  \seIf{\ienvF \; f = (\ilv_f, \{(\ilv_1, x_1), (\ilv_2, x_2), \dots, (\ilv_n, x_n)\}) \text{ and}} \\
+  \seWhere{replaceConstants(\ilv_f, \ienvL_2) = \ilv_f'} \\
+  \seAnd{\icstr_a = \bigcup\limits_{i=1}^n \icstr_i} \\
+  \seAnd{\icstr_p = \bigcup\limits_{i=1}^n \begin{cases}
+    \emptyset &\text{if } \ilv_i \in c(\iVar)\\
+    \{ \literal{\ilv_{E_i} \sqsubseteq \ilv_i} \} & \text{otherwise}
+    \end{cases}} \\
+  \seAnd{\semeq{\iE}{E_i}{\ienvL \; \ienvF}{(cstr_i, \ilv_{E_i}) \text{ for } 0 \leq i \leq n}} \\
+  \seAnd{\ienvL_2 = \ienvL[x_1 \mapsto \ilv_{E_1}, x_2 \mapsto \ilv_{E_2}, \dots, x_n \mapsto \ilv_{E_n}]}
+}
+\end{semanticequations}
+\caption{Semantic equations for function calls}
+\label{cstr:functioncall}
+\end{table}
