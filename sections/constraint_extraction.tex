@@ -3,8 +3,8 @@
 \section{Constraint Extraction}
 In this section we will give a formal definition of how constraints are extracted from a \thelang~ program.
 This formal definition will be based on denotational semantics, and will therefore utilize the concepts thereof.
-We will define our syntactic and semantic setup, which will serve as a base for the rules (semantic equations) for how constraints are extracted from a \thelang~ program.
-Following the setup, we will present the semantic equations, which describes the rules for how constraints are extracted from the individual program constructs.
+We will define our syntactic and semantic setup, which will serve as a base for the rules for how constraints are extracted from a \thelang~ program.
+Following the setup, we will present the semantic equations, which describe how constraints are extracted from the individual program constructs.
 
 \subsection{Syntax}
 Below follows an abstract syntax that describes the structure of our grammar.
@@ -103,11 +103,11 @@ $\iEnvL$ is the label environment, which maps variable identifiers, and the two 
 The special values are propagated throughout a program, as they will change as the scope changes.
 
 $\iEnvF$ is the function environment, which maps function identifiers, and the special identifier $\ifb$ (function block), to a tuple containing the label value of the function along with all its arguments.
-Functions are lookup when evaluation function calls.
+Function identifiers are looked up when evaluation function calls.
 The function block identifier is used for return statements so that the ``surrounding'' function label can be looked up.
 
 \subsubsection{Semantic functions}
-The functions described here describe how the syntactic domains (see \cref{ctif:rules}) will be transformed into the semantic domains described above.
+The semantic functions describe how the syntactic domains (see \cref{ctif:rules}) will be transformed into the semantic domains described above.
 We have a function for each domain from which we need to extract constraints, or from which we need to derive the labels used in forming constraints.
 The formal definitions of the semantic functions can be seen in \cref{cstr:semantic_functions}.
 
@@ -127,10 +127,10 @@ The formal definitions of the semantic functions can be seen in \cref{cstr:seman
 
 The ``entry point'' of a \thelang{} program is simply one or more declarations, and the result of evaluating such a program is always a set of constraints.
 The transformation of declarations will result in a set of constraints, as well as a changed environments: function for function declarations and label for variable declarations.
-Statements are where the most constraints will originate from, as this is where we will find many variable declarations and assignments.
+Statements are where most constraints will originate from, as this is where we have variable declarations and assignments.
 Expressions will also generate constraints, due to the ability to use implicit declassifications.
 Due to the simplicity of the label syntactic domain, its rules has been merged with those of policy.
-Unlike the previous functions, labels and policies are only evaluated to a label value in order to use them in the forming of constraints.
+Unlike the previous semantic functions, labels and policies are only evaluated to a label value in order to use them in the forming of constraints.
 
 \subsection{Program and declarations}
 The rules for program and declarations are simple, as their main purpose is providing an entry point, as well as the ability to have variable and function declarations appear in the root scope, and in no particular order.
@@ -192,7 +192,6 @@ As the label value for an undeclared label depends on its context, $\varepsilon$
 
 \subsection{Function Declarations}
 Function declaration (along with function call) can easily be considered the most complex rule(s).
-Specifically, the many different function and label environments in function declarations can render the rule complex.
 
 For the return label $\ilv_f$ for a function declaration it is possible to reference the parameters of that function.
 To achieve this the $\ienvL_2$ environment is constructed from the parameters.
@@ -256,7 +255,7 @@ A variable declaration without initialization uses $\bot$ as the label value for
 \end{table}
 
 \subsection{Statements}
-For statement rules we first cover a few simple rules.
+For the statement rules we first cover a few simple rules.
 The expression statement allows us to perform function calls where we are not interested in the return value.
 
 \begin{table}[H]
@@ -344,7 +343,7 @@ This structure represents the similarity in the feature they are handling, be it
 \end{table}
 
 \subsection{Acts for statements}
-The last statements is the \emph{acts for}-statement, which has two identical rules.
+The last statement is the \emph{acts for}-statement, which has two identical rules.
 This is because the difference between the two only exists at runtime.
 The $\ilv_\ia$ label represents the effective authority on execution.
 This is stored in the label environment to be used for implicit declassification when evaluating expressions.
