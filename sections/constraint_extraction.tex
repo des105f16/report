@@ -132,10 +132,10 @@ Expressions will also generate constraints, due to the ability to use implicit d
 Due to the simplicity of the label syntactic domain, its rules has been merged with those of policy.
 Unlike the previous functions, labels and policies are only evaluated to a label value in order to use them in the forming of constraints.
 
-\subsection{Semantic equations}
+\subsection{Program and declarations}
+The rules for program and declarations are simple, as their main purpose is providing an entry point, as well as the ability to have variable and function declarations appear in the root scope, and in no particular order.
 
-\subsubsection{Program and Declaration}
-
+\begin{table}[H]
 \begin{semanticequations}
 % Program
 \csemeq{\iR}{D}{}{\icstr}{
@@ -152,9 +152,12 @@ Unlike the previous functions, labels and policies are only evaluated to a label
 % Composite Declaration
 \csemeq{\iD}{D_1 \; D_2}{\ienvL \; \ienvF}{(\icstr \cup \icstr_2, \ienvL_3, \ienvF_3)}{
   \seWhere{\semeq{\iD}{D_2}{\ienvL_2 \; \ienvF_2}{(\icstr_2, \ienvL_3, \ienvF_3)}} \\
-  \seAnd{\semeq{\iD}{D_1}{\ienvL \; \ienvF}{(\icstr, \ienvL_2, \ienvF_2}}
+  \seAnd{\semeq{\iD}{D_1}{\ienvL \; \ienvF}{(\icstr, \ienvL_2, \ienvF_2)}}
 }
 \end{semanticequations}
+\caption{Semantic equations for program and declarations}
+\label{cstr:program_declarations}
+\end{table}
 
 \subsubsection{Label}
 \begin{semanticequations}
