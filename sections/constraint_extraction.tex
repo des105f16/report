@@ -1,8 +1,10 @@
 % !TEX root = ../master.tex
 
 \section{Constraint Extraction}
-In this section we will give a formal definition of how labels and constraints are extracted from a \thelang~ program.
-We will first define our syntactic and semantic constituents, which will form the rules for how constraints are extracted from a \thelang~ program.
+In this section we will give a formal definition of how constraints are extracted from a \thelang~ program.
+This formal definition will be based on denotational semantics, and will therefore utilize the concepts thereof.
+We will define our syntactic and semantic setup, which will serve as a base for the rules for how constraints are extracted from a \thelang~ program.
+Following the setup, we will present the semantic equations, which describe how constraints are extracted from the individual program constructs.
 
 \subsection{Syntax}
 Below follows an abstract syntax that describes the structure of our grammar.
@@ -66,44 +68,74 @@ In the rules below a \textit{pseudo} function $principal$ is used to represent t
 \mikkel{Is this an acceptable explanation?}
 
 \subsection{Semantic setup}
-In the following, $\mathbb P$ denotes the power set.
+This section will describe the semantic constituents which are used to translate a syntactical \thelang{} program into the semantical world.
+These constituents are based on the concepts: \emph{semantic domains}, \emph{semantic functions}, and \emph{semantic equations} from \cite[Chapter 9]{slonneger1995formal}.
+The semantic domains and semantic functions will be described in the next two subsections.
+For readability purposes, the semantic equations will be spread out over the following subsections.
+
+\subsubsection{Semantic domains}
+The semantic domains of \thelang{} are primarily used to maintain state, and to give the final result of the constraint extraction: namely the constraints themselves as well as the different label types which are used to form the constraints.
+Note that we have no need for any integers, types or the like, since we are only interested in checking labels and forming constraints.
+
+The following list is an overview of these semantic domains ($\mathbb P$ denotes the power set):
 \begin{align*}
 \iLV    & = v(\iVar) \cup c(\iVar) \cup p(\mathbb{L}) \cup j(\iLV \times \iLV) \\
+\iCstr  & = \mathbb P (\iLV \times \iLV) \\
 \iEnvF  & = \iFun \cup \{ \ifb \} \rightharpoonup \iLV \times \mathbb P (\iLV \times \iVar) \\
-\iEnvL  & = \iVar \cup \{ \ia, \ib \} \rightharpoonup \iLV \\
-\iCstr  & = \mathbb P (\iLV \times \iLV)
+\iEnvL  & = \iVar \cup \{ \ia, \ib \} \rightharpoonup \iLV
 \end{align*}
 
-$\iLV$~ is a set of \emph{Label Values}, which contains tagged values:
-\begin{description}
-  \item[$v$] -- Variable labels with variable identifier
-  \item[$c$] -- Constant labels with variable identifier
-  \item[$p$] -- Policy labels, as those described in DLM
-  \item[$j$] -- Join labels, the join of two label values
-\end{description}
+$\iLV$ is a set of \emph{label values}, not to be confused with actual labels.
+In order to differ between the different types of labels (as described in \cref{dlm:constrains}), we utilize concept of \emph{tagged values}.
+Each element in $\iLV$ is then on the form $t(v)$, where $t$ is the type of label and $v$ is the value, which then differs depending on the type of label.
 
-$\iEnvL$ is the label environment, which maps variable identifiers, and the two special identifiers $\ia$ (authority) and $\ib$ (block), to label values.
-The special values are propagated through scope throughout a program.
-
-$\iEnvF$ is the function environment, which maps function identifiers, and the special identifier $\ifb$ (function block), to a tuple containing the label value of the function along with all argument label value and identifier tuples.
-The function block identifier is used for return statements so that the ``surrounding'' function label can be looked up.
+To further increase readability when using \emph{join labels}, we will introduce another notation using quotes to signify that the value is the constituents and not the evaluated expression.
+Then we have that:
+\[ \literal{\ilv_1 \sqcup \ilv_2} \equiv j(\ilv_1, \ilv_2) \]
 
 $\iCstr$ is a set of constraint tuples, where any $(\ilv_1, \ilv_2) \in \iCstr$ can be seen as representing a constraint: $" \; LV_1 \sqsubseteq LV_2 \; "$.
+Similar to the join label above, we will have the latter notation in quotes having the same meaning as the aforementioned tuple, such that:
+\[ \literal{\ilv_1 \sqsubseteq \ilv_2} \equiv (\ilv_1, \ilv_2) \]
 
+When a literal contains both $\sqcup$ and $\sqsubseteq$, the precedence is $\sqcup$ before $\sqsubseteq$.
+
+$\iEnvL$ is the label environment, which maps variable identifiers, and the two special identifiers $\ia$ (authority) and $\ib$ (block), to label values.
+The special values are propagated throughout a program, as they will change as the scope changes.
+
+$\iEnvF$ is the function environment, which maps function identifiers, and the special identifier $\ifb$ (function block), to a tuple containing the label value of the function along with all its arguments.
+Function identifiers are looked up when evaluation function calls.
+The function block identifier is used for return statements so that the ``surrounding'' function label can be looked up.
+
+\subsubsection{Semantic functions}
+The semantic functions describe how the syntactic domains (see \cref{ctif:rules}) will be transformed into the semantic domains described above.
+We have a function for each domain from which we need to extract constraints, or from which we need to derive the labels used in forming constraints.
+The formal definitions of the semantic functions can be seen in \cref{cstr:semantic_functions}.
+
+\begin{table}[H]
 \begin{align*}
-\iR & : \iProg \rightarrow \iCstr \\
-\iD & : \iDec \rightarrow (\iEnvL \times \iEnvF \rightarrow \iCstr \times \iEnvL \times \iEnvF) \\
-\iF & : \iDecf \rightarrow (\iEnvL \times \iEnvF \rightarrow \iCstr \times \iEnvF) \\
-\iV & : \iDecv \rightarrow (\iEnvL \times \iEnvF \rightarrow \iCstr \times \iEnvL) \\
-\iS & : \iStm \rightarrow (\iEnvL \times \iEnvF \rightarrow \iCstr \times \iEnvL) \\
-\iE & : \iExp \rightarrow (\iEnvL \times \iEnvF \rightarrow \iCstr \times \iLV) \\
-\iL & : (\iLbl \cup \iPol) \rightarrow (\iEnvL \rightarrow \iLV \cup \{ \varepsilon \})
+  \iR & : \iProg \rightarrow \iCstr \\
+  \iD & : \iDec \rightarrow (\iEnvL \times \iEnvF \rightarrow \iCstr \times \iEnvL \times \iEnvF) \\
+  \iF & : \iDecf \rightarrow (\iEnvL \times \iEnvF \rightarrow \iCstr \times \iEnvF) \\
+  \iV & : \iDecv \rightarrow (\iEnvL \times \iEnvF \rightarrow \iCstr \times \iEnvL) \\
+  \iS & : \iStm \rightarrow (\iEnvL \times \iEnvF \rightarrow \iCstr \times \iEnvL) \\
+  \iE & : \iExp \rightarrow (\iEnvL \times \iEnvF \rightarrow \iCstr \times \iLV) \\
+  \iL & : (\iLbl \cup \iPol) \rightarrow (\iEnvL \rightarrow \iLV \cup \{ \varepsilon \})
 \end{align*}
+\caption{Semantic functions}
+\label{cstr:semantic_functions}
+\end{table}
 
-\subsection{Semantic equations}
+The ``entry point'' of a \thelang{} program is simply one or more declarations, and the result of evaluating such a program is always a set of constraints.
+The transformation of declarations will result in a set of constraints, as well as a changed environments: function for function declarations and label for variable declarations.
+Statements are where most constraints will originate from, as this is where we have variable declarations and assignments.
+Expressions will also generate constraints, due to the ability to use implicit declassifications.
+Due to the simplicity of the label syntactic domain, its rules has been merged with those of policy.
+Unlike the previous semantic functions, labels and policies are only evaluated to a label value in order to use them in the forming of constraints.
 
-\subsubsection{Program and Declaration}
+\subsection{Program and declarations}
+The rules for program and declarations are simple, as their main purpose is providing an entry point, as well as the ability to have variable and function declarations appear in the root scope, and in no particular order.
 
+\begin{table}[H]
 \begin{semanticequations}
 % Program
 \csemeq{\iR}{D}{}{\icstr}{
@@ -120,11 +152,19 @@ $\iCstr$ is a set of constraint tuples, where any $(\ilv_1, \ilv_2) \in \iCstr$ 
 % Composite Declaration
 \csemeq{\iD}{D_1 \; D_2}{\ienvL \; \ienvF}{(\icstr \cup \icstr_2, \ienvL_3, \ienvF_3)}{
   \seWhere{\semeq{\iD}{D_2}{\ienvL_2 \; \ienvF_2}{(\icstr_2, \ienvL_3, \ienvF_3)}} \\
-  \seAnd{\semeq{\iD}{D_1}{\ienvL \; \ienvF}{(\icstr, \ienvL_2, \ienvF_2}}
+  \seAnd{\semeq{\iD}{D_1}{\ienvL \; \ienvF}{(\icstr, \ienvL_2, \ienvF_2)}}
 }
 \end{semanticequations}
+\caption{Semantic equations for program and declarations}
+\label{cstr:program_declarations}
+\end{table}
 
-\subsubsection{Label}
+\subsection{Label and policy}\mikael{We may need to differ between policy labels and label constituents/composite labels)?}
+The rules for labels and policies consist of a simple transformation of the syntactical labels into their semantic equivalents.
+Worth noting here is that there is no ``empty'' label value for undeclared labels.
+As the label value for an undeclared label depends on its context, $\varepsilon$ is simply passed through on evaluation.
+
+\begin{table}[H]
 \begin{semanticequations}
 % Empty
 &\semeq{\iL}{\varepsilon}{\ienvL}{\varepsilon} \seSpace
@@ -146,8 +186,20 @@ $\iCstr$ is a set of constraint tuples, where any $(\ilv_1, \ilv_2) \in \iCstr$ 
 % Top
 &\semeq{\iL}{\tk{\^{}}}{\ienvL}{p(\top)}
 \end{semanticequations}
+\caption{Semantic equations for label and policy}
+\label{cstr:label_policy}
+\end{table}
 
-\subsubsection{Function Declarations}
+\subsection{Function Declarations}
+Function declaration (along with function call) can easily be considered the most complex rule(s).
+
+For the return label $\ilv_f$ for a function declaration it is possible to reference the parameters of that function.
+To achieve this the $\ienvL_2$ environment is constructed from the parameters.
+
+When evaluating the statements of the function, a reference to the return label of said function is required; this is included in $\ienvF_2$, along with a label reference for the declared function itself.
+The latter allows for recursion.
+
+\begin{table}[H]
 \begin{semanticequations}
 \csemeq{\iF}{t_f \, L_f \, f \tk ( t_1 \, l_1 \, x_1 \tk , t_2 \, l_2 \, x_2 \tk , \dots \tk , t_n \, l_n \, x_n \tk ) S}{\ienvL \; \ienvF}
 {(\icstr, \ienvF_2)}{
@@ -166,8 +218,15 @@ $\iCstr$ is a set of constraint tuples, where any $(\ilv_1, \ilv_2) \in \iCstr$ 
   \seAnd{\iL\dblSq{L_i} \; \ienvL = \ilv_i \text{ for all } 0 \leq i \leq n}
 }
 \end{semanticequations}
+\caption{Semantic equation for function declaration}
+\label{cstr:functiondeclaration}
+\end{table}
 
-\subsubsection{Variable Declaration}
+\subsection{Variable Declaration}
+New labels are introduced when declaring variables.
+A variable declaration without initialization uses $\bot$ as the label value for the missing initialization value.
+
+\begin{table}[H]
 \begin{semanticequations}
 % With Expression
 \csemeq{\iV}{t \; L \; x \tk = E}{\ienvL \; \ienvF}{(\icstr_E \cup \{ c \}, \ienvL[x \mapsto \ilv_x'])}{
@@ -191,9 +250,15 @@ $\iCstr$ is a set of constraint tuples, where any $(\ilv_1, \ilv_2) \in \iCstr$ 
   \seAnd{c = \literal{\bot \sqcup \ilv_\ib \sqsubseteq \ilv_x}}
 }
 \end{semanticequations}
+\caption{Semantic equations for variable declaration}
+\label{cstr:variabledeclaration}
+\end{table}
 
-\subsubsection{Control flow}
+\subsection{Statements}
+For the statement rules we first cover a few simple rules.
+The expression statement allows us to perform function calls where we are not interested in the return value.
 
+\begin{table}[H]
 \begin{semanticequations}
 % Empty
 &\semeq{\iS}{\varepsilon}{\ienvL \; \ienvF}{(\emptyset, \ienvL)} \seSpace
@@ -205,7 +270,18 @@ $\iCstr$ is a set of constraint tuples, where any $(\ilv_1, \ilv_2) \in \iCstr$ 
 \csemeq{\iS}{S_1 \; S_2}{\ienvL \; \ienvF}{(\icstr \cup \icstr_2, \ienvL_3)}{
   \seWhere{\semeq{\iS}{S_2}{\ienvL_2 \; \ienvF}{(\icstr_2, \ienvL_3)}} \\
   \seAnd{\semeq{\iS}{S_1}{\ienvL \; \ienvF}{(\icstr, \ienvL_2)}}
-} \seSpace
+}
+\end{semanticequations}
+\caption{Semantic equations for simple statements}
+\label{cstr:statements}
+\end{table}
+
+\subsection{Control structures}
+The control flow constructs (while and if) define constraints that will allow inference to determine their basic blocks labels.
+These constraints allows for propagation of label constraints and are effectively the implementation of implicit flows.
+
+\begin{table}[H]
+\begin{semanticequations}
 % While
 \csemeq{\iS}{\tk{while} \tk ( E \tk ) S}{\ienvL \; \ienvF}{(\icstr_E \cup \icstr_S \cup \{ c \}, \ienvL)}{
   \seWhere{\semeq{\iE}{E}{\ienvL_2 \; \ienvF}{(\icstr_E, \ilv_E)}} \\
@@ -235,8 +311,15 @@ $\iCstr$ is a set of constraint tuples, where any $(\ilv_1, \ilv_2) \in \iCstr$ 
   \seAnd{\ilv_{if} = v(next)}
 }
 \end{semanticequations}
+\caption{Semantic equations for control structures}
+\label{cstr:controlstructures}
+\end{table}
 
-\subsubsection{Assignment and return statements}
+\subsection{Assignment and return statements}
+It should be noticed that the constraints constructed for declarations, assignments, and return statements have a similar structure.
+This structure represents the similarity in the feature they are handling, be it assignment to a variables value or to the return value of a function.
+
+\begin{table}[H]
 \begin{semanticequations}
 % Assignment
 \csemeq{\iS}{x \tk = E}{\ienvL \; \ienvF}{(\ienvL, \icstr \cup \{ c \})}{
@@ -255,47 +338,17 @@ $\iCstr$ is a set of constraint tuples, where any $(\ilv_1, \ilv_2) \in \iCstr$ 
   \seAnd{\ilv_\ib = \ienvL_\ib}
 }
 \end{semanticequations}
+\caption{Semantic equations for assignment and return statements}
+\label{cstr:assignment_return}
+\end{table}
 
-\subsubsection{Function call}
+\subsection{Acts for statements}
+The last statement is the \emph{acts for}-statement, which has two identical rules.
+This is because the difference between the two only exists at runtime.
+The $\ilv_\ia$ label represents the effective authority on execution.
+This is stored in the label environment to be used for implicit declassification when evaluating expressions.
 
-\begin{semanticequations}
-\csemeq{\iE}{f \tk{<{}<{}<} p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{>{}>{}>} \tk ( E_1 \tk , E_2 \tk , \dots E_n \tk )}{\ienvL \; \ienvF}{(\icstr_E, \ilv_f)}{
-  \seIf{\ienvF \; f = undefined} \text{ and} \\
-  \seWhere{\icstr_E = \bigcup_{i=1}^n \; \icstr_i} \\
-  \seAnd{\ilv_f = \sqcupl_{i=1}^n \; \ilv_i} \\
-  \seAnd{\semeq{\iE}{E_i}{\ienvL \; \ienvF}{(\icstr_i, \ilv_i)} \text{ for } 0 \leq i \leq n}
-}
-\end{semanticequations}
-
-In order to evaluate function calls, where the function declaration uses constant parameters, we need to replace these constants with the corresponding argument label.
-In order to do this, we declare an auxiliary function:
-\[ replaceConstants : \iLV \times \iEnvL \rightarrow \iLV \]
-
-with the following definition:
-
-\[replaceConstants(lv, \ienvL) = \begin{cases}
-  \ienvL \; x & \quad \text{if } lv = c(x) \\
-  j(replaceConstants(lv_1), & \quad \text{if } lv = j(lv_1, lv_2) \\
-  \quad replaceConstants(lv_2)) & \\
-  lv & \quad \text{otherwise}
-\end{cases} \]
-
-\begin{semanticequations}
-\csemeq{\iE}{f \tk ( E_1 \tk , E_2 \tk , \dots \tk , E_n \tk )}{\ienvL \; \ienvF}{(cstr_a \cup cstr_p, \ilv_f')}{
-  \seIf{\ienvF \; f = (\ilv_f, \{(\ilv_1, x_1), (\ilv_2, x_2), \dots, (\ilv_n, x_n)\}) \text{ and}} \\
-  \seWhere{replaceConstants(\ilv_f, \ienvL_2) = \ilv_f'} \\
-  \seAnd{\icstr_a = \bigcup\limits_{i=1}^n \icstr_i} \\
-  \seAnd{\icstr_p = \bigcup\limits_{i=1}^n \begin{cases}
-    \emptyset &\text{if } \ilv_i \in c(\iVar)\\
-    \{ \literal{\ilv_{E_i} \sqsubseteq \ilv_i} \} & \text{otherwise}
-    \end{cases}} \\
-  \seAnd{\semeq{\iE}{E_i}{\ienvL \; \ienvF}{(cstr_i, \ilv_{E_i}) \text{ for } 0 \leq i \leq n}} \\
-  \seAnd{\ienvL_2 = \ienvL[x_1 \mapsto \ilv_{E_1}, x_2 \mapsto \ilv_{E_2}, \dots, x_n \mapsto \ilv_{E_n}]}
-}
-\end{semanticequations}
-
-\subsubsection{Acts for statements}
-
+\begin{table}[H]
 \begin{semanticequations}
 % this Keyword
 \csemeq{\iS}{\tk{this} \tk{-{}->?} p_1 \tk , p_2 \tk , \dots \tk , p_k \; S}{\ienvL \; \ienvF}{(\icstr, \ienvL)}{
@@ -310,9 +363,14 @@ with the following definition:
   \seAnd{\ilv_\ia = \ienvL \; \ia}
 }
 \end{semanticequations}
+\caption{Semantic equations for acts for statement}
+\label{cstr:actsfor}
+\end{table}
 
-\subsubsection{Expressions}
+\subsection{Expressions}
+Most rules for expression evaluation produce no constraints and have a simple definition in terms of the label they return.
 
+\begin{table}[H]
 \begin{semanticequations}
 % Variable
 \csemeq{\iE}{x}{\ienvL \; \ienvF}{(\emptyset, \ilv)}{
@@ -330,9 +388,16 @@ with the following definition:
 % Parentheses
 &\semeq{\iE}{\tk ( E \tk )}{\ienvL \; \ienvF}{semeq{\iE}{E}{\ienvL \; \ienvF}{}}
 \end{semanticequations}
+\caption{Semantic equations for expressions}
+\label{cstr:expressions}
+\end{table}
 
-\subsubsection{Declassification}
+\subsection{Declassification}
+The two rules for declassification shows some of the simplicity that is part of inference.
+Either an explicit label is defined for declassification or one (represented by the variable label $\ilv_d$) will be inferred.
+Aside from that the rules are exactly the same.
 
+\begin{table}[H]
 \begin{semanticequations}
 % Implicit Label
 \csemeq{\iE}{\tk{<|} E \tk{|>}}{\ienvL \; \ienvF}{(\icstr \cup \{ c \}, \ilv_d)}{
@@ -349,3 +414,51 @@ with the following definition:
   \seAnd{\ilv_\ia = \ienvL \; \ia}
 }
 \end{semanticequations}
+\caption{Semantic equations for declassification}
+\label{cstr:declassification}
+\end{table}
+
+\subsection{Function call}
+The final type of expression is a function call.
+There are two rules regarding function calls.
+One for functions that have label definitions and one for those that do not.
+The latter is meant for externally declared functions, such as library functions.
+
+In order to evaluate function calls, where the function declaration uses constant parameters, we need to replace these constants with the corresponding argument label.
+In order to do this, we declare an auxiliary function:
+\[ replaceConstants : \iLV \times \iEnvL \rightarrow \iLV \]
+
+with the following definition:
+
+\[replaceConstants(lv, \ienvL) = \begin{cases}
+  \ienvL \; x & \quad \text{if } lv = c(x) \\
+  j(replaceConstants(lv_1), & \quad \text{if } lv = j(lv_1, lv_2) \\
+  \quad replaceConstants(lv_2)) & \\
+  lv & \quad \text{otherwise}
+\end{cases} \]
+
+\begin{table}[H]
+\begin{semanticequations}
+% library function call
+\csemeq{\iE}{f \tk{<{}<{}<} p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{>{}>{}>} \tk ( E_1 \tk , E_2 \tk , \dots E_n \tk )}{\ienvL \; \ienvF}{(\icstr_E, \ilv_f)}{
+  \seIf{\ienvF \; f = undefined} \text{ and} \\
+  \seWhere{\icstr_E = \bigcup_{i=1}^n \; \icstr_i} \\
+  \seAnd{\ilv_f = \sqcupl_{i=1}^n \; \ilv_i} \\
+  \seAnd{\semeq{\iE}{E_i}{\ienvL \; \ienvF}{(\icstr_i, \ilv_i)} \text{ for } 0 \leq i \leq n}
+} \seSpace
+% declared function call
+\csemeq{\iE}{f \tk ( E_1 \tk , E_2 \tk , \dots \tk , E_n \tk )}{\ienvL \; \ienvF}{(cstr_a \cup cstr_p, \ilv_f')}{
+  \seIf{\ienvF \; f = (\ilv_f, \{(\ilv_1, x_1), (\ilv_2, x_2), \dots, (\ilv_n, x_n)\}) \text{ and}} \\
+  \seWhere{replaceConstants(\ilv_f, \ienvL_2) = \ilv_f'} \\
+  \seAnd{\icstr_a = \bigcup\limits_{i=1}^n \icstr_i} \\
+  \seAnd{\icstr_p = \bigcup\limits_{i=1}^n \begin{cases}
+    \emptyset &\text{if } \ilv_i \in c(\iVar)\\
+    \{ \literal{\ilv_{E_i} \sqsubseteq \ilv_i} \} & \text{otherwise}
+    \end{cases}} \\
+  \seAnd{\semeq{\iE}{E_i}{\ienvL \; \ienvF}{(cstr_i, \ilv_{E_i}) \text{ for } 0 \leq i \leq n}} \\
+  \seAnd{\ienvL_2 = \ienvL[x_1 \mapsto \ilv_{E_1}, x_2 \mapsto \ilv_{E_2}, \dots, x_n \mapsto \ilv_{E_n}]}
+}
+\end{semanticequations}
+\caption{Semantic equations for function calls}
+\label{cstr:functioncall}
+\end{table}
