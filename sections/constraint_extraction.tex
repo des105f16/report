@@ -255,8 +255,11 @@ A variable declaration without initialization uses $\bot$ as the label value for
 \label{cstr:variabledeclaration}
 \end{table}
 
-\subsubsection{Control flow}
+\subsubsection{Statements}
+For statement rules we first cover a few simple rules.
+The expression statement allows us to perform function calls where we are not interested in the return value.
 
+\begin{table}[H]
 \begin{semanticequations}
 % Empty
 &\semeq{\iS}{\varepsilon}{\ienvL \; \ienvF}{(\emptyset, \ienvL)} \seSpace
@@ -268,7 +271,18 @@ A variable declaration without initialization uses $\bot$ as the label value for
 \csemeq{\iS}{S_1 \; S_2}{\ienvL \; \ienvF}{(\icstr \cup \icstr_2, \ienvL_3)}{
   \seWhere{\semeq{\iS}{S_2}{\ienvL_2 \; \ienvF}{(\icstr_2, \ienvL_3)}} \\
   \seAnd{\semeq{\iS}{S_1}{\ienvL \; \ienvF}{(\icstr, \ienvL_2)}}
-} \seSpace
+}
+\end{semanticequations}
+\caption{Semantic equations for simple statements}
+\label{cstr:statements}
+\end{table}
+
+\subsection{Control structures}
+The control flow constructs (while and if) define constraints that will allow inference to determine their basic blocks labels.
+These constraints allows for propagation of label constraints and are effectively the implementation of implicit flows.
+
+\begin{table}[H]
+\begin{semanticequations}
 % While
 \csemeq{\iS}{\tk{while} \tk ( E \tk ) S}{\ienvL \; \ienvF}{(\icstr_E \cup \icstr_S \cup \{ c \}, \ienvL)}{
   \seWhere{\semeq{\iE}{E}{\ienvL_2 \; \ienvF}{(\icstr_E, \ilv_E)}} \\
@@ -298,8 +312,15 @@ A variable declaration without initialization uses $\bot$ as the label value for
   \seAnd{\ilv_{if} = v(next)}
 }
 \end{semanticequations}
+\caption{Semantic equations for control structures}
+\label{cstr:controlstructures}
+\end{table}
 
 \subsubsection{Assignment and return statements}
+It should be noticed that the constraints constructed for declarations, assignments, and return statements have a similar structure.
+This structure represents the similarity in the feature they are handling, be it assignment to a variables value or to the return value of a function.
+
+\begin{table}[H]
 \begin{semanticequations}
 % Assignment
 \csemeq{\iS}{x \tk = E}{\ienvL \; \ienvF}{(\ienvL, \icstr \cup \{ c \})}{
@@ -318,6 +339,34 @@ A variable declaration without initialization uses $\bot$ as the label value for
   \seAnd{\ilv_\ib = \ienvL_\ib}
 }
 \end{semanticequations}
+\caption{Semantic equations for assignment and return statements}
+\label{cstr:assignment_return}
+\end{table}
+
+\subsection{Acts for statements}
+The last statements is the \emph{acts for}-statement, which has two identical rules.
+This is because the difference between the two only exists at runtime.
+The $\ilv_\ia$ label represents the effective authority on execution.
+This is stored in the label environment to be used for implicit declassification when evaluating expressions.
+
+\begin{table}[H]
+\begin{semanticequations}
+% this Keyword
+\csemeq{\iS}{\tk{this} \tk{-{}->?} p_1 \tk , p_2 \tk , \dots \tk , p_k \; S}{\ienvL \; \ienvF}{(\icstr, \ienvL)}{
+  \seWhere{\semeq{\iS}{S}{\ienvL[\ia \mapsto \ilv_\ia'] \; \ienvF}{(\icstr, \ienvL_2)}} \\
+  \seAnd{\ilv_\ia' = \ilv_\ia \sqcup \sqcupl_{i=1}^k \{ p_i \rightarrow \emptyset \}} \\
+  \seAnd{\ilv_\ia = \ienvL \; \ia}
+} \seSpace
+% caller Keyword
+\csemeq{\iS}{\tk{caller} \tk{-{}->?} p_1 \tk , p_2 \tk , \dots \tk , p_k \; S}{\ienvL \; \ienvF}{(\icstr, \ienvL)}{
+  \seWhere{\semeq{\iS}{S}{\ienvL[\ia \mapsto \ilv_\ia'] \; \ienvF}{(\icstr, \ienvL_2)}} \\
+  \seAnd{\ilv_\ia' = \ilv_\ia \sqcup \sqcupl_{i=1}^k \{ p_i \rightarrow \emptyset \}} \\
+  \seAnd{\ilv_\ia = \ienvL \; \ia}
+}
+\end{semanticequations}
+\caption{Semantic equations for acts for statement}
+\label{cstr:actsfor}
+\end{table}
 
 \subsubsection{Function call}
 
@@ -354,23 +403,6 @@ with the following definition:
     \end{cases}} \\
   \seAnd{\semeq{\iE}{E_i}{\ienvL \; \ienvF}{(cstr_i, \ilv_{E_i}) \text{ for } 0 \leq i \leq n}} \\
   \seAnd{\ienvL_2 = \ienvL[x_1 \mapsto \ilv_{E_1}, x_2 \mapsto \ilv_{E_2}, \dots, x_n \mapsto \ilv_{E_n}]}
-}
-\end{semanticequations}
-
-\subsubsection{Acts for statements}
-
-\begin{semanticequations}
-% this Keyword
-\csemeq{\iS}{\tk{this} \tk{-{}->?} p_1 \tk , p_2 \tk , \dots \tk , p_k \; S}{\ienvL \; \ienvF}{(\icstr, \ienvL)}{
-  \seWhere{\semeq{\iS}{S}{\ienvL[\ia \mapsto \ilv_\ia'] \; \ienvF}{(\icstr, \ienvL_2)}} \\
-  \seAnd{\ilv_\ia' = \ilv_\ia \sqcup \sqcupl_{i=1}^k \{ p_i \rightarrow \emptyset \}} \\
-  \seAnd{\ilv_\ia = \ienvL \; \ia}
-} \seSpace
-% caller Keyword
-\csemeq{\iS}{\tk{caller} \tk{-{}->?} p_1 \tk , p_2 \tk , \dots \tk , p_k \; S}{\ienvL \; \ienvF}{(\icstr, \ienvL)}{
-  \seWhere{\semeq{\iS}{S}{\ienvL[\ia \mapsto \ilv_\ia'] \; \ienvF}{(\icstr, \ienvL_2)}} \\
-  \seAnd{\ilv_\ia' = \ilv_\ia \sqcup \sqcupl_{i=1}^k \{ p_i \rightarrow \emptyset \}} \\
-  \seAnd{\ilv_\ia = \ienvL \; \ia}
 }
 \end{semanticequations}
 
