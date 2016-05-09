@@ -4,6 +4,7 @@
 In this section we will give a formal definition of how constraints are extracted from a \thelang~ program.
 This formal definition will be based on denotational semantics, and will therefore utilize the concepts thereof.
 We will define our syntactic and semantic setup, which will serve as a base for the rules (semantic equations) for how constraints are extracted from a \thelang~ program.
+Following the setup, we will present the semantic equations, which describes the rules for how constraints are extracted from the individual program constructs.
 
 \subsection{Syntax}
 Below follows an abstract syntax that describes the structure of our grammar.
@@ -69,6 +70,8 @@ In the rules below a \textit{pseudo} function $principal$ is used to represent t
 \subsection{Semantic setup}
 This section will describe the semantic constituents which are used to translate a syntactical \thelang{} program into the semantical world.
 These constituents are based on the concepts: \emph{semantic domains}, \emph{semantic functions}, and \emph{semantic equations} from \cite[Chapter 9]{slonneger1995formal}.
+The semantic domains and semantic functions will be described in the next two subsections.
+For readability purposes, the semantic equations will be spread out over the following subsections.
 
 \subsubsection{Semantic domains}
 The semantic domains of \thelang{} are primarily used to maintain state, and to give the final result of the constraint extraction: namely the constraints themselves as well as the different label types which are used to form the constraints.
