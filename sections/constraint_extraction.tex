@@ -224,6 +224,10 @@ The latter allows for recursion.
 \end{table}
 
 \subsubsection{Variable Declaration}
+New labels are introduced when declaring variables.
+A variable declaration without initialization uses $\bot$ as the label value for the missing initialization value.
+
+\begin{table}[H]
 \begin{semanticequations}
 % With Expression
 \csemeq{\iV}{t \; L \; x \tk = E}{\ienvL \; \ienvF}{(\icstr_E \cup \{ c \}, \ienvL[x \mapsto \ilv_x'])}{
@@ -247,6 +251,9 @@ The latter allows for recursion.
   \seAnd{c = \literal{\bot \sqcup \ilv_\ib \sqsubseteq \ilv_x}}
 }
 \end{semanticequations}
+\caption{Semantic equations for variable declaration}
+\label{cstr:variabledeclaration}
+\end{table}
 
 \subsubsection{Control flow}
 
