@@ -191,6 +191,16 @@ As the label value for an undeclared label depends on its context, $\varepsilon$
 \end{table}
 
 \subsubsection{Function Declarations}
+Function declaration (along with function call) can easily be considered the most complex rule(s).
+Specifically, the many different function and label environments in function declarations can render the rule complex.
+
+For the return label $\ilv_f$ for a function declaration it is possible to reference the parameters of that function.
+To achieve this the $\ienvL_2$ environment is constructed from the parameters.
+
+When evaluating the statements of the function, a reference to the return label of said function is required; this is included in $\ienvF_2$, along with a label reference for the declared function itself.
+The latter allows for recursion.
+
+\begin{table}[H]
 \begin{semanticequations}
 \csemeq{\iF}{t_f \, L_f \, f \tk ( t_1 \, l_1 \, x_1 \tk , t_2 \, l_2 \, x_2 \tk , \dots \tk , t_n \, l_n \, x_n \tk ) S}{\ienvL \; \ienvF}
 {(\icstr, \ienvF_2)}{
@@ -209,6 +219,9 @@ As the label value for an undeclared label depends on its context, $\varepsilon$
   \seAnd{\iL\dblSq{L_i} \; \ienvL = \ilv_i \text{ for all } 0 \leq i \leq n}
 }
 \end{semanticequations}
+\caption{Semantic equation for function declaration}
+\label{cstr:functiondeclaration}
+\end{table}
 
 \subsubsection{Variable Declaration}
 \begin{semanticequations}
