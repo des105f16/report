@@ -159,7 +159,12 @@ The rules for program and declarations are simple, as their main purpose is prov
 \label{cstr:program_declarations}
 \end{table}
 
-\subsubsection{Label}
+\subsection{Label and policy}\mikael{We may need to differ between policy labels and label constituents/composite labels)?}
+The rules for labels and policies consist of a simple transformation of the syntactical labels into their semantic equivalents.
+Worth noting here is that there is no ``empty'' label value for undeclared labels.
+As the label value for an undeclared label depends on its context, $\varepsilon$ is simply passed through on evaluation.
+
+\begin{table}[H]
 \begin{semanticequations}
 % Empty
 &\semeq{\iL}{\varepsilon}{\ienvL}{\varepsilon} \seSpace
@@ -181,6 +186,9 @@ The rules for program and declarations are simple, as their main purpose is prov
 % Top
 &\semeq{\iL}{\tk{\^{}}}{\ienvL}{p(\top)}
 \end{semanticequations}
+\caption{Semantic equations for label and policy}
+\label{cstr:label_policy}
+\end{table}
 
 \subsubsection{Function Declarations}
 \begin{semanticequations}
