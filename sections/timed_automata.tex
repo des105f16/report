@@ -17,3 +17,9 @@ A timed automaton is a tuple $(\Sigma, S, S_0, C, E)$, where
     The set $\lambda \subseteq C$ gives the clocks to be reset with this transition, and $\delta$ is a clock constraint over C.
 \end{itemize}
 \end{definition}
+
+\begin{definition}{Clock constraints}
+For a set $X$ of clock variables there exists a set $\phi(X)$ of \emph{clock constraints}, where $\delta \in \phi(X)$ is defined recursively by:
+\[ \delta := x \leq c \gp c \leq x \gp \lnot \delta \gp \delta_1 \land \delta_2 \]
+where $x \in X$ and $c \in \mathbb{R}_{\geq 0}$ (the set of non-negative real numbers).
+\end{definition}
