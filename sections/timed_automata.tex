@@ -1,3 +1,19 @@
 % !TEX root = ../master.tex
 
 \section{Timed Automata}
+Here we will shortly define and describe timed automata, based on \cite{timed_automata}.
+
+The timed automata is an extension to the $\omega$-automata formalism, allowing for the manipulation of clock-variables, as well as clock-based restrictions.
+
+\begin{definition}{Timed automaton}
+A timed automaton is a tuple $(\Sigma, S, S_0, C, E)$, where
+\begin{itemize}
+  \item $\Sigma$ is a finite alphabet,
+  \item $S$ is a finite set of states,
+  \item $S_0 \subseteq S$ is a set of start states,
+  \item $C$ is a finite set of clocks, and
+  \item $E \subseteq S \times S \times \Sigma \times 2^C \times \phi(C)$ gives the set of transitions. \\
+    An edge $(s, s', \sigma, \lambda, \delta)$ represents a transition from state $s$ to state $s'$ on input symbol $\sigma$.
+    The set $\lambda \subseteq C$ gives the clocks to be reset with this transition, and $\delta$ is a clock constraint over C.
+\end{itemize}
+\end{definition}
