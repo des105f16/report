@@ -5,10 +5,10 @@ Based on the previous descriptions, we have created two examples which will work
 These examples contain only constructions supported by our implementation.
 
 \subsection{Smart meter bill calculation}
-Related to the protection of smart meter data, we have created a simple example which uses data from both consumer and electrical company in order to calculate a bill.
+Related to the protection of smart meter data, we have created a simple example (see \cref{example:calculate_bill}) which uses data from both consumer and electrical company in order to calculate a bill.
 Here we make use of 4 auxiliary functions: \dlmc{get_latest_usage}, \dlmc{get_latest_prices}, \dlmc{send_to_consumer}, and \dlmc{send_to_electrical_company}, which represent ways of either obtaining data from outside the program, or sending data to outside of the program.
 
-\begin{lstlisting}[style=dlmc, numbers=left]
+\begin{lstlisting}[float, style=dlmc, numbers=left, caption={Smart meter bill calculation}, label=example:calculate_bill]
 typedef struct usage {
   int start_time;
   int usage_in_Wh;
@@ -51,10 +51,10 @@ int main(int argc, char **argv) {
 \end{lstlisting}
 
 \subsection{Password checker}
-A more general example is a simple password checker, which checks a given username and password combination and checks it against the user database, giving a response to the user whether it was correct or not.
+A more general example is a simple password checker (see \cref{example:check_password}), which checks a given username and password combination and checks it against the user database, giving a response to the user whether it was correct or not.
 Here we have two auxiliary functions: \dlmc{get_users} -- which simply gets the total list of username/password from somewhere outside the program, and \dlmc{send_response} -- which sends the response to the requesting user to outside the program.
 
-\begin{lstlisting}[style=dlmc, numbers=left]
+\begin{lstlisting}[float, style=dlmc, numbers=left, caption={Password checker}, label=example:check_password]
 #include <stdbool.h>
 #include <string.h>
 
