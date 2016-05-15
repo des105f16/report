@@ -70,7 +70,7 @@ int main(int argc, char **argv) {
 
 \subsection{Password checker}
 A more general example is a simple password checker (see \cref{example:check_password} and \cref{example:graph:check_password}), which checks a given username and password combination and checks it against the user database, giving a response to the user whether it was correct or not.
-Here we have two auxiliary functions: \dlmc{get_users} -- which simply gets the total list of username/password from somewhere outside the program, and \dlmc{send_response} -- which sends the response to the requesting user to outside the program.
+Here we have three auxiliary functions: \dlmc{get_login}, \dlmc{get_users}, and \dlmc{send_response} -- they represent the two inputs needed, as well as the output to be given.
 
 \begin{lstlisting}[float, style=dlmc, numbers=left, caption={Password checker}, label=example:check_password]
 #include <stdbool.h>
@@ -81,6 +81,7 @@ typedef struct user_info {
   char password[20];
 } user_info;
 
+user_info get_login();
 user_info* get_users();
 void send_response(bool is_match);
 
@@ -101,7 +102,8 @@ bool check_password(char *username, char *password) {
 }
 
 int main(int argc, char **argv) {
-  bool is_match = check_password(argv[1], argv[2]);
+  user_info login = get_login();
+  bool is_match = check_password(login.username, login.password);
   send_response(is_match);
 }
 \end{lstlisting}
