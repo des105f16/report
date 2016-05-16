@@ -30,8 +30,8 @@ typedef struct price {
   int price_in_cents;
 } price;
 
-usage* get_latest_usage();
-price* get_latest_prices();
+usage *get_latest_usage();
+price *get_latest_prices();
 void send_to_consumer(int bill);
 void send_to_electrical_company(int bill);
 
@@ -81,9 +81,9 @@ typedef struct user_info {
   char password[20];
 } user_info;
 
-user_info get_login();
-user_info* get_users();
-void send_response(bool is_match);
+user_info get_login(){}
+user_info *get_users(){}
+void send_response(bool is_match){}
 
 bool check_password(char *username, char *password) {
   int user_count = 100;
