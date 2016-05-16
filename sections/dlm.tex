@@ -5,6 +5,7 @@
 \newcommand{\dlmdeclassify}{\dlmc{declassify}}
 \newcommand{\dlmpc}{$\underline{pc}$}
 \newcommand{\mathcomment}[1]{\color{green!50!black}{#1}}
+\newcommand{\ceil}[1]{\lceil#1\rceil}
 
 \chapter{The Decentralized Label Model}
 The Decentralized Label Model \cite{myers1997, myers1998, myers2000} is a model for ensuring information flow control in a system.
@@ -332,18 +333,18 @@ Using the inference algorithm we then relax the label, effectively making it les
 To simplify the use of current upper bounds we define a current upper bound for all labels:
 
 \begin{definition}{Current upper bound}\label{dlm:def:upperbound}
-  The current upper bound of a variable label $L_{var}$ is given by the notation $\lceil L_{var} \rceil$.
+  The current upper bound of a variable label $L_{var}$ is given by the notation $\ceil{L_{var}}$.
   For any other label types the following definition applies:
   \[
-  \lceil L \rceil = 
+  \ceil{L} =
   \begin{cases}
     %upper(L) & \text{if } L \text{ is a variable label} \\
-    \lceil L_1 \rceil \sqcup \lceil L_2 \rceil & \text{if } L = L_1 \sqcup L_2 \\
-    \lceil L_1 \rceil \sqcap \lceil L_2 \rceil & \text{if } L = L_1 \sqcap L_2 \\
+    \ceil{L_1} \sqcup \ceil{L_2} & \text{if } L = L_1 \sqcup L_2 \\
+    \ceil{L_1} \sqcap \ceil{L_2} & \text{if } L = L_1 \sqcap L_2 \\
     L & \text{otherwise}
   \end{cases}
   \]
-  Note that $\lceil L_{var} \rceil$, where $L_{var}$ is a variable label, can be a composite label (using joins and/or meets) but can never have variable labels as subcomponents.
+  Note that $\ceil{L_{var}}$, where $L_{var}$ is a variable label, can be a composite label (using joins and/or meets) but can never have variable labels as subcomponents.
 \end{definition}
 
 \myparagraph{Joins and meets}
@@ -361,7 +362,7 @@ We do this by simply employing the current upper bound of both labels in the com
   Let $\sqsubseteq^*$ represent the definition given in \cref{dlm:def:restrict}.
   We then redefine $\sqsubseteq$ such that:
   \[
-    L_1 \sqsubseteq L_2 = \lceil L_1 \rceil \sqsubseteq^* \lceil L_2 \rceil
+    L_1 \sqsubseteq L_2 = \ceil{L_1} \sqsubseteq^* \ceil{L_2}
   \]
   Note that given \cref{dlm:def:upperbound} this definition does not alter the pre-existing meaning of $\sqsubseteq$ but merely expands it to include variable labels.
 \end{definition}
