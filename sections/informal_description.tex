@@ -49,3 +49,12 @@ Labels are defined between the type and the identifier of a variable, or between
 Unlike types, labels can be omitted completely, which has two applications.
 Firstly, it is possible to take old code and incrementally apply labels.
 Secondly, it can be used to apply labels only where completely necessary, and relying on inference for the rest, thus limiting the clutter of labels throughout a program.
+
+The following subsections will describe the label constructions implemented by \thelang.
+It will follow the \dlmc{check_password} example from \cref{example:sec:check_password}.
+The fully updated source can be seen in \cref{example:code:check_password-explicit}.
+The labelled version of \dlmc{calculate_bill} can be seen in \cref{example:code:calculate_bill-explicit}, however, it will not be described.
+
+\include{figures/code/check_password-explicit}
+
+\include{figures/code/calculate_bill-explicit}
