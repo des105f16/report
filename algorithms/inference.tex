@@ -1,25 +1,48 @@
 % !TEX root = ../master.tex
+{
+\let\oldnl\nl% Store \nl in \oldnl
+\newcommand{\nonl}{\renewcommand{\nl}{\let\nl\oldnl}}% Remove line number for one line
+
 \begin{algorithm}[h]
 \SetAlgoNoEnd
-CHECK\_LABELS(p)\\
-\ForEach {$c \in Q$}
+\DontPrintSemicolon
+\SetKw{Let}{let}
+\SetKw{Error}{ERROR}
+\SetKw{False}{false}
+\SetKw{True}{true}
+\SetKwData{Checked}{checked}
+\KwData{A set $Q$ of constraints $"L_1 \sqsubseteq L_2"$}
+
+\ForEach {$"L_1 \sqsubseteq L_2" \in Q$}
 {
-  \If {left($c$) is variable}
+  \Let $Q' = Q \setminus "L_1 \sqsubseteq L_2"$\;
+  $Q := Q' \cup unjoin("L_1 \sqsubseteq L_2")$\;
+}
+\ForEach {$"L_1 \sqsubseteq L_2" \in Q$}
+{
+  \If {$L_1$ is a variable label}
   {
-    upper($c$) = $\top$
-  }
-  \Else
-  {
-    upper($c$) = left($c$)
+    $\lceil L_1 \rceil := \top$\;
   }
 }
-\While {$\exists c \in Q | upper(c) \sqsubseteq right(c)$}
+\Checked := \False\;
+\While {$\neg$ \Checked}
 {
-  pick $c \in Q | upper(c) \sqsubseteq right(c)$\\
-  \If {left($c$) is not variable}
+  \Checked := \True\;
+  \ForEach {$"L_1 \sqsubseteq L_2" \in Q$}
   {
-    $ERROR$
+    \If {$L_1 \not\sqsubseteq L_2$}
+    {
+      \eIf {$L_1$ is a variable label}
+      {
+        $\ceil{L_1} := \ceil{L_1} \sqcap \ceil{L_2}$\;
+        \Checked := \False\;
+      }
+      {
+        \Error\;
+      }
+    }
   }
-  let upper($c$) = upper($c$) $\sqcup$ right($c$)
 }
 \end{algorithm}
+}

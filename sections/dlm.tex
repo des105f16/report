@@ -380,24 +380,24 @@ A constant label could be part of the a variable labels current upper bound and 
 Here it should be noted that \cref{dlm:def:upperbound} applies to constant labels.
 
 \myparagraph{Label restriction}
+\mikkel{This paragraph is incomplete. Nothing to see here, move along.}
 In order to define restriction for constant labels, we must also define it for the composite label types.
 We provide a definition for join labels but not meet labels.
 This is a result of the definition 
 Restriction for constant labels is undefined for certain label types.
 The definition below specifies how 
 
-\begin{itemize}
-  \item Policy
-  \item Join
-  \item Meet
-  \item Upper
-  \item Lower
-  \item Constant
-  \item Variable
-\end{itemize}
+\subsection{Inference algorithm}\label{dlm:inf:algsection}
+\input{algorithms/inference.tex}
+
+\[
+\text{unjoin}("L_1 \sqsubseteq L_2") =
+\begin{cases}
+  \text{unjoin}(L_3) \cup \text{unjoin}(L_4) & \text{ if } L_1 = L_3 \sqcup L_4\\
+  \{"L_1 \sqsubseteq L_2"\} & \text{ otherwise}
+\end{cases}
+\]
+
 % Describe why inference is so nice.
 % Describe the different types of labels.
 % Present the inference algorithm.
-
-\subsection{Inference algorithm}\label{dlm:inf:algsection}
-\input{algorithms/inference.tex}
