@@ -24,10 +24,12 @@ int calculate_bill() {
   int i = 0;
   int j = 0;
   while (i < usage_count) {
-    while ((j < prices_count-1) && (latest_prices[j+1].start_time <= latest_usage[i].start_time)) {
+    while ((j < prices_count-1) &&
+        (latest_prices[j+1].start_time <= latest_usage[i].start_time)) {
       j = j + 1;
     }
-    result = result + latest_usage[i].usage_in_Wh * latest_prices[j].price_in_cents;
+    result = result + latest_usage[i].usage_in_Wh *
+      latest_prices[j].price_in_cents;
     i = i + 1;
   }
   return result;

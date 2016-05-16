@@ -1,5 +1,7 @@
 \usepackage{listings}
 
+\newcommand{\dlmcsyntax}[1]{\color{violet}{#1}}
+
 \lstdefinestyle{dlmc}{
   belowcaptionskip=1\baselineskip,
   breaklines=true,
@@ -7,11 +9,24 @@
   xleftmargin=\parindent,
   language=C,
   showstringspaces=false,
+  morekeywords={bool, user\_info},
   basicstyle=\ttfamily,
   keywordstyle=\bfseries\color{blue},
   commentstyle=\itshape\color{green!50!black},
   stringstyle=\color{red!50!black},
-  mathescape=true
+  mathescape=true,%
+  columns=fullflexible,
+  keepspaces,
+  escapeinside={(*@}{@*)},
+  morekeywords=[2]{principal,this,caller},
+  keywordstyle=[2]\dlmcsyntax,
+  keywordstyle=[3]\dlmcsyntax,
+  moredelim = [s][\dlmcsyntax]{\{\{}{\}\}},
+  literate= {-->?}{{\dlmcsyntax{-{}->?}}}1
+            {<|}{{\dlmcsyntax{<|}}}1
+            {|>}{{\dlmcsyntax{|>}}}1
+            {@}{{\dlmcsyntax{@}}}1
+            {@?}{{\dlmcsyntax{@?}}}1
 }
 
 \newcommand{\dlmc}[1]{\lstinline[style=dlmc]{#1}}

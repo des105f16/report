@@ -1,5 +1,5 @@
 \begin{lstlisting}[float, style=dlmc, numbers=left, caption={Labelled smart meter bill calculation example}, label=example:code:calculate_bill-explicit]
-principal u, ec, s, output;
+principal u, ec, s;
 
 typedef struct usage {
   int start_time;
@@ -11,10 +11,10 @@ typedef struct price {
   int price_in_cents;
 } price;
 
-usage {{u->}} *get_latest_usage(){}
-price {{_}} *get_latest_prices(){}
-void {{output->u}} send_to_consumer(int bill){}
-void {{output->ec}} send_to_electrical_company(int bill){}
+usage {{u->}} *get_latest_usage();
+price {{_}} *get_latest_prices();
+void {{output->u}} send_to_consumer(int bill);
+void {{output->ec}} send_to_electrical_company(int bill);
 
 int {{u->u, ec}} calculate_bill() {
   int {{s->}} usage_count = 100;
@@ -26,10 +26,12 @@ int {{u->u, ec}} calculate_bill() {
   int {{s->}} i = 0;
   int {{u->; s->}} j = 0;
   while (i < usage_count) {
-    while ((j < prices_count-1) && (latest_prices[j+1].start_time <= latest_usage[i].start_time)) {
+    while ((j < prices_count-1) &&
+        (latest_prices[j+1].start_time <= latest_usage[i].start_time)) {
       j = j + 1;
     }
-    result = result + latest_usage[i].usage_in_Wh * latest_prices[j].price_in_cents;
+    result = result + latest_usage[i].usage_in_Wh *
+      latest_prices[j].price_in_cents;
     i = i + 1;
   }
   this -->? u, s {
