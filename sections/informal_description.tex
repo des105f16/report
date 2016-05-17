@@ -106,3 +106,16 @@ Then we could have declared that function as: \\
 \end{minipage}
 
 This is a form of label polymorphism, as the return label of \dlmc{strcmp2} will always depend on the calling arguments \dlmc{s1} and \dlmc{s2}, which can differ depending on its usage.
+
+\subsection{Variable declarations}
+The labeling of variable declarations is done mainly to oblige the return values of functions and input given either by parameters or auxiliary function calls.
+This is also why most of these labels are easier to infer, and can therefore often be left out, as we shall see later in this section.
+
+For \dlmc{check_password} we have the following labeling of variables:\\
+\begin{minipage}{\linewidth}
+\lstinputlisting[style=dlmc, numbers=left, linerange={16-19}, firstnumber=16]{dlm_examples/report/check_password-explicit.ncif}
+\end{minipage}
+
+The labeling applied here is done so that it obliges the different inputs to the method.
+The most noteworthy thing here is the labeling of \dlmc{match}, as its assignment within both the \dlmc{while} and \dlmc{if} nestings will implicitly obtain knowledge of all other labeled values.
+It is therefore labeled with the join of all those labels: \dlmc{\{\{u->;pc->\}\}} so that it is more strict than all.
