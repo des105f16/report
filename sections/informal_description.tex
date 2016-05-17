@@ -102,7 +102,7 @@ For example we could have made a \dlmc{strcmp2} method which takes the two strin
 Then we could have declared that function as: \\
 \begin{minipage}{\linewidth}
   \centering
-  \dlmc{int \{\{s1;s2\}\} strcmp2(char * s1, char * s2, int x);}
+  \dlmc{int \{\{s1;s2\}\} strcmp2(char * s1, char * s2, int \{\{_\}\} x);}
 \end{minipage}
 
 This is a form of label polymorphism, as the return label of \dlmc{strcmp2} will always depend on the calling arguments \dlmc{s1} and \dlmc{s2}, which can differ depending on its usage.
