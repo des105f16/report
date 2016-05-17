@@ -56,8 +56,47 @@ Some of these labels have been deliberately faded to show labels which could be 
 The following subsections will describe the label constructions implemented by \thelang.
 It will follow the \dlmc{check_password} example from \cref{example:sec:check_password}.
 The fully updated source can be seen in \cref{example:code:check_password-explicit}.
-The labelled version of \dlmc{calculate_bill} can be seen in \cref{example:code:calculate_bill-explicit}, however, it will not be described.
+The labeled version of \dlmc{calculate_bill} can be seen in \cref{example:code:calculate_bill-explicit}, however, it will not be described.
 
 \lstinputlisting[float, style=dlmc, numbers=left, caption={Labelled password checker example}, label=example:code:check_password-explicit]{dlm_examples/report/check_password-explicit.ncif}
 
 \lstinputlisting[float, style=dlmc, numbers=left, caption={Labelled smart meter bill calculation example}, label=example:code:calculate_bill-explicit]{dlm_examples/report/calculate_bill-explicit.ncif}
+
+\subsection{Function declarations}
+The first thing we would want to label in a program is what can be seen as the bigger components; the functions that either obtain data from outside or send data to outside the program.
+These are what are known as \emph{channels}, as described in \cref{dlm:channels}.
+In \thelang{} we have no distinction between \emph{input channels} and any other function with a return value.
+However, \emph{output channels} are distinguishable by having the special \textbf{output} owner and is handled differently than other functions, as only the \emph{effective reader sets} of the labels of the arguments are compared with that of the output channel.
+
+For \dlmc{check_password} we have the 3 auxiliary functions and the \dlmc{check_password} function itself, which we would label as so:\\
+\begin{minipage}{\linewidth}
+\lstinputlisting[style=dlmc, numbers=left, linerange={11-15}, firstnumber=11]{dlm_examples/report/check_password-explicit.ncif}
+\end{minipage}
+
+Here we have two principals: user (u) and pc (password checker).\footnote{We make use of the \dlmc{principal} declaration in the full example to simulate the actual obtaining of system principals.}
+The user provides some login information, to which he is the owner.
+The password checker is a trusted principal which has access to the user database.
+The final output is sent to an output channel which is readable only be the user.
+
+\dlmc{check_password} returns the comparison result, which is owned by and readable by the user only.
+Here we also need to add labels to the parameters, otherwise we would not be able to statically check the function, as the actual labels for the parameters would only be known at run time, but by supplying them we know that they will hold at least those policies that have been declared.
+When supplied with a label, parameters are treated as any other variable when evaluating a function declaration.
+However, if no label is supplied for a parameter, that parameter is recognized as a \emph{constant label}, which means that when running the inference algorithm we cannot lessen the label of a parameter in the same way we could a \emph{variable label} (more about this later).
+
+\subsubsection{Parameters}
+Another interesting possibility when declaring the return label is the ability to reference parameter labels.
+By default, an unlabeled function will have an implicit label which is the join of all of its parameters ($\bot$ if it has none).
+This is also how external functions are always labeled.
+This is done by simply stating the parameter name in the label, and possibly joining it with other policies by using the join operator (semi-colon).
+
+This ability to reference parameters is useful when declaring helper methods that should maintain the policies of its parameters.
+For example we could have made a \dlmc{strcmp2} method which takes the two strings to compare, as well as some integer to limit the amount of characters we would want to compare.
+Then we could have declared that function as: \\
+\begin{minipage}{\linewidth}
+  \centering
+  \dlmc{int \{\{s1;s2\}\} strcmp2(char * s1, char * s2, int x);}
+\end{minipage}
+
+This is a form of label polymorphism, as the return label of \dlmc{strcmp2} will always depend on the calling arguments \dlmc{s1} and \dlmc{s2}, which can differ depending on its usage.
+
+\subsubsection{Variable declarations}
