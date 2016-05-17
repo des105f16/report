@@ -119,3 +119,20 @@ For \dlmc{check_password} we have the following labeling of variables:\\
 The labeling applied here is done so that it obliges the different inputs to the method.
 The most noteworthy thing here is the labeling of \dlmc{match}, as its assignment within both the \dlmc{while} and \dlmc{if} nestings will implicitly obtain knowledge of all other labeled values.
 It is therefore labeled with the join of all those labels: \dlmc{\{\{u->;pc->\}\}} so that it is more strict than all.
+
+\subsection{If-acts-for and declassification}
+Going into \dlmc{check_password} we have data that is privy to the user as well as data that is not.
+So before we can return the result to the user, we need to explicitly declare that in this particular case it is an intentional leak of the password checker's data (the user db and the internals of \dlmc{check_password}).
+
+This is done with the declassification delimiter \dlmc{<| |>} which takes two arguments, an expression to be declassified as well as the new label.
+For \dlmc{check_password} we need to declassify and return \dlmc{match}:\\
+\begin{minipage}{\linewidth}
+\lstinputlisting[style=dlmc, numbers=left, linerange={28-30}, firstnumber=28]{dlm_examples/report/check_password-explicit.ncif}
+\end{minipage}
+
+As can be seen we also need to obtain the proper authority before such a declassification is possible.
+During compile time checking we do not differ between the special keywords \dlmc{this} and \dlmc{caller}, as they can only be handled during runtime.
+In this case we need \dlmc{u} in order to add \dlmc{u} as a reader to its own policy.
+We also need to clear the return value's label of that policy of \dlmc{pc}, as explained above.
+
+It is also possible to leave out the explicit label of the declassification, as we will see later.
