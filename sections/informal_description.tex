@@ -81,7 +81,7 @@ For \dlmc{check_password} we have the 3 auxiliary functions and the \dlmc{check_
 \lstinputlisting[style=dlmc, numbers=left, linerange={11-15}, firstnumber=11]{dlm_examples/report/check_password-explicit.ncif}
 \end{minipage}
 
-Here we have two principals: user (u) and pc (password checker).\footnote{We make use of the \dlmc{principal} declaration in the full example to simulate the actual obtaining of system principals.}
+Here we have two principals: user (u) and password checker (pc).\footnote{We make use of the \dlmc{principal} declaration in the full example to simulate the actual obtaining of system principals.}
 The user provides some login information, to which he is the owner.
 The password checker is a trusted principal which has access to the user database.
 The final output is sent to an output channel which is readable only be the user.
