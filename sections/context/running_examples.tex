@@ -1,4 +1,4 @@
-% !TEX root = ../master.tex
+% !TEX root = ../../master.tex
 
 \section{Running Examples}\label{examples:sec}
 Based on the previous descriptions, we have created two examples which will work as IoT use-cases, and will be the base for our following discussions and implementation.
@@ -16,11 +16,10 @@ The main function has been left out, and the \emph{request} flows represent call
 In the code examples themselves, the logic in the main function will also not completely represent an actual implementation, as we have abstracted away from how the program will actually be run or called.
 
 \subsection{Smart meter bill calculation}
-\mikaelin{Fix encoding in code examples}
 Related to the protection of smart meter data, we have created a simple example (see \cref{example:code:calculate_bill} and \cref{example:graph:calculate_bill}) which uses data from both consumer and electrical company in order to calculate a bill.
 Here we make use of 4 auxiliary functions: \dlmc{get_latest_usage}, \dlmc{get_latest_prices}, \dlmc{send_to_consumer}, and \dlmc{send_to_electrical_company}, which represent ways of either obtaining data from outside the program, or sending data to outside of the program.
 
-\lstinputlisting[float, style=dlmc, numbers=left, caption={Labelled password checker example}, label=example:code:check_password-explicit]{dlm_examples/report/check_password.ncif}
+\lstinputlisting[float, style=dlmc, numbers=left, caption={Smart meter bill calculation example}, label=example:code:calculate_bill]{dlm_examples/report/calculate_bill.ncif}
 \begin{figure}
   \centering
   \includegraphics[scale=0.8]{figures/dlm_calculate_bill}
@@ -32,8 +31,7 @@ Here we make use of 4 auxiliary functions: \dlmc{get_latest_usage}, \dlmc{get_la
 A more general example is a simple password checker (see \cref{example:code:check_password} and \cref{example:graph:check_password}), which checks a given username and password combination and checks it against the user database, giving a response to the user whether it was correct or not.
 Here we have three auxiliary functions: \dlmc{get_login}, \dlmc{get_users}, and \dlmc{send_response} -- they represent the two inputs needed, as well as the output to be given.
 
-
-\lstinputlisting[float, style=dlmc, numbers=left, caption={Labelled smart meter bill calculation example}, label=example:code:calculate_bill-explicit]{dlm_examples/report/calculate_bill.ncif}
+\lstinputlisting[float, style=dlmc, numbers=left, caption={Password checker example}, label=example:code:check_password]{dlm_examples/report/check_password.ncif}
 \begin{figure}
   \centering
   \includegraphics[scale=0.8]{figures/dlm_check_password}
