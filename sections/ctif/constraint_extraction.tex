@@ -133,7 +133,8 @@ Due to the simplicity of the label syntactic domain, its rules has been merged w
 Unlike the previous semantic functions, labels and policies are only evaluated to a label value in order to use them in the forming of constraints.
 
 \subsection{Program and declarations}
-The rules for program and declarations are simple, as their main purpose is providing an entry point, as well as the ability to have variable and function declarations appear in the root scope, and in no particular order.
+The rules for program and declarations are simple, as their main purpose is providing an entry point, as well as the ability to have variable and function declarations appear in the global scope, and in arbitrary order.
+$empty\ienvF$ and $empty\ienvL$ are the initial, empty, environments.
 
 \begin{table}[H]
 \begin{semanticequations}
@@ -189,6 +190,7 @@ As the label value for an undeclared label depends on its context, $\varepsilon$
 \caption{Semantic equations for label and policy}
 \label{cstr:label_policy}
 \end{table}
+\mikaelin{Fix weird latex that won't use the semeq command.}
 
 \subsection{Function Declarations}
 Function declaration (along with function call) can easily be considered the most complex rule(s).
@@ -255,7 +257,7 @@ A variable declaration without initialization uses $\bot$ as the label value for
 \end{table}
 
 \subsection{Statements}
-For the statement rules we first cover a few simple rules.
+For the statement rules, we first cover a few simple rules.
 The expression statement allows us to perform function calls where we are not interested in the return value.
 
 \begin{table}[H]
@@ -278,7 +280,7 @@ The expression statement allows us to perform function calls where we are not in
 
 \subsection{Control structures}
 The control flow constructs (while and if) define constraints that will allow inference to determine their basic blocks labels.
-These constraints allows for propagation of label constraints and are effectively the implementation of implicit flows.
+These constraints allow for propagation of label constraints and are effectively the implementation of implicit flows.
 
 \begin{table}[H]
 \begin{semanticequations}
@@ -391,9 +393,10 @@ Most rules for expression evaluation produce no constraints and have a simple de
 \caption{Semantic equations for expressions}
 \label{cstr:expressions}
 \end{table}
+\mikaelin{Fix weird latex that won't use the semeq command.}
 
 \subsection{Declassification}
-The two rules for declassification shows some of the simplicity that is part of inference.
+The two rules for declassification show some of the simplicity that is part of inference.
 Either an explicit label is defined for declassification or one (represented by the variable label $\ilv_d$) will be inferred.
 Aside from that the rules are exactly the same.
 
@@ -462,3 +465,4 @@ with the following definition:
 \caption{Semantic equations for function calls}
 \label{cstr:functioncall}
 \end{table}
+\mikaelin{Reminder to do something about caller authority in function calls, possibly also in declaration.}
