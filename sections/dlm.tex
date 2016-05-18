@@ -287,7 +287,7 @@ res = val;                // $\mathcomment{\labelof{val} \sqsubseteq \labelof{re
 % Reference the previous examples in the chapter.
 % Provide reference to the semantics chapter for "how to retrieve constraints".
 
-\section{Inferring labels}
+\section{Inferring labels}\label{dlm:inferring_labels}
 The components of constraints are labels.
 Some of these labels will be constructed from the evaluation of expressions, as is the example with the assignment above.
 But the values of the labels themselves all stem from a declaration somewhere.
@@ -383,9 +383,9 @@ Here it should be noted that \cref{dlm:def:upperbound} applies to constant label
 \mikkelin{This paragraph is incomplete. Nothing to see here, move along.}
 In order to define restriction for constant labels, we must also define it for the composite label types.
 We provide a definition for join labels but not meet labels.
-This is a result of the definition 
+This is a result of the definition
 Restriction for constant labels is undefined for certain label types.
-The definition below specifies how 
+The definition below specifies how
 
 \subsection{Inference algorithm}\label{dlm:inf:algsection}
 Using the established extensions of labels we present the inference algorithm (\cref{dlm:inf:algorithm}).
