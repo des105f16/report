@@ -46,7 +46,7 @@ This set contains all the principals in a system.
 \myparagraph{Labels}
 A label can be described as a set of policies, where a policy consists of an owner principal $o$ and a set of reader principals $r_1, r_2, \dots, r_n$.
 Formally we provide the following, equivalent definition:
-\begin{definition}{Labels}
+\begin{definition}{Labels}\label{dlm:def:label}
 A label $L$ is a set of owners $owners(L)$, and a function $readers(L, o)$ that retrieves the set of reader principals that $o$ allows to read.
 Note that given this definition we have that $$o \notin owners(L) \Rightarrow readers(L, o) = *$$
 \end{definition}
@@ -75,8 +75,52 @@ This is known as the \emph{effective reader set}, which is the intersection of \
   $$readers(L_1) = \{r1,r2\} \cap \{r2, r3\} = \{r2\}$$
 \end{example}
 
-\section{Labels as partially ordered set}
-\mikkelin{Describe why we have an interest in labels being partially ordered and then proceed to define it.}
+\section{Security class lattice}
+Using the above definitions for labels we will proceed to define them as a lattice.
+A lattice is a partially ordered set, for which each pair of elements in the set have a unique least upper bound (the join/$\sqcup$ of the labels) and a greatest lower bound (the meet/$\sqcap$ of the labels).
+In the case of DLM, the lattice is the set of all labels and it is ordered by how restrictive the labels are.
+
+A label without owners effectively has no restrictions on the data it protects.
+As such it is the lower bound $\bot$ of the lattice.
+Likewise the label that has all owners in a system (as defined in \cref{dlm:def:label}), but no readers allowed by either of the owners, is the most restrictive label.
+This is the upper bound $\top$ of the lattice.
+
+With these we have a bounded lattice as illustrated by \cref{dlm:lattice_fig}.
+In the following sections we define the properties of this security lattice.
+These will match the description of the lattice bounds given above.
+
+\renein{Reference til bevis/påstand for lattice egenskab}
+\mikkelin[Hvordan?]{Kan vi referere til DLM, hvor det ikke bevises men blot nævnes eller bør vi inkludere et bevis? Jeg går ud fra at vi skal vise \textit{Commutative, Associative, Absorption, Identity} ?}
+
+\begin{figure}
+  \begin{center}
+  \begin{tikzpicture}[inner sep=1mm, >=latex]
+    \node (l1) at (-1,0) {$L_1$};
+    \node (l2) at (1,0) {$L_2$};
+
+    \node (meet) at (0,-1) {\small $L_1$ {\LARGE $\! \sqcap \!$} $L_2$};
+    \node (bot) at (0,-2) {$\bot$s};
+
+    \node (join) at (0,1) {\small $L_1$ {\LARGE $\! \sqcup \!$} $L_2$};
+    \node (top) at (0,2) {$\top$};
+
+    \draw[->] (l1) edge (join);
+    \draw[->] (l2) edge (join);
+    \draw[->] (l1) edge (meet);
+    \draw[->] (l2) edge (meet);
+
+    \draw[->, dashed, gray] (l1) edge [bend left] (top);
+    \draw[->, dashed, gray] (join) edge (top);
+    \draw[->, dashed, gray] (l2) edge [bend right] (top);
+
+    \draw[->, dashed, gray] (l1) edge [bend right] (bot);
+    \draw[->, dashed, gray] (meet) edge (bot);
+    \draw[->, dashed, gray] (l2) edge [bend left] (bot);
+  \end{tikzpicture}
+  \caption{Abstraction of security lattice}
+  \label{dlm:lattice_fig}
+  \end{center}
+\end{figure}
 
 \subsection{Composite labels}
 We can construct composite labels by either joining or meeting two labels.
@@ -119,44 +163,6 @@ We can employ this definition to determine if two labels are equal:
 If $L_1 \sqsubseteq L_2$ and $L_2 \sqsubseteq L_1$ then we must have that $L_1 = L_2$.
 Additionally we note that given \cref{dlm:def:join,dlm:def:restrict} we note that $L_1 \sqcup L_2 \sqsubseteq L_3$ is equivalent to $L_1 \sqsubseteq L_3 \wedge L_2 \sqsubseteq L_3$.
 This provides a simplified means for comparing composite label-structures.
-
-\myparagraph{Security class lattice}
-By having this relationship between labels, we can see the set of all our labels as a partially-ordered set: a \emph{lattice}.\renein{Lattice = partially ordered + structure}
-This means that we have a hierarchy in which the shared parent of every two individual elements is the result of a join of the two labels.
-Similarly a shared child of two elements is the result of a meet of those labels.
-To represent the least restrictive label of any security class lattice we have a bottom element, denoted $\bot$.
-Dual to the bottom element, we also have the most restrictive label: the top element, denoted $\top$.\renein{Reference til bevis/påstand for lattice egenskab}
-\Cref{dlm:lattice_fig} illustrates this label relation.
-
-\begin{figure}
-  \begin{center}
-  \begin{tikzpicture}[inner sep=1mm, >=latex]
-    \node (l1) at (-1,0) {$L_1$};
-    \node (l2) at (1,0) {$L_2$};
-
-    \node (meet) at (0,-1) {\small $L_1$ {\LARGE $\! \sqcap \!$} $L_2$};
-    \node (bot) at (0,-2) {$\bot$s};
-
-    \node (join) at (0,1) {\small $L_1$ {\LARGE $\! \sqcup \!$} $L_2$};
-    \node (top) at (0,2) {$\top$};
-
-    \draw[->] (l1) edge (join);
-    \draw[->] (l2) edge (join);
-    \draw[->] (l1) edge (meet);
-    \draw[->] (l2) edge (meet);
-
-    \draw[->, dashed, gray] (l1) edge [bend left] (top);
-    \draw[->, dashed, gray] (join) edge (top);
-    \draw[->, dashed, gray] (l2) edge [bend right] (top);
-
-    \draw[->, dashed, gray] (l1) edge [bend right] (bot);
-    \draw[->, dashed, gray] (meet) edge (bot);
-    \draw[->, dashed, gray] (l2) edge [bend left] (bot);
-  \end{tikzpicture}
-  \caption{Abstraction of security lattice}
-  \label{dlm:lattice_fig}
-  \end{center}
-\end{figure}
 
 \section{Implicit flows}\label{dlm:implicit_flows}
 When assigning a value to a slot, possibly from another slot, it is an explicit flow.
