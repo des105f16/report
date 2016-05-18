@@ -1,8 +1,4 @@
 \newcounter{todofull}
-\newcounter{todomikkel}
-\newcounter{todomikael}
-\newcounter{todorene}
-\newcounter{todomads}
 
 %\newcommand*\rfrac[2]{\ensuremath{{}^{#1}\!/_{#2}}}
 %\newcommand*\rfrac[2]{\fbox{\ensuremath{\frac{#1}{#2}}}}
@@ -14,13 +10,13 @@
   \ifthenelse{\equal{#1}{}}
   {
     \todo[backgroundcolor=#4,linecolor=#4,caption=
-    {\textbf{#3: } #2}]
-    {\color{#5}\textbf{#3: }#2}
+    {\textbf{\arabic{todofull} #3: } #2}]
+    {\color{#5}\textbf{\arabic{todofull} #3: }#2}
   }
   {
     \todo[backgroundcolor=#4,linecolor=#4,caption=
-    {\textbf{#3: } #1}]
-    {\color{#5}\textbf{#3: }#2}
+    {\textbf{\arabic{todofull} #3: } #1}]
+    {\color{#5}\textbf{\arabic{todofull} #3: }#2}
   }
 }
 \newcommand{\namedtodoinline}[5]
@@ -28,60 +24,51 @@
   \stepcounter{todofull}
   \ifthenelse{\equal{#1}{}}
   {
-    \todo[backgroundcolor=#4,caption=
-    {\textbf{#3: } #2}
-    ,inline]
-    {\normalsize\color{#5}\textbf{#3: }#2}
+    \todo[backgroundcolor=#4,inline,caption=
+    {\textbf{\arabic{todofull} #3: } #2}]
+    {\normalsize\color{#5}\textbf{\arabic{todofull} #3: }#2}
   }
   {
-    \todo[backgroundcolor=#4,caption=
-    {\textbf{#3: } #1}
-    ,inline]
-    {\normalsize\color{#5}\textbf{#3: }#2}
+    \todo[backgroundcolor=#4,inline,caption=
+    {\textbf{\arabic{todofull} #3: } #1}]
+    {\normalsize\color{#5}\textbf{\arabic{todofull} #3: }#2}
   }
 }
 \newcommand{\mikkel}[2][]
 {
-  \stepcounter{todomikkel}
   \namedtodo{#1}{#2}
-  {
-    \rfrac{\arabic{todomikkel}}{\arabic{todofull}} Mikkel}{blue!80}{white}
+  {Mikkel}{blue!80}{white}
 }
 \newcommand{\mikkelin}[2][]
 {
-  \stepcounter{todomikkel}
   \namedtodoinline{#1}{#2}
-  {
-    \rfrac{\arabic{todomikkel}}{\arabic{todofull}} Mikkel}{blue!80}{white}
+  {Mikkel}{blue!80}{white}
 }
 \newcommand{\mikael}[2][]
 {
-  \stepcounter{todomikael}
   \namedtodo{#1}{#2}
-  {
-    \rfrac{\arabic{todomikael}}{\arabic{todofull}} Mikael}{green}{black}
+  {Mikael}{green}{black}
 }
 \newcommand{\mikaelin}[2][]
 {
-  \stepcounter{todomikael}
   \namedtodoinline{#1}{#2}
-  {
-    \rfrac{\arabic{todomikael}}{\arabic{todofull}} Mikael}{green}{black}
+  {Mikael}{green}{black}
 }
 \newcommand{\rene}[2][]
 {
-  \stepcounter{todorene}
+  \namedtodo{#1}{#2}
+  {René}{purple}{white}
+}
+\newcommand{\renein}[2][]
+{
   \namedtodoinline{#1}{#2}
-  {
-    \rfrac{\arabic{todorene}}{\arabic{todofull}} René}{purple}{white}
+  {René}{purple}{white}
 }
 
 \newcommand{\mads}[2][]
 {
-  \stepcounter{todomads}
   \namedtodoinline{#1}{#2}
-  {
-    \rfrac{\arabic{todomads}}{\arabic{todofull}} Mads}{yellow}{red}
+  {Mads}{yellow}{red}
 }
 
 \makeatletter \renewcommand \listoftodos{\section*{List of Todos} \@starttoc{tdo}}
