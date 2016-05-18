@@ -1,0 +1,64 @@
+% !TEX root = ../../master.tex
+
+\section{Informal Description}
+% extend concept of output channels with ensuring that time policies are followed
+% current authority dictates whether a function call to a time-labeled value can be made or not
+% simple, yet expressive, time labels attached to readers
+% in order to check compile time:
+% - special constructs @ and @?
+% - limited to return labels and function root scope variables (if time-labeled and not handled in the function)
+Extending on the concept of controlling how information should exit the system, as we did previously using channels, we want to further this by adding time constraints.
+As we have different principals in our system, which have different requirements/rights, we also want to be able to express this in our time policies.
+We therefore suggest an extension of our previously defined labels, with the addition of time policies.
+These time policies will extend upon the \emph{policy} labels, with the possibility to declare a time policy for each principal.
+This is a way of saying that a specific owner of some data will only allow a certain principal to read his data while following some time constraint.
+
+The \dlmc{@} symbol will be associated with anything time-related.
+It is how the policies will have its principals extended with time policies, by ``attaching'' a principal with a \dlmc{@} it signifies a time policy for that principal.
+If the owner of a policy has an attached time policy, it is meant to apply for all its readers.
+The \dlmc{@} symbol will also be used for the two time constructs \dlmc{@?} (\emph{if-can-call})  and \dlmc{@} (\emph{await}), explained later in this section.
+
+\subsection{Expressiveness}
+We want our time policies to be expressive, so that we can cover a wide variety of cases.
+We therefore introduce three types of time constituents, where different combinations of these will form a time policy.
+
+This will be formally explained in \cref{time:pic}, however, we will give a small description and some simple examples of its usage here.
+We have the three constituents \emph{period}, \emph{interval}, and \emph{count}.
+
+\myparagraph{Period}
+Period is an time-period with a start- and end-hour, where only within this period it is possible to access the data/function.
+E.g. \dlmc{\{\{u->u, ec@09:00-10:00\}\}} signifies that \dlmc{ec} is only allowed to access when the time is between 09:00 and 10:00 in the morning.
+
+\myparagraph{Interval}
+Interval is a constant value indicating the minimum amount of time there should pass between each access.
+\dlmc{\{\{u->u, ec@10m\}\}} requires a minimum of 10 minutes between each access.
+
+\myparagraph{Count}
+Count is in itself without meaning, as it says how many consecutive accesses within the given period and/or interval are allowed.
+However, due to default values some meaning may apply to a case such as \dlmc{\{\{u->u, ec@*5\}\}}, where in this case 5 consecutive accesses are allowed within a day (24-hour period).
+
+\myparagraph{Combined time policies}
+It is possible to combine two or all three of the time constituents.
+
+E.g. \dlmc{\{\{pc->u@10m*3\}\}}, indicating that the user is only allowed to access the user database thrice per 10 minutes.
+Another way of explaining it; after the initial read another two reads \emph{can} follow, either way it is reset 10 minutes after the initial read.
+
+Another example \dlmc{\{\{u->u, ec@00:00-09:00 30m\}\}}, where \dlmc{u} can access without limitations.
+\dlmc{ec}, however, is restricted to reading between midnight and 9 in the morning, and with a minimum of 30 minutes passing between each access.
+
+\subsection{Time constructs}
+We have the two time constructs:
+
+\begin{itemize}
+  \item if-can-call \dlmc{@?}
+  \item await \dlmc{@}
+\end{itemize}
+
+The two constructs represent run-time checks.
+\dlmc{@?} takes one argument: a function identifier, and returns a boolean whether the function is callable or not, as per the time constraints.
+\dlmc{@} is placed before a function call, forcing the program to busy-wait until the function is callable.
+
+The constructs themselves currently have no run-time-related implementation.
+However, they are used during compile time checking to ensure that whenever we access data with a time policy, that we have used one of these to somehow handle the time policy.
+
+\subsection{Applications}
