@@ -1,8 +1,6 @@
-% !TEX root = ../master.tex
+% !TEX root = ../../master.tex
 
-\section{Informal Description}
-
-\subsection{Scope}
+\section{Scope}
 As we have chosen a practical approach in developing \thelang~ we have had to apply a limited scope.
 We have tried to include as many basic necessities as possible, in order to properly ascertain the usefulness of \thelang.
 
@@ -18,14 +16,14 @@ Following the list will be some elaborations where deemed necessary.
   \item External libraries
 \end{itemize}
 
-\subsubsection{Structs and arrays}
+\myparagraph{Structs and arrays}
 It is possible to define structs consisting of simple type fields.
 However, it is not possible to define fields of other struct types -- i.e. nested structs.
 
 Arrays are limited to simple types and structs.
 Arrays are referred to as a pointer referenc  e, and arrays alone are referred to through pointers (more about this below).
 
-\subsubsection{Boolean and arithmetic operators}
+\myparagraph{Boolean and arithmetic operators}
 The following boolean and arithmetic operators are allowed:
 \[ \tk +, \tk - \text{(unary and binary)}, \tk *, \tk /, \tk{\&\&}, \tk{||}, \tk{!} \]
 
@@ -34,16 +32,16 @@ The actual operator precedence checks are only used for, and therefore handled b
 
 We have chosen to leave out the \tk{++} and \tk{-{}-} post-/pre-fix operators.
 
-\subsubsection{Control structures}
+\myparagraph{Control structures}
 It is possible to use \emph{if}-, \emph{if-else}-, and \emph{while}-statements.
 We have, however, chosen to leave out the \emph{for}-statement, as it is can as easily be constructed as a while-statement.
 
-\subsubsection{Pointers}
+\myparagraph{Pointers}
 Pointers are completely left out of \thelang, as there are many troubles associated with assuring safety when data can be accessed through pointers.
 \mikaelin{This sounds like something that needs further explaining. :)}
 The pointer-syntax is still being used for arrays.
 
-\subsection{Applying labels}
+\section{Informal Description}
 The first big thing in \thelang~ is of course applying labels to values and functions.
 Labels are defined between the type and the identifier of a variable, or between the return type and identifier of a function.
 The syntax for labels consists of 5 components:
