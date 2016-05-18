@@ -1,19 +1,20 @@
-% !TEX root = ../master.tex
+% !TEX root = ../../master.tex
 
 In this chapter we will present the \thelanglong{} language, hereafter referred to simply as \thelang.
-However, this chapter will only show how to apply ordinary labels, as those discussed in the previous chapter.
+However, this chapter will only show how to apply ordinary labels, as those presented in the previous chapter.
 The following chapter will go into the details of time policies.
 
 \thelang{} is based upon C99 and will extend the syntax of C with the concept of labels, as discussed in the previous chapter.
-This fact enables us with two nice properties:
+This fact gives us two nice properties:
 \begin{enumerate}
-  \item A \thelang{} program is compilable with the \thelang{} compiler, but also with any C99 compiler.
-  \item A \thelang{} program can be checked by a C99 compiler, freeing the \thelang{} compiler from having to perform the same checks.
+  \item A C99 program is compilable with the \thelang{} compiler.
+  \item An unlabeled \thelang{} program can be checked by a C99 compiler.
 \end{enumerate}
-These two properties allow for incrementally changing of old source code, with the addition of labels, but without having to do a complete rewrite.
+The first property allow for incrementally adding labels to old source code.
 This becomes even more palpable when also having the ability of using the \thelang{} compiler to infer labels.
+The second property frees the \thelang{} compiler from handling many of the same things that could as easily be handled by already existing C99 compilers.
 
 The rest of this chapter will be organized as follows.
 Firstly, we will present the scope under which we have limited our implementation.
-Then we will informally present \thelang~ without going into much details on the implementation, but rather focus on usage.
-Lastly we will present the specifics of extracting labels and constraints, used for the inference algorithm presented in \Cref{dlm:inference_algorithm}.
+Then we will informally present \thelang~ without going into much details about the implementation, but rather focus on usage.
+Lastly we will present the specifics of inferring labels, as described in \Cref{dlm:inferring_labels}.
