@@ -25,7 +25,7 @@ The same concept applies to more complex language constructs, such as functions 
 Each slot is associated with a label, that describes how the data in the slot can be handled.
 We denote the label of slot $s$ as $\underline{s}$.
 Referring to labels in this fashion serves the same purpose as letters in algebra; it allows for handling labels without knowledge about their actual value.
-This proves useful as it allows for label inference and label polymorphism (see \cref{dlm:implicit_labels} and ??). \mikkel{Insert reference when written.}\mikael{Are we going to write about label polymorphism?}
+This proves useful as it allows for label inference and label polymorphism (see \cref{dlm:implicit_labels} and ??). \mikkel{Insert reference when written.} \mikael{Are we going to write about label polymorphism?}\rene{Yes :)}
 
 For a given label it is possible to define both read (\emph{privacy}) and write (\emph{integrity}) policies.
 The first represents information flow out of a system and the latter information flow into a system.
@@ -38,9 +38,10 @@ In the following, we employ the concept of \emph{principals}.
 A principal (or \emph{subject}, \emph{agent}) is an entity in a system that represents some interest.
 In short, principals represent real-world users or the authority under which a program/system runs.
 Principals can exists in a \emph{principal hierarchy}, that describe more complex principal relationships, such as groups or roles.
-\mikkel{Reminder about principal hierarchies}
+\mikkel{Reminder about principal hierarchies}\rene{Vigtigt!}
+
 In the following we make use of the special set of principals; $*$.
-This set represents all principals in a system.
+This set contains all the principals in a system.
 
 \myparagraph{Labels}
 A label can be described as a set of policies, where a policy consists of an owner principal $o$ and a set of reader principals $r_1, r_2, \dots, r_n$.
@@ -56,10 +57,10 @@ If an owner is not part of its own policies reader set, that owner is not allowe
 He is however still allowed to change his policy.
 
 \myparagraph{The effective reader set}
-To ensure that the policies of all owners in a label are enforced, only readers that the all ``agree'' on can read from the slot associated with the label.
+To ensure that the policies of all owners in a label are enforced, only readers that all owners ``agree'' can read from the slot associated with the label.
 This is known as the \emph{effective reader set}, which is the intersection of \emph{all} reader sets of a label:
 \begin{definition}{The effective reader set}
-  The reader set of a label is the intersection of the reader sets of each of the labels owners reader sets:
+  The reader set of a label $L$ is the set of readers that are in the reader set of all owners:
   $$readers(L) = \bigcap_{o \in *} readers(L, o)$$
 \end{definition}
 
@@ -105,26 +106,26 @@ Additionally when inferring labels, the meet operation allows us to infer the mo
 As mentioned above, labels provide restrictions on which principals can read from the slots that the labels ``protect''.
 In order to check that security policies are enforced throughout a program, we need to be able to compare how restrictive labels are.
 To do this we introduce the ``at most as restrictive as''-relation ($\sqsubseteq$) from \cite{myers1997}.
-We can employ this definition to determine if two labels are equal:
-If $L_1 \sqsubseteq L_2$ and $L_2 \sqsubseteq L_1$ then we must have that $L_1 = L_2$.
 
 \begin{definition}{Label Restrictiveness}\label{dlm:def:restrict}
-  Label $L_1$ is at most as restrictive as label $L_2$ ($L_1 \sqsubseteq L_2$) if:
+  Label $L_1$ is at most as restrictive as label $L_2$ ($L_1 \sqsubseteq L_2$) if it does not have more owners and each owner does not have a smaller reader set:
   \begin{align*}
     & owners(L_1) \subseteq owners(L_2) \text{ and} \\
     & \forall o \in owners(L_1) , readers(L_1, o) \supseteq readers(L_2, o)
   \end{align*}
 \end{definition}
 
-Additionally we note that given \cref{dlm:def:join,,dlm:def:restrict} we note that $L_1 \sqcup L_2 \sqsubseteq L_3$ is equivalent to $L_1 \sqsubseteq L_3 \wedge L_2 \sqsubseteq L_3$.
+We can employ this definition to determine if two labels are equal:
+If $L_1 \sqsubseteq L_2$ and $L_2 \sqsubseteq L_1$ then we must have that $L_1 = L_2$.
+Additionally we note that given \cref{dlm:def:join,dlm:def:restrict} we note that $L_1 \sqcup L_2 \sqsubseteq L_3$ is equivalent to $L_1 \sqsubseteq L_3 \wedge L_2 \sqsubseteq L_3$.
 This provides a simplified means for comparing composite label-structures.
 
 \myparagraph{Security class lattice}
-By having this relationship between labels, we can see the set of all our labels as a partially-ordered set: a \emph{lattice}.
+By having this relationship between labels, we can see the set of all our labels as a partially-ordered set: a \emph{lattice}.\renein{Lattice = partially ordered + structure}
 This means that we have a hierarchy in which the shared parent of every two individual elements is the result of a join of the two labels.
 Similarly a shared child of two elements is the result of a meet of those labels.
 To represent the least restrictive label of any security class lattice we have a bottom element, denoted $\bot$.
-Dual to the bottom element, we also have the most restrictive label: the top element, denoted $\top$.
+Dual to the bottom element, we also have the most restrictive label: the top element, denoted $\top$.\renein{Reference til bevis/påstand for lattice egenskab}
 \Cref{dlm:lattice_fig} illustrates this label relation.
 
 \begin{figure}
