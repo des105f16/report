@@ -101,7 +101,7 @@ Label composition is an integral part of DLM.
 Label joins allows for label evaluation of expressions, as described in \cref{semantics} and provides the means for representing implicit flows via scope blocks, as described in \cref{dlm:implicit_flows}.
 Additionally when inferring labels, the meet operation allows us to infer the most restrictive label that agrees with the preexisting labels.
 
-\subsection{Label comparison}
+\subsection{Label comparison}\label{dlm:comparison}
 As mentioned above, labels provide restrictions on which principals can read from the slots that the labels ``protect''.
 In order to check that security policies are enforced throughout a program, we need to be able to compare how restrictive labels are.
 To do this we introduce the ``at most as restrictive as''-relation ($\sqsubseteq$) from \cite{myers1997}.
@@ -116,7 +116,7 @@ If $L_1 \sqsubseteq L_2$ and $L_2 \sqsubseteq L_1$ then we must have that $L_1 =
   \end{align*}
 \end{definition}
 
-Additionally we note that given \cref{dlm:def:join,,dlm:def:restrict} and $L_1 \sqsubseteq L_3$ and $L_2 \sqsubseteq L_3$ then we have that $L_1 \sqcup L_2 \sqsubseteq L_3$.
+Additionally we note that given \cref{dlm:def:join,,dlm:def:restrict} we note that $L_1 \sqcup L_2 \sqsubseteq L_3$ is equivalent to $L_1 \sqsubseteq L_3 \wedge L_2 \sqsubseteq L_3$.
 This provides a simplified means for comparing composite label-structures.
 
 \myparagraph{Security class lattice}
@@ -234,7 +234,7 @@ return -1;
   While we still leak some information about \dlmc{cond}, we now do it explicitly.
 \end{example}
 
-\section{Label constraints}
+\section{Label constraints}\label{dlm:constraints}
 Using the concept of labels as described in the above sections, code can be annotated to express what type of information flow is permissible.
 By examining all points in code where information flows it can then be determined if these information flows are valid.
 The validity of an information flow is expressed as a constraint on the form $L_1 \sqsubseteq L_2$, as described in \cref{dlm:def:restrict}.
@@ -380,7 +380,7 @@ A constant label could be part of the a variable labels current upper bound and 
 Here it should be noted that \cref{dlm:def:upperbound} applies to constant labels.
 
 \myparagraph{Label restriction}
-\mikkel{This paragraph is incomplete. Nothing to see here, move along.}
+\mikkelin{This paragraph is incomplete. Nothing to see here, move along.}
 In order to define restriction for constant labels, we must also define it for the composite label types.
 We provide a definition for join labels but not meet labels.
 This is a result of the definition 
@@ -388,7 +388,28 @@ Restriction for constant labels is undefined for certain label types.
 The definition below specifies how 
 
 \subsection{Inference algorithm}\label{dlm:inf:algsection}
+Using the established extensions of labels we present the inference algorithm (\cref{dlm:inf:algorithm}).
+In the following we provide an informal description of the algorithm to aid the reader.
+
+Note that the input for the algorithm is a set of constraints.
+In \cref{extraction} we detail how to extract all constraints from source code, though the input for the algorithm can be \textit{any} set of constraints (see \cref{dlm:constraints}).
+The only exception from this rule is that $\sqcap$ labels are not allowed on the left side of a constraint.
+Why this is the case will become apparent as we walk through the algorithm.
+The algorithm does not return a result, but instead works through the side effect of updating the variable labels current upper bound.
+
 \input{algorithms/inference.tex}
+
+\myparagraph{Initialization}
+As described in \cref{dlm:inf:types}, the initial current upper bound of a variable label must be $\top$.
+Thus for all constraints with a variable label on the left hand side, we set the current upper bound of that label.
+
+It could be the case that a constraint is on the form $L_1 \sqcup L_2 \sqsubseteq L_3$.
+If $L_1$ or $L_2$ is a variable label in such a constraint their current upper bound would not be set.
+Thus we would want to translate the constraint such that there are no joins on the left hand side of it.
+In \cref{dlm:comparison} we noted that $L_1 \sqcup L_2 \sqsubseteq L_3$ and $L_1 \sqsubseteq L_3 \wedge L_2 \sqsubseteq L_3$ are equivalent.
+
+With this we define a function that takes a constraint as input and produces a set of constraints where the left hand side has no joined labels.
+This function is applied to all constraints before setting the current upper bound of the variable labels.
 
 \[
 \text{unjoin}("L_1 \sqsubseteq L_2") =
@@ -397,6 +418,26 @@ The definition below specifies how
   \{"L_1 \sqsubseteq L_2"\} & \text{ otherwise}
 \end{cases}
 \]
+
+Because meet labels are not allowed in label declarations, we can be sure that the left hand side of all constraints is either a set of policies, a variable label or a constant label.
+
+\myparagraph{Computing labels}
+Having taking the necessary initializing steps the algorithm checks that each constraint in the constraints set is valid.
+If all constraints are valid we know that the information flow of the program is valid and the algorithm can terminate.
+Thus, if we have explicit stated all labels, the algorithm simply performs a check of weather the information flow is valid.
+
+If a constraint is not valid one of two things will happen, based on the type of label on the left hand side of the constraint:
+\begin{itemize}
+  \item If the label is a variable, we update its current upper bound to \textit{include} the right hand side of the constraint.
+  This is achieved by meeting the two labels.
+  \item If the label is not a variable, we can do nothing to relax it and the inference will fail.
+  This is the case we will end up in when considering a program with invalid information flow and only explicit labels.
+\end{itemize}
+
+Overall the idea of the algorithm is to initialize all variable labels to $\top$ and then relax them until all constraints are valid.
+It might be tempting to make a label stricter such that a specific constraint is valid.
+This is however not an option, as labels are only relaxed exactly enough that constraints are valid.
+Making a label stricter would thus break a previously checked label.
 
 % Describe why inference is so nice.
 % Describe the different types of labels.
