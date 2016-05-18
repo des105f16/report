@@ -1,4 +1,4 @@
-% !TEX root = ../master.tex
+% !TEX root = ../../master.tex
 
 \section{Constraint Extraction}\label{extraction}
 In this section we will give a formal definition of how constraints are extracted from a \thelang~ program.
@@ -75,7 +75,7 @@ For readability purposes, the semantic equations will be spread out over the fol
 
 \subsubsection{Semantic domains}
 The semantic domains of \thelang{} are primarily used to maintain state, and to give the final result of the constraint extraction: namely the constraints themselves as well as the different label types which are used to form the constraints.
-Note that we have no need for any integers, types or the like, since we are only interested in checking labels and forming constraints.
+Note that we have no need for any numerals or type enumerations, since we are only interested in checking labels and forming constraints.
 
 The following list is an overview of these semantic domains ($\mathbb P$ denotes the power set):
 \begin{align*}
@@ -86,7 +86,7 @@ The following list is an overview of these semantic domains ($\mathbb P$ denotes
 \end{align*}
 
 $\iLV$ is a set of \emph{label values}, not to be confused with actual labels.
-In order to differ between the different types of labels (as described in \cref{dlm:constrains}), we utilize concept of \emph{tagged values}.
+In order to differ between the different types of labels (as described in \cref{dlm:inf:types}), we utilize concept of \emph{tagged values}.
 Each element in $\iLV$ is then on the form $t(v)$, where $t$ is the type of label and $v$ is the value, which then differs depending on the type of label.
 
 To further increase readability when using \emph{join labels}, we will introduce another notation using quotes to signify that the value is the constituents and not the evaluated expression.
@@ -97,13 +97,13 @@ $\iCstr$ is a set of constraint tuples, where any $(\ilv_1, \ilv_2) \in \iCstr$ 
 Similar to the join label above, we will have the latter notation in quotes having the same meaning as the aforementioned tuple, such that:
 \[ \literal{\ilv_1 \sqsubseteq \ilv_2} \equiv (\ilv_1, \ilv_2) \]
 
-When a literal contains both $\sqcup$ and $\sqsubseteq$, the precedence is $\sqcup$ before $\sqsubseteq$.
+When we have both $\sqcup$ and $\sqsubseteq$ in a ``quoted expression'', the precedence is $\sqcup$ before $\sqsubseteq$.
 
 $\iEnvL$ is the label environment, which maps variable identifiers, and the two special identifiers $\ia$ (authority) and $\ib$ (block), to label values.
 The special values are propagated throughout a program, as they will change as the scope changes.
 
 $\iEnvF$ is the function environment, which maps function identifiers, and the special identifier $\ifb$ (function block), to a tuple containing the label value of the function along with all its arguments.
-Function identifiers are looked up when evaluation function calls.
+Function identifiers are looked up when evaluating function calls.
 The function block identifier is used for return statements so that the ``surrounding'' function label can be looked up.
 
 \subsubsection{Semantic functions}
@@ -126,9 +126,9 @@ The formal definitions of the semantic functions can be seen in \cref{cstr:seman
 \end{table}
 
 The ``entry point'' of a \thelang{} program is simply one or more declarations, and the result of evaluating such a program is always a set of constraints.
-The transformation of declarations will result in a set of constraints, as well as a changed environments: function for function declarations and label for variable declarations.
-Statements are where most constraints will originate from, as this is where we have variable declarations and assignments.
-Expressions will also generate constraints, due to the ability to use implicit declassifications.
+The transformation of declarations will result in a set of constraints, as well as a changed environment: function for function declarations and label for variable declarations.
+Statements are where most constraints will originate from, as this is where we have both variable declarations and assignments.
+Expressions will also generate constraints, due to the ability to use declassifications.
 Due to the simplicity of the label syntactic domain, its rules has been merged with those of policy.
 Unlike the previous semantic functions, labels and policies are only evaluated to a label value in order to use them in the forming of constraints.
 
