@@ -5,6 +5,7 @@
 \newcommand{\dlmdeclassify}{\dlmc{declassify}}
 \newcommand{\dlmpc}{$\underline{pc}$}
 \newcommand{\mathcomment}[1]{\color{green!50!black}{#1}}
+\newcommand{\ceil}[1]{\lceil#1\rceil}
 
 \chapter{The Decentralized Label Model}
 The Decentralized Label Model \cite{myers1997, myers1998, myers2000} is a model for ensuring information flow control in a system.
@@ -13,12 +14,13 @@ This section will present the necessary information needed to understand the imp
 The descriptions and definitions in this section are based on \cite{myers1997, myers1998, myers2000}.
 Throughout the examples, we will use the same grammar as that used by \thetool. \mikkel{Remember to write something about the grammar/parser...}
 
-\section{Labels and Policies}
+\section{Labels and Policies}\label{dlm:policies}
 Throughout a program, values are declared, initialized, and assigned to variables and other value-holders.
 Value-holders are collectively known as \emph{slots}, which cover constructs such as variables, structs, and other storage locations.
 In order to ensure that a certain assignment is legal, such that no information is unintentionally leaked, we assign \emph{labels} to slots so that their ``security'' can be compared.
 This way we can ensure that an assignment is only legal in the cases where higher-security values aren't assigned to lower-security slots.
 The same concept applies to more complex language constructs, such as functions (and their return values).
+\mikkel{Function labels? Mangler vi en oversigt over hvor det er muligt at deklarere labels?}
 
 Each slot is associated with a label, that describes how the data in the slot can be handled.
 We denote the label of slot $s$ as $\underline{s}$.
@@ -80,14 +82,14 @@ We can construct composite labels by either joining or meeting two labels.
 A composite label $L_1 \sqcup L_2$ or $L_1 \sqcap L_2$ represents nodes in a composite label structure.
 To employ these labels similarly to the previously defined labels, we define the owner and reader sets of the composite labels:
 
-\begin{definition}{Label Join}
+\begin{definition}{Label Join}\label{dlm:def:join}
 The join operation is denoted by the operator $\sqcup$ and represents the least restrictive label that is as restrictive as either operand:
   \begin{align*}
     owners(L_1 \sqcup L_2) &= owners(L_1) \cup owners(L_2) \\
     readers(L_1 \sqcup L_2, o) &= readers(L_1, o) \cap readers(L_2, o)
   \end{align*}
 \end{definition}
-\begin{definition}{Label Meet}
+\begin{definition}{Label Meet}\label{dlm:def:meet}
 The meet operation is denoted by the operator $\sqcap$ and represents the most restrictive label that is no more restrictive than either operand:
   \begin{align*}
     owners(L_1 \sqcap L_2) &= owners(L_1) \cap owners(L_2) \\
@@ -99,12 +101,14 @@ Label composition is an integral part of DLM.
 Label joins allows for label evaluation of expressions, as described in \cref{semantics} and provides the means for representing implicit flows via scope blocks, as described in \cref{dlm:implicit_flows}.
 Additionally when inferring labels, the meet operation allows us to infer the most restrictive label that agrees with the preexisting labels.
 
-\subsection{Label comparison}
+\subsection{Label comparison}\label{dlm:comparison}
 As mentioned above, labels provide restrictions on which principals can read from the slots that the labels ``protect''.
 In order to check that security policies are enforced throughout a program, we need to be able to compare how restrictive labels are.
 To do this we introduce the ``at most as restrictive as''-relation ($\sqsubseteq$) from \cite{myers1997}.
+We can employ this definition to determine if two labels are equal:
+If $L_1 \sqsubseteq L_2$ and $L_2 \sqsubseteq L_1$ then we must have that $L_1 = L_2$.
 
-\begin{definition}{Label Restrictiveness}
+\begin{definition}{Label Restrictiveness}\label{dlm:def:restrict}
   Label $L_1$ is at most as restrictive as label $L_2$ ($L_1 \sqsubseteq L_2$) if:
   \begin{align*}
     & owners(L_1) \subseteq owners(L_2) \text{ and} \\
@@ -112,8 +116,8 @@ To do this we introduce the ``at most as restrictive as''-relation ($\sqsubseteq
   \end{align*}
 \end{definition}
 
-We can employ this definition to determine if two labels are equal:
-If $L_1 \sqsubseteq L_2$ and $L_2 \sqsubseteq L_1$ then we must have that $L_1 = L_2$.
+Additionally we note that given \cref{dlm:def:join,,dlm:def:restrict} we note that $L_1 \sqcup L_2 \sqsubseteq L_3$ is equivalent to $L_1 \sqsubseteq L_3 \wedge L_2 \sqsubseteq L_3$.
+This provides a simplified means for comparing composite label-structures.
 
 \myparagraph{Security class lattice}
 By having this relationship between labels, we can see the set of all our labels as a partially-ordered set: a \emph{lattice}.
@@ -230,4 +234,211 @@ return -1;
   While we still leak some information about \dlmc{cond}, we now do it explicitly.
 \end{example}
 
-\section{Label-checking and inference}
+\section{Label constraints}\label{dlm:constraints}
+Using the concept of labels as described in the above sections, code can be annotated to express what type of information flow is permissible.
+By examining all points in code where information flows it can then be determined if these information flows are valid.
+The validity of an information flow is expressed as a constraint on the form $L_1 \sqsubseteq L_2$, as described in \cref{dlm:def:restrict}.
+
+When information flows from one point $A$ to another $B$, it is required that $B$ is allowed to read the same information as $A$.
+Thus we can, in general, represent such an information flow as $\labelof{A} \sqsubseteq \labelof{B}$.
+This represents that access to the information known at point $A$ is no more restrictive than access to that of point $B$.
+An example of such an information flow is the assignment of a value to a variable:
+
+$$var := expression$$
+
+From this simple example it is clear that information flows from the expression to the variable and thus a constraint for this example would be $\labelof{expression} \sqsubseteq \labelof{var}$.
+Though as we described in \cref{dlm:implicit_flows} information can also flow implicitly, and because of that we must include all available information in the flow constraint.
+The currently available information is represented as the program counter $\labelof{pc}$ and must be included on the left side of the constraint, to produce:
+
+$$\labelof{expression} \sqcup \labelof{pc} \sqsubseteq \labelof{var}$$
+
+This expansion of constraints captures that information assigned to $var$ could contain information about the values on which the current program counter is based.
+Implicit flows will thus be considered similarly to any other constraints.
+
+\myparagraph{Extracting constraints}
+The above example illustrates the concept of information flow as described by a constraint.
+The information flow of a program can be describe by a number of constraints.
+Checking that each constraint is valid using \cref{dlm:def:restrict} will ensure that the information flow of the entire program is valid, given the declared labels.
+In \cite{myers1997, myers1998, myers2000} an informal description of which constraints a program is associated with is provided.
+In \cref{extraction} we provide a formalized approach to extracting constraints from label declarations.
+
+Below is a simple example of the how labels and constraints are extracted from source code.
+The example does not consider some of the complexities that arise from checking a complete function (or set of functions), but merely serves to provide a simple example of what checking constraints entails.
+
+\begin{example}{Declaration and assignment}\label{dlm:ex:extract}
+  Two variable declarations with associated labels and an assignment operation.
+
+  \begin{lstlisting}[style=dlmc]
+int {{a->y, x}} val = 5;  // $\mathcomment{\{a \rightarrow y, x\}}$, $\mathcomment{\labelof{5} \sqsubseteq \labelof{val}}$
+int {{a->y}} res;         // $\mathcomment{\{a \rightarrow y\}}$
+
+res = val;                // $\mathcomment{\labelof{val} \sqsubseteq \labelof{res}}$
+  \end{lstlisting}
+
+  As described above, the assignment operation introduces a constraint that must be checked for the information flow to be valid.
+  Additionally the declaration of the \dlmc{val} variable includes an assignment operation.
+  Because of this we have an additional, yet trivial, constraint for the declaration.
+  Thus we have the following constraints for the above code and know that the information flow in the code is valid.
+  $$\labelof{5} \sqsubseteq \labelof{val} \equiv \bot \sqsubseteq \{a \rightarrow y, x\}$$
+  $$\labelof{val} \sqsubseteq \labelof{res} \equiv \{a \rightarrow y, x\} \sqsubseteq \{a \rightarrow y\}$$
+\end{example}
+
+% Introduce constraints and what information they represent.
+% Reference the previous examples in the chapter.
+% Provide reference to the semantics chapter for "how to retrieve constraints".
+
+\section{Inferring labels}
+The components of constraints are labels.
+Some of these labels will be constructed from the evaluation of expressions, as is the example with the assignment above.
+But the values of the labels themselves all stem from a declaration somewhere.
+Expressions merely employ the label associated with the individual slot.
+In \cref{dlm:policies} we described how slots and functions are associated with labels at declaration.
+Using these declared labels we are able to construct constraints that can then be checked to see if a programs information flow is valid, as exemplified by \cref{dlm:ex:extract}.
+
+As constraints use the \textit{label of} construct to represent slots, it is required that all slots be associated with a label.
+In other words; the programmer must determine information flow for each slot within a program.
+On the surface this is a great feature of DLM, as it forces the programmer to actively consider information flow throughout his application.
+On the downside, the programmer is also forced to spend time considering the information flow of every variable in a function.
+Some of these might be trivially associated with other variables and thus simple to label.
+But as a rule of thumb anything that is simple and trivial to do should be automated, freeing the programmer to handle more complex tasks.
+Having to label every slot will also increase the complexity of maintaining code, as a single change in a label might have to propagate many places.
+
+\myparagraph{Inference in DLM}
+To address the above concerns, \cite{myers1997} introduces the concept of label inference.
+Inferring labels allows a program, such as a specialized compiler, to compute appropriate labels for unlabeled slots.
+The inferred labels are ``reverse engineered'' based on the constraints of a program.
+
+The means of inference is described informally in \cite{myers1997}; both in terms of the required structures and the algorithm.
+Because the description is only provided informally there are some uncertainties for inference.
+First and foremost, how constraints are extracted from code, as has already been discussed.
+But additionally which label declarations can be omitted and what the meaning of such an omission is.
+\mikkel{Make sure we are explicit in \cref{extraction} about our decisions/contributions on how undefined labels are handled.}
+
+In our approach we allow any label declaration to be omitted, and in \cref{extraction} we provide a formal definition for the meaning of each omitted label as well as a definition for how constraints are extracted.
+In the following we formalize the data structure (\cref{dlm:inf:types}) and algorithm (\cref{dlm:inf:algsection}) described in \cite{myers1997} such that they can be applied to the constraints that are extracted.
+
+\subsection{Label types}\label{dlm:inf:types}
+To manage any unlabeled entities we introduce special label types that have no actual principal policies.
+Instead these labels function as placeholders for policies.
+By defining the $\sqsubseteq$, $\sqcup$ and $\sqcap$ operations for these new labels, we are able to use them in conjunction with the existing labels.
+
+Below we introduce two new label types; variable and constant labels and define the meaning of each operation for these new types.
+
+\subsubsection{Variable labels}
+A \textit{variable label} represents a label that should be computed through inference.
+This is done by associating the label with another label value, known as its current upper bound.
+This upper bound will initially have the value $\top$, representing the most restrictive label.
+Using the inference algorithm we then relax the label, effectively making it less restrictive.
+
+To simplify the use of current upper bounds we define a current upper bound for all labels:
+
+\begin{definition}{Current upper bound}\label{dlm:def:upperbound}
+  The current upper bound of a variable label $L_{var}$ is given by the notation $\ceil{L_{var}}$.
+  For any other label types the following definition applies:
+  \[
+  \ceil{L} =
+  \begin{cases}
+    %upper(L) & \text{if } L \text{ is a variable label} \\
+    \ceil{L_1} \sqcup \ceil{L_2} & \text{if } L = L_1 \sqcup L_2 \\
+    \ceil{L_1} \sqcap \ceil{L_2} & \text{if } L = L_1 \sqcap L_2 \\
+    L & \text{otherwise}
+  \end{cases}
+  \]
+  Note that $\ceil{L_{var}}$, where $L_{var}$ is a variable label, can be a composite label (using joins and/or meets) but can never have variable labels as subcomponents.
+\end{definition}
+
+\myparagraph{Joins and meets}
+As variable labels are not directly associated with policies the join or meet of variable labels is only represented as a composite structure.
+This is true regardless of the label the variable label is joined or met with (including another variable label).
+
+Our interest in variable labels is only temporary, in order to determine the most restrictive upper bounds that allows for information flow.
+Because of this we are content using a composite representation.
+When inference has been applied to constraints these composite labels can be removed using \cref{dlm:def:upperbound}.
+
+\myparagraph{Label restriction}
+Label restriction (represented by $\sqsubseteq$) is redefined to include variable labels.
+We do this by simply employing the current upper bound of both labels in the comparison:
+\begin{definition}{Label Restrictiveness}\label{dlm:def:restrictupperbound}
+  Let $\sqsubseteq^*$ represent the definition given in \cref{dlm:def:restrict}.
+  We then redefine $\sqsubseteq$ such that:
+  \[
+    L_1 \sqsubseteq L_2 = \ceil{L_1} \sqsubseteq^* \ceil{L_2}
+  \]
+  Note that given \cref{dlm:def:upperbound} this definition does not alter the pre-existing meaning of $\sqsubseteq$ but merely expands it to include variable labels.
+\end{definition}
+
+\subsubsection{Constant labels}
+A \textit{constant label} represents a label that is not associated with a set of policies, and one that should \textit{not} be computed through inference.
+Instead constant labels are used to implement label polymorphism.
+Similar to how a letter would represent an unknown numeric value in algebra, a constant label represents some undefined set of information flow policies.
+
+\myparagraph{Joins and meets}
+Constant labels use the same definition for joins and meets as variable labels, meaning that the result is simply a composite structure.
+This way we maintain the notion that a constant label is present without knowledge of any information flow policies.
+
+A constant label could be part of the a variable labels current upper bound and thus replacing it with a set of policies, the variable labels upper bound would include those policies.
+Here it should be noted that \cref{dlm:def:upperbound} applies to constant labels.
+
+\myparagraph{Label restriction}
+\mikkelin{This paragraph is incomplete. Nothing to see here, move along.}
+In order to define restriction for constant labels, we must also define it for the composite label types.
+We provide a definition for join labels but not meet labels.
+This is a result of the definition 
+Restriction for constant labels is undefined for certain label types.
+The definition below specifies how 
+
+\subsection{Inference algorithm}\label{dlm:inf:algsection}
+Using the established extensions of labels we present the inference algorithm (\cref{dlm:inf:algorithm}).
+In the following we provide an informal description of the algorithm to aid the reader.
+
+Note that the input for the algorithm is a set of constraints.
+In \cref{extraction} we detail how to extract all constraints from source code, though the input for the algorithm can be \textit{any} set of constraints (see \cref{dlm:constraints}).
+The only exception from this rule is that $\sqcap$ labels are not allowed on the left side of a constraint.
+Why this is the case will become apparent as we walk through the algorithm.
+The algorithm does not return a result, but instead works through the side effect of updating the variable labels current upper bound.
+
+\input{algorithms/inference.tex}
+
+\myparagraph{Initialization}
+As described in \cref{dlm:inf:types}, the initial current upper bound of a variable label must be $\top$.
+Thus for all constraints with a variable label on the left hand side, we set the current upper bound of that label.
+
+It could be the case that a constraint is on the form $L_1 \sqcup L_2 \sqsubseteq L_3$.
+If $L_1$ or $L_2$ is a variable label in such a constraint their current upper bound would not be set.
+Thus we would want to translate the constraint such that there are no joins on the left hand side of it.
+In \cref{dlm:comparison} we noted that $L_1 \sqcup L_2 \sqsubseteq L_3$ and $L_1 \sqsubseteq L_3 \wedge L_2 \sqsubseteq L_3$ are equivalent.
+
+With this we define a function that takes a constraint as input and produces a set of constraints where the left hand side has no joined labels.
+This function is applied to all constraints before setting the current upper bound of the variable labels.
+
+\[
+\text{unjoin}("L_1 \sqsubseteq L_2") =
+\begin{cases}
+  \text{unjoin}(L_3) \cup \text{unjoin}(L_4) & \text{ if } L_1 = L_3 \sqcup L_4\\
+  \{"L_1 \sqsubseteq L_2"\} & \text{ otherwise}
+\end{cases}
+\]
+
+Because meet labels are not allowed in label declarations, we can be sure that the left hand side of all constraints is either a set of policies, a variable label or a constant label.
+
+\myparagraph{Computing labels}
+Having taking the necessary initializing steps the algorithm checks that each constraint in the constraints set is valid.
+If all constraints are valid we know that the information flow of the program is valid and the algorithm can terminate.
+Thus, if we have explicit stated all labels, the algorithm simply performs a check of weather the information flow is valid.
+
+If a constraint is not valid one of two things will happen, based on the type of label on the left hand side of the constraint:
+\begin{itemize}
+  \item If the label is a variable, we update its current upper bound to \textit{include} the right hand side of the constraint.
+  This is achieved by meeting the two labels.
+  \item If the label is not a variable, we can do nothing to relax it and the inference will fail.
+  This is the case we will end up in when considering a program with invalid information flow and only explicit labels.
+\end{itemize}
+
+Overall the idea of the algorithm is to initialize all variable labels to $\top$ and then relax them until all constraints are valid.
+It might be tempting to make a label stricter such that a specific constraint is valid.
+This is however not an option, as labels are only relaxed exactly enough that constraints are valid.
+Making a label stricter would thus break a previously checked label.
+
+% Describe why inference is so nice.
+% Describe the different types of labels.
+% Present the inference algorithm.

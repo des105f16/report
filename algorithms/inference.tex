@@ -1,35 +1,50 @@
 % !TEX root = ../master.tex
-\begin{algorithm}[h]
+{
+\let\oldnl\nl% Store \nl in \oldnl
+\newcommand{\nonl}{\renewcommand{\nl}{\let\nl\oldnl}}% Remove line number for one line
+
+\begin{algorithm}[p]
 \SetAlgoNoEnd
-CHECK\_LABELS(p)\\
--- Assign constant/variable labels to those without label:\\
-Function parameters without a label will get a constant label named after the parameter\\
-Slots without a label will get a variable label named after the slot, with current upper bound set to $\top$\\
-Conditional blocks will get a variable label named $L_i$, for blocks $0, 1, \dots, i$, where $L$ is the type of block\\
-Declassifications will get variable labels named $D_{s_j}$ for declassifications $0, 1, \dots, j$, where $\underline{s}$ is the declassified slot\\
--- Let $Q$ be all constraints for program $p$, created as such:\\
-For each assignment, the constraint is $\underline{block} \sqcup \underline{expr} \sqsubseteq \underline{slot}$\\
-For each return statement, the constraint is $\underline{expr} \sqsubseteq returnLabel$\\
-For each block $i$, the constraint is $\underline{block} \sqcup \underline{cond} \sqsubseteq \underline{L_i}$\\
-For each declassification $j$, the constraint is $\underline{slot} \sqsubseteq \underline{L_{d_j}} \sqcup (\forall p \in authority \longrightarrow \{ p \rightarrow \emptyset\})$\\
-\ForEach {$c \in Q$}
+\DontPrintSemicolon
+\SetKw{Let}{let}
+\SetKw{Error}{ERROR}
+\SetKw{False}{false}
+\SetKw{True}{true}
+\SetKwData{Checked}{checked}
+\SetKwFunction{Unjoin}{unjoin}
+\KwData{A set $Q$ of constraints $"L_1 \sqsubseteq L_2"$}
+
+\ForEach {$"L_1 \sqsubseteq L_2" \in Q$}
 {
-  \If {left($c$) is variable}
+  \Let $Q' = Q \setminus \{ "L_1 \sqsubseteq L_2" \}$\;
+  $Q := Q' \cup \Unjoin("L_1 \sqsubseteq L_2")$\;
+}
+\ForEach {$"L_1 \sqsubseteq L_2" \in Q$}
+{
+  \If {$L_1$ is a variable label}
   {
-    upper($c$) = $\top$
-  }
-  \Else
-  {
-    upper($c$) = left($c$)
+    $\lceil L_1 \rceil := \top$\;
   }
 }
-\While {$\exists c \in Q | upper(c) \sqsubseteq right(c)$}
+\Checked := \False\;
+\While {$\neg\!\!\!\;$ \Checked}
 {
-  pick $c \in Q | upper(c) \sqsubseteq right(c)$\\
-  \If {left($c$) is not variable}
+  \Checked := \True\;
+  \ForEach {$"L_1 \sqsubseteq L_2" \in Q$}
   {
-    $ERROR$
+    \If {$L_1 \not\sqsubseteq L_2$}
+    {
+      \eIf {$L_1$ is a variable label}
+      {
+        $\ceil{L_1} := \ceil{L_1} \sqcap \ceil{L_2}$\;
+        \Checked := \False\;
+      }
+      {
+        \Error\;
+      }
+    }
   }
-  let upper($c$) = upper($c$) $\sqcup$ right($c$)
 }
+\caption{Label inference from constraint set}\label{dlm:inf:algorithm}
 \end{algorithm}
+}
