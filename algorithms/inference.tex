@@ -3,7 +3,7 @@
 \let\oldnl\nl% Store \nl in \oldnl
 \newcommand{\nonl}{\renewcommand{\nl}{\let\nl\oldnl}}% Remove line number for one line
 
-\begin{algorithm}[h]
+\begin{algorithm}[p]
 \SetAlgoNoEnd
 \DontPrintSemicolon
 \SetKw{Let}{let}
@@ -11,12 +11,13 @@
 \SetKw{False}{false}
 \SetKw{True}{true}
 \SetKwData{Checked}{checked}
+\SetKwFunction{Unjoin}{unjoin}
 \KwData{A set $Q$ of constraints $"L_1 \sqsubseteq L_2"$}
 
 \ForEach {$"L_1 \sqsubseteq L_2" \in Q$}
 {
-  \Let $Q' = Q \setminus "L_1 \sqsubseteq L_2"$\;
-  $Q := Q' \cup unjoin("L_1 \sqsubseteq L_2")$\;
+  \Let $Q' = Q \setminus \{ "L_1 \sqsubseteq L_2" \}$\;
+  $Q := Q' \cup \Unjoin("L_1 \sqsubseteq L_2")$\;
 }
 \ForEach {$"L_1 \sqsubseteq L_2" \in Q$}
 {
@@ -26,7 +27,7 @@
   }
 }
 \Checked := \False\;
-\While {$\neg$ \Checked}
+\While {$\neg\!\!\!\;$ \Checked}
 {
   \Checked := \True\;
   \ForEach {$"L_1 \sqsubseteq L_2" \in Q$}
