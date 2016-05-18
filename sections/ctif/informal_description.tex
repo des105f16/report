@@ -66,11 +66,13 @@ The fully updated source can be seen in \cref{example:code:check_password-explic
 
 \subsection{Function declarations}
 The first thing we would want to label in a program is what can be seen as the bigger components; the functions that either obtain data from outside or send data to outside the program.
-These are what are known as \emph{channels}, as described in \cref{dlm:channels}.
+These are what are known as \emph{channels}, as described in \cref{dlm:channels}.\mikael{Describe channels in DLM chapter}
 In \thelang{} we have no distinction between \emph{input channels} and any other function with a return value.
-However, \emph{output channels} are distinguishable by having the special \textbf{output} owner and is handled differently than other functions, as only the \emph{effective reader sets} of the labels of the arguments are compared with that of the output channel.
+However, \emph{output channels} are distinguishable by having the \dlmc{<-} construct, preceded by a list of principals.
+Output channels are handled the same as other functions.
+Additionally, the \emph{effective reader sets} of the labels of the arguments are compared with that of the output channel.
 
-For \dlmc{check_password} we have the 3 auxiliary functions and the \dlmc{check_password} function itself, which we would label as so:\\
+For \dlmc{check_password} we have the 3 auxiliary functions as well as the \dlmc{check_password} function itself, which we would label as so:\\
 \begin{minipage}{\linewidth}
 \lstinputlisting[style=dlmc, numbers=left, linerange={11-15}, firstnumber=11]{dlm_examples/report/check_password-explicit.ncif}
 \end{minipage}
@@ -81,18 +83,18 @@ The password checker is a trusted principal which has access to the user databas
 The final output is sent to an output channel which is readable only be the user.
 
 \dlmc{check_password} returns the comparison result, which is owned by and readable by the user only.
-Here we also need to add labels to the parameters, otherwise we would not be able to statically check the function, as the actual labels for the parameters would only be known at run time, but by supplying them we know that they will hold at least those policies that have been declared.
+Here we also need to add labels to the parameters, otherwise we would not be able to statically check the function, as the actual labels for the parameters could differ between different calls to the function, but by supplying the labels we know that they will have policies no more strict.
 When supplied with a label, parameters are treated as any other variable when evaluating a function declaration.
-However, if no label is supplied for a parameter, that parameter is recognized as a \emph{constant label}, which means that when running the inference algorithm we cannot lessen the label of a parameter in the same way we could a \emph{variable label} (more about this later).
+However, if no label is supplied for a parameter, that parameter is recognized as a \emph{constant label}, which means that when running the inference algorithm we cannot lessen the label of a parameter in the same way we could a \emph{variable label}.
 
-\subsubsection{Parameters}
+\myparagraph{Parameters}
 Another interesting possibility when declaring the return label is the ability to reference parameter labels.
 By default, an unlabeled function will have an implicit label which is the join of all of its parameters ($\bot$ if it has none).
 This is also how external functions are always labeled.
-This is done by simply stating the parameter name in the label, and possibly joining it with other policies by using the join operator (semi-colon).
+This is done by simply stating the parameter name in the label, and possibly joining it with other policies by using the join operator.
 
 This ability to reference parameters is useful when declaring helper methods that should maintain the policies of its parameters.
-For example we could have made a \dlmc{strcmp2} method which takes the two strings to compare, as well as some integer to limit the amount of characters we would want to compare.
+For example, we could have made a \dlmc{strcmp2} method which takes the two strings to compare, as well as some integer to limit the amount of characters we would want to compare.
 Then we could have declared that function as: \\
 \begin{minipage}{\linewidth}
   \centering
