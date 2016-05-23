@@ -1,21 +1,12 @@
-% !TEX root = ../master.tex
+% !TEX root = ../../master.tex
 
 \section{Timed Automata}
 Here we will shortly define and describe timed automata, based on \cite{timed_automata}.
 
-In the following we will consider time values as positive integers representing milliseconds.
-For simplicity, we will use the time postfixes: $\mathbb{T} = \{ h, m, s, ms \}$, which are to be seen as factors to be applied to times.
-For a value $X \in \mathbb{N}$ followed by a postfix $t \in \mathbb{T}$, we have that:
-\[Xt = \begin{cases}
-  X \times 60 \times 60 \times 1000 & \quad\text{if } t = h \\
-  X \times 60 \times 1000 & \quad\text{if } t = m \\
-  X \times 1000 & \quad\text{if } t = s \\
-  X & \quad\text{otherwise}
-\end{cases}\]
-
 The timed automata is an extension to the $\omega$-automata formalism, allowing for the manipulation of clock-variables, as well as clock-based restrictions.
+The formal definition for a timed automaton can be seen in \cref{time:def:timedautomaton}.
 
-\begin{definition}{Timed automaton}
+\begin{definition}{Timed automaton}\label{time:def:timedautomaton}
 A timed automaton is a tuple $(\Sigma, S, S_0, C, E)$, where
 \begin{itemize}
   \item $\Sigma$ is a finite alphabet,
@@ -28,13 +19,7 @@ A timed automaton is a tuple $(\Sigma, S, S_0, C, E)$, where
 \end{itemize}
 \end{definition}
 
-\begin{definition}{Clock constraints}
-For a set $X$ of clock variables there exists a set $\phi(X)$ of \emph{clock constraints}, where $\delta \in \phi(X)$ is defined recursively by:
-\[ \delta := x \leq c \gp c \leq x \gp \lnot \delta \gp \delta_1 \land \delta_2 \]
-where $x \in X$ and $c \in \mathbb{Z}^+$ (the set of non-negative integers).
-\end{definition}
-
-Below can be seen a simple example of the visualization of a timed automaton.
+In \cref{time:ex:visualrepresentation} can be seen a visualization of a timed automaton.
 Generally, for each edge we have the input $\sigma$, clock resets $\lambda$, and clock constraints $\phi(C)$.
 In our examples, the input will symbolize an action performed along with the transition, reading a value with the corresponding name.
 Clock resets are denoted $x := 0$, which corresponds to $\lambda = \{ x \}$, and will reset the clock variable $x$ to 0.
@@ -42,7 +27,7 @@ Finally, clock constraints are declared, denoted $(x >= 10m)?$, which is a singl
 Several input characters, clock resets, and clock constraints can be defined for a single edge, the syntax should make it clear which are which.
 It should also be noted that the time constants used will use the same time factors as those described for our time policies (see \cref{time:expressiveness}).
 
-\begin{example}{Visual representation}
+\begin{example}{Visual representation}\label{time:ex:visualrepresentation}
 In this example we have a timed automata with the following characteristica:
 \begin{itemize}
   \item $\Sigma = \{ v \} \cup \{ \varepsilon \}$
@@ -51,9 +36,9 @@ In this example we have a timed automata with the following characteristica:
   \item $C = \{ x \}$
   \item $E = \{ (s_0, s_1, v, \{ x \}, \emptyset), (s_1, s_0, \varepsilon, \emptyset, \{ 10m \geq x \})\}$
 \end{itemize}
-This particular timed automaton is concerned with protecting the value of $v$, which should be read with at least 10 minutes pause between reads.
-We start in state $s_0$, with all clock variables initially set to $0$ (although this is not important for this particular example).
-At some point, we make the transition from $s_0$ to $s_1$, which is an unrestricted transition, however, $x$ will be reset and we perform the action of reading $v$.
+This timed automaton is concerned with protecting the value of $v$, which should be read with at least 10 minutes inbetween reads.
+We start in state $s_0$, with all clock variables initially set to $0$ (although this is not important for this example).
+At some point, we make the transition from $s_0$ to $s_1$, which is an unrestricted transition, $x$ will be reset and we perform the action of reading $v$.
 Now, in $s_1$, we cannot transition back to our initial state before we have waited for at least 10 minutes, hence the restriction on the edge going from $s_1$ to $s_0$.
 Once enough time has passed, we can carry out the transition and once again we are permitted to perform the first transition in order to read $v$.
 
