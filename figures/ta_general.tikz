@@ -12,8 +12,8 @@
 	\path (S1) edge [bend left] node [above=0.2em] {$x_1 \geq i$} (S0);
 	\path (S1) edge [bend left] node {$v, x_2 := 0, \delta_p$} (S2);
 	\path (S2) edge [bend left] node [above] {$x_2 \geq i$} (S0);
-	\path (S2) edge [bend left] node {$\dots$} (Sd);
-	\path (Sd) edge [bend left] node [above] {$\dots$} (S0);
+	\path (S2) edge [bend left] node  [above=0.5em] {$\dots$} (Sd);
+	\path (Sd) edge [bend left] node [above=0.5em] {$\dots$} (S0);
 	\path (Sd) edge [bend left] node {$v, x_c := 0, \delta_p$} (Sc);
 	\path (Sc) edge [bend left] node [above] {$x_c \geq i$} (S0);
 \end{tikzpicture}
