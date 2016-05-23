@@ -43,6 +43,14 @@ Now, in $s_1$, we cannot transition back to our initial state before we have wai
 Once enough time has passed, we can carry out the transition and once again we are permitted to perform the first transition in order to read $v$.
 
 \begin{centering}
-\include{figures/ta_10m}
+  \input{figures/ta_10m.tikz}
 \end{centering}
 \end{example}
+
+\subsection{Time policies and timed automata}
+
+\begin{figure}[h]
+  \resizebox{\linewidth}{!}{\input{figures/ta_general.tikz}}
+  \caption{Visualization of the general \thelang{} time policy translated to a timed automaton.}
+  \label{time:fig:generaltimedautomata}
+\end{figure}
