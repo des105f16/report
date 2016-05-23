@@ -49,6 +49,24 @@ Once enough time has passed, we can carry out the transition and once again we a
 
 \subsection{Time policies and timed automata}
 
+\begin{definition}{General \thelang{} Time Policy Timed Automaton}
+  If we have a general time policy:
+  \[(p_s, p_e, i, c)\]
+
+  Then we can define a timed automaton:
+
+  \begin{itemize}
+    \item $\Sigma = \{ v \} \cup \{ \varepsilon \}$
+    \item $S = \{ s_0 \} \cup \{ s_1, s_2, \dots, s_c \}$
+    \item $S_0 = \{ s_0 \}$
+    \item $C = \{ x_1, x_2, \dots, x_c \} \cup \{ \tau_s \}$
+    \item $\begin{aligned}E =& \{ (s_0, s_1, v, \{ x_1 \}, \{ \delta_p \}), (s_1, s_2, v, \{ x_2 \}, \{ \delta_p \}), \dots, (s_{c-1}, s_c, v, \{ x_c \}, \{ \delta_p \})\} \\ &\cup \{ (s_1, s_0, \varepsilon, \emptyset, \{ x_1 \geq i \}), (s_2, s_0, \varepsilon, \emptyset, \{ x_2 \geq i \}), \dots, (s_c, s_0, \varepsilon, \emptyset, \{ x_c \geq i \}) \}\end{aligned}$
+  \end{itemize}
+
+  Where we have the period clock constraint $\delta_p$ defined as \[p_s \leq \tau_s \leq p_e\]
+  and $\tau_s$ represents the system time.
+\end{definition}
+
 \begin{figure}[h]
   \resizebox{\linewidth}{!}{\input{figures/ta_general.tikz}}
   \caption{Visualization of the general \thelang{} time policy translated to a timed automaton.}
