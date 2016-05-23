@@ -18,12 +18,22 @@ It is how the policies will have its principals extended with time policies, by 
 If the owner of a policy has an attached time policy, it is meant to apply for all its readers.
 The \dlmc{@} symbol will also be used for the two time constructs \dlmc{@?} (\emph{if-can-call})  and \dlmc{@} (\emph{await}), explained later in this section.
 
-\subsection{Expressiveness}
+\subsection{Expressiveness}\label{time:expressiveness}
 We want our time policies to be expressive, so that we can cover a wide variety of cases.
 We therefore introduce three types of time constituents, where different combinations of these will form a time policy.
 
 This will be formally explained in \cref{time:pic}, however, we will give a small description and some simple examples of its usage here.
 We have the three constituents \emph{period}, \emph{interval}, and \emph{count}.
+
+In the following, we will consider time values as positive integers representing milliseconds.
+For simplicity, we will use the time postfixes: $\mathbb{T} = \{ h, m, s, ms \}$, which are to be seen as factors to be applied to times.
+For a value $n \in \mathbb{N}$ followed by a postfix $T \in \mathbb{T}$, we have that:
+\[nT = \begin{cases}
+  n \times 60 \times 60 \times 1000 & \quad\text{if } T = h \\
+  n \times 60 \times 1000 & \quad\text{if } T = m \\
+  n \times 1000 & \quad\text{if } T = s \\
+  n & \quad\text{otherwise}
+\end{cases}\]
 
 \myparagraph{Period}
 Period is an time-period with a start- and end-hour, where only within this period it is possible to access the data/function.
