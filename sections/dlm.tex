@@ -32,7 +32,6 @@ The same concept applies to more complex language constructs, such as functions 
 Each slot is associated with a label, that describes how the data in the slot can be handled.
 We denote the label of slot $s$ as $\underline{s}$.
 Referring to labels in this fashion serves the same purpose as letters in algebra; it allows for handling labels without knowledge about their actual value.
-This proves useful as it allows for label inference and label polymorphism (see \cref{dlm:implicit_labels} and ??). \mikkel{Insert reference when written.} \mikael{Are we going to write about label polymorphism?}\rene{Yes :)}
 
 For a given label it is possible to define both read (\emph{privacy}) and write (\emph{integrity}) policies.
 The first represents information flow out of a system and the latter information flow into a system.
@@ -83,7 +82,7 @@ This is known as the \emph{effective reader set}, which is the intersection of \
 \end{example}
 
 \section{Security class lattice}
-Using the above definitions for labels we will proceed to define them as a lattice.
+A set of DLM labels can be seen as a \emph{security class lattice} \cite[pp. 6-7]{myers1997}.
 A lattice is a partially ordered set, for which each pair of elements in the set have a unique least upper bound (the join/$\sqcup$ of the labels) and a greatest lower bound (the meet/$\sqcap$ of the labels).
 In the case of DLM, the lattice is the set of all labels and it is ordered by how restrictive the labels are.
 
@@ -95,9 +94,6 @@ This is the upper bound $\top$ of the lattice.
 With these we have a bounded lattice as illustrated by \cref{dlm:lattice_fig}.
 In the following sections we define the properties of this security lattice.
 These will match the description of the lattice bounds given above.
-
-\renein{Reference til bevis/påstand for lattice egenskab}
-\mikkelin[Hvordan?]{Kan vi referere til DLM, hvor det ikke bevises men blot nævnes eller bør vi inkludere et bevis? Jeg går ud fra at vi skal vise \textit{Commutative, Associative, Absorption, Identity} ?}
 
 \begin{figure}
   \begin{center}
@@ -326,7 +322,6 @@ The means of inference is described informally in \cite{myers1997}; both in term
 Because the description is only provided informally there are some uncertainties for inference.
 First and foremost, how constraints are extracted from code, as has already been discussed.
 But additionally which label declarations can be omitted and what the meaning of such an omission is.
-\mikkel{Make sure we are explicit in \cref{extraction} about our decisions/contributions on how undefined labels are handled.}
 
 In our approach we allow any label declaration to be omitted, and in \cref{extraction} we provide a formal definition for the meaning of each omitted label as well as a definition for how constraints are extracted.
 In the following we formalize the data structure (\cref{dlm:inf:types}) and algorithm (\cref{dlm:inf:algsection}) described in \cite{myers1997} such that they can be applied to the constraints that are extracted.
@@ -404,7 +399,7 @@ Restriction for constant labels is undefined for certain label types.
 The definition below specifies how
 
 \subsection{Inference algorithm}\label{dlm:inf:algsection}
-Using the established extensions of labels we present the inference algorithm (\cref{dlm:inf:algorithm}).
+Using the established extensions of labels we present the inference algorithm (see \cref{dlm:inf:algorithm}).
 In the following we provide an informal description of the algorithm to aid the reader.
 
 Note that the input for the algorithm is a set of constraints.
