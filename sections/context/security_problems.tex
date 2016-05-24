@@ -4,18 +4,18 @@
 In \cite{prespecialization} we investigated problems involving the imminent implementation of smart meters throughout Europe.
 Here we discovered a wide array of problems, ranging from ethical to practical.
 One of the more interesting discoveries that we made was the newly acquired problems associated with increasing the availability of a previously physically isolated device.
-This is exactly what is going to happen when the current electrical meters are going to be substituted with remote-accessed and -controlled smart meters.
-It will open up for problems already found in similar devices, which in general is any internet-connected (IoT) device.
+This is exactly what is going to happen when the current electrical meters are going to be substituted with remotely accessed and controlled smart meters.
+It will open up for problems already found in similar devices, which in general is any IoT device.
 
 One of the focuses we had in \cite{prespecialization} was on the privacy issues related to such an exposed device.
-We would like to explore this problem further, while coming up with a solution which will start towards aiding in the securing of privacy in IoT devices.
-Many of the security problems associated with privacy could possibly also be minimized by adding the concept of time restraints, which we will also discuss this here.
+We would like to explore this problem further, while coming up with a solution which will aid in the securing of privacy in IoT devices.
+Many of the security problems associated with privacy could possibly also be minimized by adding the concept of time constraints, which we will also discuss here.
 
 \subsection{Privacy}
-With the emergence of the Internet-of-Things, more and more of our devices are being globally exposed, for both good and for worse.
-There will be endless possibilities in easing our everyday lives, both at a personal level and at a community level.
+With the emergence of IoT, more and more of our devices are being globally exposed, for both good and for worse.
+There will be endless possibilities in easing our everyday lives, both at a personal level and at a communal level.
 At the personal level, we will be able to access devices that monitor and control our homes.
-On a community level, many of the tasks that previously had to be done by people can now be pushed to remote devices, such as monitoring the health of patients or changing traffic signs on a freeway.
+On the communal level, many of the tasks that previously had to be done by people can now be pushed to remote devices, such as monitoring the health of patients or changing traffic signs on a freeway.
 
 All these things have of course major potential risks if they should be compromised.
 At the personal level, we do not wish to give up any information about our personal lives, and we don't want anyone else controlling our devices.
@@ -29,5 +29,8 @@ This could for instance be power consumption data which have different policies 
 It is also possible to have \emph{passive cheaters}, users of the system who follow the rules, but try to acquire more information than is intended possible.
 
 \subsection{Time constraints}
+Properly handling timing within a system is an already-exising and quite common problem.
+This is especially true for IoT devices which operate in the real world and any potentional mistakes can result in great consequence.\footnote{\url{http://www.nist.gov/pml/div688/timing-031915.cfm}}
+
 To further the concept of protecting privacy, it would make sense to limit functionality of a device based on time constraints.
 By doing this, it could be further ensured that the leak of information from a system is minimal.\mikael{Do not know what to write here. :(}\rene{Du er på rette spor: mange IoT enheder har et stærkt tidsaspekt og det er vigtigt at formalisere/modellere dette for at kunne ræssonere korrekt om sikkerheden af et system}
