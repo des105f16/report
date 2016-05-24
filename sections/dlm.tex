@@ -13,6 +13,7 @@ This is done by annotating source code with security policies, in the form of la
 This section will present the necessary information needed to understand the implementation of \thetool.
 The descriptions and definitions in this section are based on \cite{myers1997, myers1998, myers2000}.
 Throughout the examples, we will use the same grammar as that used by \thetool. \mikkel{Remember to write something about the grammar/parser...}
+\rene{Begræns scope her: principal hierarchy og evt. andet}
 
 \section{Labels and Policies}\label{dlm:policies}
 Throughout a program, values are declared, initialized, and assigned to variables and other value-holders.
@@ -352,6 +353,7 @@ To simplify the use of current upper bounds we define a current upper bound for 
   \end{cases}
   \]
   Note that $\ceil{L_{var}}$, where $L_{var}$ is a variable label, can be a composite label (using joins and/or meets) but can never have variable labels as subcomponents.
+  \renein{Forklar med ord (substitution).}
 \end{definition}
 
 \myparagraph{Joins and meets}
@@ -372,6 +374,7 @@ We do this by simply employing the current upper bound of both labels in the com
     L_1 \sqsubseteq L_2 = \ceil{L_1} \sqsubseteq^* \ceil{L_2}
   \]
   Note that given \cref{dlm:def:upperbound} this definition does not alter the pre-existing meaning of $\sqsubseteq$ but merely expands it to include variable labels.
+  \renein{Et lille eksempel eller, endnu bedre, et argument for hvorfor det holder ville være godt. Det er relateret til spørgsmålet om hvorvidt mængden af labels under denne ordning udgør et lattice}
 \end{definition}
 
 \subsubsection{Constant labels}
