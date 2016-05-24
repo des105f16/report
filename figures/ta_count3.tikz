@@ -1,0 +1,16 @@
+\usetikzlibrary{arrows,automata,positioning}
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=4cm, semithick]
+	\node(start) {};
+	\node[state] (S0) [right=0cm and 1cm of start]{$s_0$};
+	\node[state] (S1) [right of=S0] {$s_1$};
+	\node[state] (S2) [right of=S1] {$s_2$};
+	\node[state] (S3) [right of=S2] {$s_3$};
+
+	\path (start) edge node {} (S0);
+	\path (S0) edge [bend left] node {$v, x_1 := 0$} (S1);
+	\path (S1) edge [bend left] node [above] {$x_1 \geq 10m$} (S0);
+	\path (S1) edge [bend left] node {$v, x_2 := 0$} (S2);
+	\path (S2) edge [bend left] node [above] {$x_2 \geq 10m$} (S0);
+	\path (S2) edge [bend left] node {$v, x_3 := 0$} (S3);
+	\path (S3) edge [bend left] node [above] {$x_3 \geq 10m$} (S0);
+\end{tikzpicture}
