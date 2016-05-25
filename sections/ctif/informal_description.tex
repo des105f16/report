@@ -118,7 +118,7 @@ The labeling applied here is done so that it obliges the different inputs to the
 The most noteworthy thing here is the labeling of \dlmc{match}, as it through its assignment within both the \dlmc{while} and \dlmc{if} blocks will implicitly obtain knowledge of all other labeled values.
 It is therefore labeled with the join of all those labels: \dlmc{\{\{u->;pc->\}\}} so that it is at most as strict as all.
 
-\subsection{If-acts-for and declassification}
+\subsection{If-acts-for and declassification}\label{ctif:informal:ifactsfor_declassify}
 Going into \dlmc{check_password} we have data that is privy to the user as well as data that is not.
 So before we can return the result to the user, we need to explicitly declare that in this particular case it is an intentional leak of the password checker's data (the user db and the internals of \dlmc{check_password}).
 

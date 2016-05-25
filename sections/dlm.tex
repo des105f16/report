@@ -208,17 +208,16 @@ return val;               // $\mathcomment{\bot}$
 In order to avoid mishaps by setting certain policies too lax, so that certain flows are permitted, we can temporarily set some policies to be more strict, and then only relax (\emph{declassify}) them when we really need to.
 In order to do this, the concept of \emph{authority} is introduced.
 
-At any point during execution of a program, it will have a \emph{true authority}, which is the maximal authority by which the program can carry out operations.
+At any point during execution of a program, there will be a \emph{true authority}, which is the maximal authority by which the program can carry out operations.
 Whenever we call a function, we can do this with a certain authority, corresponding to running that method with the authority of a specific principal or principals.
 However, in order to take advantage of this given authority, we need to explicitly claim it.
-This is done by using the \dlmactsfor\dlmc{(a, b) \{ stmts \}} statement, where $a$ is the principal (typically the function itself) trying to obtain the authority of $b$.
-Only after calling this function will we obtain the \emph{effective authority} to act for $b$, enabling us to carry out the statements within the \dlmactsfor~ block that would normally only be permissible for $b$ itself.
+This is done by using the \emph{if acts for} construction\footnote{We use the syntax: \dlmc{-->? p1, p2 \{ /*statements*/ \}} -- more about this in \cref{ctif:informal:ifactsfor_declassify}).}, which takes as an argument one or more principals for which we want to obtain authority to carry out statements in the block.
+Only after calling this function will we obtain the \emph{effective authority} to act for the principals, enabling us to carry out the statements within the  block that would normally only be permissible for the principals themselves.
 
-If the check passed, the \dlmc{stmt} block will be executed under the the newly established authority.
-If the check fails, the block is not executed.
-
-With $b$ in the effective authority we can perform declassification -- deliberately and explicitly relaxing the security policies in which $b$ is owner.
-This is done by calling the \dlmdeclassify\dlmc{(v, l)} function, with a slot $v$ and a new label $l$ as inputs, returning the value $v$ relabeled to $l$.
+If the check fails, the statements block is not executed.
+If the check passed, the statements will be executed under the the newly established authority, e.g. for a principal $p$.
+With $p$ in the effective authority we can perform declassification -- deliberately and explicitly relaxing the security policies in which $p$ is owner.
+This is done by using the \emph{declassify} construction\footnote{We use the syntax: \dlmc{<|v, l|>} -- more about this in \cref{ctif:informal:ifactsfor_declassify}).}, with a slot $v$ and a new label $l$ as arguments, returning the value $v$ relabeled to $l$.
 The relabeling by declassification rule (the inference rule) is defined as follows:
 
 \begin{definition}{Relabeling by declassification}
@@ -240,7 +239,7 @@ The relabeling by declassification rule (the inference rule) is defined as follo
   \]
 \end{definition}
 
-The combination of these two concepts, \dlmactsfor~ and \dlmdeclassify, is especially useful when we have sensitive inputs to a method and want to carry out our calculations without the fear of neither explicit or implicit leakage.
+The combination of these two concepts, \emph{if acts for} and \emph{declassify}, is especially useful when we have sensitive inputs to a method and want to carry out our calculations without the fear of neither explicit or implicit leakage.
 This way we can keep our strict policies throughout the calculations of the method and only relax the label once we want to return the result.
 
 \begin{example}{Temporarily restricting a label}
@@ -251,8 +250,8 @@ int {{a->y}} cond = 1;
 if (cond) {
   val++;
 }
-if_acts_for(this, a) {
-  return declassify(x, {{a->y,z}});
+-->? a {
+  return <|x, {{a->y,z}}|>;
 }
 return -1;
   \end{lstlisting}
