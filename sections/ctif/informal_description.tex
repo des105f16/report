@@ -73,12 +73,11 @@ The fully labeled source can be seen in \cref{example:code:check_password-explic
 \lstinputlisting[float, style=dlmc, numbers=left, caption={Labelled password checker example}, label=example:code:check_password-explicit]{dlm_examples/report/check_password-explicit.ncif}
 
 \subsection{Function declarations}
-The first thing we would want to label in a program is what can be seen as the bigger components; the functions that either obtain data from outside or send data to outside the program.
-These are what are known as \emph{channels}, as described in \cref{dlm:channels}.\mikael{Describe channels in DLM chapter}
-In \thelang{} we have no distinction between \emph{input channels} and any other function with a return value.
-However, \emph{output channels} are distinguishable by having the \dlmc{<-} construct, preceded by a list of principals.
+The first thing we would want to label in a program is what can be seen as the bigger components; the functions that either obtain data from outside or send data to outside the program -- our channels.
+In \thelang{} we have no distinction between input channels and any other function with a return value.
+However, output channels are distinguishable by having the \dlmc{<-} construct, preceded by one or more principals.
 Output channels are handled the same as other functions.
-Additionally, the \emph{effective reader sets} of the labels of the arguments are compared with that of the output channel.
+Additionally, the effective reader sets of the labels of the arguments are compared with that of the output channel.
 
 For \dlmc{check_password} we have the 3 auxiliary functions as well as the \dlmc{check_password} function itself, which we would label as so:\\
 \begin{minipage}{\linewidth}
