@@ -9,19 +9,26 @@ Following the list will be some elaborations where necessary.
 \begin{itemize}
   \item Variables
   \item Simple types (int, bool, char, string)
-  \item Structs and arrays
-  \item Declaring and calling functions
+  \item Struct type definitions
+  \item Pointer declarations
+  \item Function prototypes, declarations, and calls
   \item Boolean and arithmetic operators
-  \item Control structures
+  \item \emph{if}- and \emph{while} control structures
   \item External libraries
 \end{itemize}
 
-\myparagraph{Structs and arrays}
-It is possible to define structs consisting of simple type fields.
-However, it is not possible to define fields of other struct types -- i.e. nested structs.
+\myparagraph{Structs}
+It is possible to make struct definitions, so that the defined type can be used as any other type throughout a program.
+However, it is not possible to initialize a struct.
+\mikael{Måske noget om vores problemer ift. tid? Og om det ulogiske ved label på en type?}
 
-Arrays are limited to simple types and structs.
-Arrays are referred to as a pointer reference, and arrays alone are referred to through pointers (more about this below).
+\myparagraph{Pointers}
+It is only possible to make pointer declarations.
+Pointer dereferencing and address expressions are not allowed.
+It is deemed to big of a subject to handle within the scope of this report, especially when trying to take into consideration pointer arithmetics.\footnote{\url{https://www.securecoding.cert.org/confluence/display/c/EXP08-C.+Ensure+pointer+arithmetic+is+used+correctly}}
+In \cite{muller2015cif} the simple pointer operations are handled undifferently from any other declaration or assignment, and they prohibit the use of pointer arithmetic.\mikael{Skal stadig forklares bedre, men nu er kilderne der.}
+
+Having pointer declarations allows us to reference arrays, even though we cannot initialize an array.
 
 \myparagraph{Boolean and arithmetic operators}
 The following boolean and arithmetic operators are allowed:
@@ -29,19 +36,6 @@ The following boolean and arithmetic operators are allowed:
 
 Operator precedence has no say for our compiler, as we are only interested in what operands are used in expressions.
 The actual operator precedence checks are only used for, and therefore handled by, the C compiler.
-
-We have chosen to leave out the \tk{++} and \tk{-{}-} post-/pre-fix operators.
-
-\myparagraph{Control structures}
-It is possible to use \emph{if}-, \emph{if-else}-, and \emph{while}-statements.
-We have, however, chosen to leave out the \emph{for}-statement, as it is can as easily be constructed as a while-statement.
-
-\myparagraph{Pointers}
-Pointers are completely left out of \thelang, as there are many troubles associated with assuring safety when data can be accessed through pointers.
-\mikael{This sounds like something that needs further explaining. :)}
-\rene{Pointer guidelines/styleguide for sikre programmer. Referér CIF pointer forklaring (præcise sætning).}
-\rene{Konsekvenser med/uden pointers.}
-The pointer-syntax is still being used for arrays.
 
 \section{Informal Description}
 The main extension of C found in \thelang~ is of course applying labels to values and functions.
