@@ -150,7 +150,7 @@ Label joins allows for label evaluation of expressions, as described in \cref{ex
 Additionally when inferring labels, the meet operation allows us to infer the most restrictive label that agrees with the preexisting labels.
 
 \subsection{Label comparison}\label{dlm:comparison}
-As mentioned above, labels provide restrictions on which principals can read from the slots that the labels ``protect''.
+As mentioned above, labels provide restrictions on how data can flow to and from slots that the labels ``protect''.
 In order to check that security policies are enforced throughout a program, we need to be able to compare how restrictive labels are.
 To do this we introduce the ``at most as restrictive as''-relation ($\sqsubseteq$) from \cite{myers1997}.
 
@@ -166,6 +166,21 @@ We can employ this definition to determine if two labels are equal:
 If $L_1 \sqsubseteq L_2$ and $L_2 \sqsubseteq L_1$ then we must have that $L_1 = L_2$.
 Additionally we note that given \cref{dlm:def:join,dlm:def:restrict} we note that $L_1 \sqcup L_2 \sqsubseteq L_3$ is equivalent to $L_1 \sqsubseteq L_3 \wedge L_2 \sqsubseteq L_3$.
 This provides a simplified means for comparing composite label-structures.
+
+\section{Channels}
+Throughout a system data can enter and leave, before- and afterwhich labels cannot be enforced.
+The entry points for data entering and leaving can therefore be seen as crucial endpoints, where we want to do additional checking to ensure we are not unintentionally leaking.
+This is done through \emph{channels}, specifically \emph{input channels} and \emph{output channels}.
+However, input channels are not special and simply apply the label of the channel to the inputted data.
+
+\myparagraph{Output channels}
+On the other hand, output channels are especially crucial in that it is an endpoint where we will intentionally ``leak'' data, and afterwhich we are not able to control the further flow of this data.
+Intuitively, an output channel represents data going outside the system, e.g. through a physical printer, console output, or web request.
+
+Output channels therefore differ in the way that the ``security'' is compared.
+Output channels need only declare a list of readers, that represent the principals that have access to the endpoint.
+We then need to compare this reader list to the effective reader set of the label for the data to be outputted.
+Any reader declared by the output channel must be in the effective reader set for the label of the outputted data, to ensure that we do not output data to a channel where the principals aren't allowed to read it.
 
 \section{Implicit flows}\label{dlm:implicit_flows}
 When assigning a value to a slot, possibly from another slot, it is an explicit flow.
