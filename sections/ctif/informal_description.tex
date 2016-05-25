@@ -55,14 +55,20 @@ The syntax for labels consists of 5 components:
   \item special values \dlmc{_} (underscore, for bottom label) and \dlmc{^} (caret, for top label)
 \end{itemize}
 
+Along with the 3 constructs:
+\begin{itemize}
+  \item if acts for \dlmc{-->? p1, p2 \{ /* statements */ \}}
+  \item declassify \dlmc{<|v, l|>}
+  \item output channel \dlmc{p1, p2 <- foo();}
+\end{itemize}
+
 Unlike types, labels can be omitted completely, which has two applications.
 Firstly, it is possible to take old code and incrementally apply labels.
 Secondly, it can be used to apply labels only where completely necessary, and relying on inference for the rest, thus limiting the clutter of labels throughout a program.
-In the following examples, which are extensions on the C examples given in \cref{examples:sec}, we have explicitly declared labels for all variables, functions, and parameters.
 
 The following subsections will describe the label constructions implemented by \thelang.
 The description will follow the password checker example from \cref{example:sec:check_password}.
-The fully updated source can be seen in \cref{example:code:check_password-explicit}.
+The fully labeled source can be seen in \cref{example:code:check_password-explicit}.
 
 \lstinputlisting[float, style=dlmc, numbers=left, caption={Labelled password checker example}, label=example:code:check_password-explicit]{dlm_examples/report/check_password-explicit.ncif}
 
