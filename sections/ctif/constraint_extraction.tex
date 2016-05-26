@@ -481,7 +481,13 @@ with the following definition:
     \{ \literal{\ilv_{E_i} \sqsubseteq \ilv_i} \} & \text{otherwise}
     \end{cases}} \\
   \seAnd{\semeq{\iE}{E_i}{\ienvL \; \ienvF}{(cstr_i, \ilv_{E_i}) \text{ for } 0 \leq i \leq n}} \\
-  \seAnd{\ienvL_2 = \ienvL[x_1 \mapsto \ilv_{E_1}, x_2 \mapsto \ilv_{E_2}, \dots, x_n \mapsto \ilv_{E_n}]}
+  \seAnd{\ienvL_2 = \ienvL[x_1 \mapsto \ilv_{E_1}, x_2 \mapsto \ilv_{E_2}, \dots, x_n \mapsto \ilv_{E_n}]} \\
+  \seAnd{cstr_o = \begin{cases}
+      \bigcup\limits_{i=1}^n \{ \literal{lv_{E_i} \sqsubseteq lv_o} \} & \quad \text{if } k > 0 \\
+      \emptyset & \quad \text{otherwise}
+    \end{cases}} \\
+  \seAnd{lv_o = \bigcup_{p \in P}\{ p \rightarrow r_1, r_2, \dots, r_k \}} \\
+  \seAnd{P = \{ p' | (p \rightarrow p') \in principal \}}
 }
 \end{semanticequations}
 \caption{Semantic equations for function calls}
