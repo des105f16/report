@@ -63,12 +63,6 @@ No value (represented by $\varepsilon$) can be provided for any label declaratio
 When omitting a label the semantic rules specify a \textit{default} value for the label.
 This is initial step of label inference and allows unlabeled C to be recognized and evaluated using these rules.
 
-\paragraph{No principal declaration}
-Principals and possibly a principal hierarchy are expected to be extracted from some system information and not defined in the program code itself.
-In the rules below a function $principal$ is used to represent the lookup of principal names in some system.
-\mikkel{Is this an acceptable explanation?}
-\rene{Ja, men jeg tror I skal finde et sted tidligt i rapporten og forklare hvorfor I ikke har principal hierarchy med og hvorfor det er ok}
-
 \subsection{Semantic setup}
 This section will describe the semantic constituents which are used to translate a syntactical \thelang{} program into the semantical world.
 These constituents are based on the concepts: \emph{semantic domains}, \emph{semantic functions}, and \emph{semantic equations} from \cite[Chapter 9]{slonneger1995formal}.
@@ -79,13 +73,20 @@ For readability purposes, the semantic equations will be spread out over the fol
 The semantic domains of \thelang{} are primarily used to maintain state, and to give the final result of the constraint extraction: namely the constraints themselves as well as the different label types which are used to form the constraints.
 Note that we have no need for any numerals or type enumerations, since we are only interested in checking labels and forming constraints.
 
-The following list is an overview of these semantic domains ($\mathbb P$ denotes the power set):
+The following list is an overview of these semantic domains (Here $\mathcal P$ denotes the power set):
 \begin{align*}
 \iLV    & = v(\iVar) \cup c(\iVar) \cup p(\mathbb{L}) \cup j(\iLV \times \iLV) \\
-\iCstr  & = \mathbb P (\iLV \times \iLV) \\
-\iEnvF  & = \iFun \cup \{ \ifb \} \rightharpoonup \iLV \times \mathbb P (\iLV \times \iVar) \\
+\iCstr  & = \mathcal P (\iLV \times \iLV) \\
+\iEnvF  & = \iFun \cup \{ \ifb \} \rightharpoonup \iLV \times \mathcal P (\iLV \times \iVar) \times \mathcal P(\mathbb{P}) \\
 \iEnvL  & = \iVar \cup \{ \ia, \ib \} \rightharpoonup \iLV
 \end{align*}
+
+$\mathbb L$ denotes the set of all labels.
+
+$\mathbb P$ the set of all principals.
+Principals are expected to be extracted from some system information and not defined in the program code itself.
+Instead we make us of a function $principal$, which is used to represent the lookup of principal names in some system:
+\[ principal = \iPrin \rightarrow \mathbb P \]
 
 $\iLV$ is a set of \emph{label values}, not to be confused with actual labels.
 In order to differ between the different types of labels (as described in \cref{dlm:inf:types}), we utilize concept of \emph{tagged values}.
@@ -104,7 +105,7 @@ When we have both $\sqcup$ and $\sqsubseteq$ in a ``quoted expression'', the pre
 $\iEnvL$ is the label environment, which maps variable identifiers, and the two special identifiers $\ia$ (authority) and $\ib$ (block), to label values.
 The special values are propagated throughout a program, as they will change as the scope changes.
 
-$\iEnvF$ is the function environment, which maps function identifiers, and the special identifier $\ifb$ (function block), to a tuple containing the label value of the function along with all its arguments.
+$\iEnvF$ is the function environment, which maps function identifiers, and the special identifier $\ifb$ (function block), to a tuple containing the label value of the function along with all its arguments and output readers.
 Function identifiers are looked up when evaluating function calls.
 The function block identifier is used for return statements so that the ``surrounding'' function label can be looked up.
 
