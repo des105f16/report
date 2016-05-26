@@ -206,11 +206,12 @@ The latter allows for recursion.
 
 \begin{table}[H]
 \begin{semanticequations}
+% Without readers
 \csemeq{\iF}{t_f \, L_f \, f \tk ( t_1 \, l_1 \, x_1 \tk , t_2 \, l_2 \, x_2 \tk , \dots \tk , t_n \, l_n \, x_n \tk ) S}{\ienvL \; \ienvF}
 {(\icstr, \ienvF_2)}{
   \seWhere{\semeq{\iS}{S}{\ienvL_2 \; \ienvF_2}{(\icstr, \ienvL_3)}} \\
   \seAnd{\ienvL_2 = \ienvL[x_1 \mapsto \ilv_1', x_2 \mapsto \ilv_2', \dots, x_n \mapsto \ilv_n']} \\
-  \seAnd{\ienvF_2 = \ienvF[\ifb \mapsto (\ilv_f', \emptyset), f \mapsto (\ilv_f', \{(\ilv_1', x_1), (\ilv_2', x_2), \dots, (\ilv_n', x_n)\})]} \\
+  \seAnd{\ienvF_2 = \ienvF[\ifb \mapsto (\ilv_f', \emptyset, \emptyset), f \mapsto (\ilv_f', \{(\ilv_1', x_1), (\ilv_2', x_2), \dots, (\ilv_n', x_n)\}, \emptyset)]} \\
   \seAnd{\ilv_f' = \begin{cases}
     \mathlarger\sqcupl_{i = 1}^n \ilv_i' & \quad \text{if } \ilv_f = \varepsilon \\
     \ilv_f & \quad \text{otherwise}
@@ -221,6 +222,24 @@ The latter allows for recursion.
     \ilv_i & \quad otherwise
   \end{cases}} \\
   \seAnd{\iL\dblSq{L_i} \; \ienvL = \ilv_i \text{ for all } 0 \leq i \leq n}
+} \seSpace
+% With output readers
+\csemeq{\iF}{p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{<-} \; t_f \, L_f \, f \tk ( t_1 \, l_1 \, x_1 \tk , t_2 \, l_2 \, x_2 \tk , \dots \tk , t_n \, l_n \, x_n \tk ) S}{\ienvL \; \ienvF}
+{(\icstr, \ienvF_2)}{
+  \seWhere{\semeq{\iS}{S}{\ienvL_2 \; \ienvF_2}{(\icstr, \ienvL_3)}} \\
+  \seAnd{\ienvL_2 = \ienvL[x_1 \mapsto \ilv_1', x_2 \mapsto \ilv_2', \dots, x_n \mapsto \ilv_n']} \\
+  \seAnd{\ienvF_2 = \ienvF[\ifb \mapsto (\ilv_f', \emptyset, R_o), f \mapsto (\ilv_f', \{(\ilv_1', x_1), (\ilv_2', x_2), \dots, (\ilv_n', x_n)\}, R_o)]} \\
+  \seAnd{\ilv_f' = \begin{cases}
+    \mathlarger\sqcupl_{i = 1}^n \ilv_i' & \quad \text{if } \ilv_f = \varepsilon \\
+    \ilv_f & \quad \text{otherwise}
+  \end{cases}} \\
+  \seAnd{\iL\dblSq{L_f} \; \ienvL = \ilv_f} \\
+  \seAnd{\ilv_i' = \begin{cases}
+    c(x_i) & \quad \text{if } \ilv_i = \varepsilon \\
+    \ilv_i & \quad otherwise
+  \end{cases}} \\
+  \seAnd{\iL\dblSq{L_i} \; \ienvL = \ilv_i \text{ for all } 0 \leq i \leq n} \\
+  \seAnd{R_o = \{ p_i' | p_i' = principal p_i \}}
 }
 \end{semanticequations}
 \caption{Semantic equation for function declaration}
@@ -453,8 +472,8 @@ with the following definition:
   \seAnd{\semeq{\iE}{E_i}{\ienvL \; \ienvF}{(\icstr_i, \ilv_i)} \text{ for } 0 \leq i \leq n}
 } \seSpace
 % declared function call
-\csemeq{\iE}{f \tk ( E_1 \tk , E_2 \tk , \dots \tk , E_n \tk )}{\ienvL \; \ienvF}{(cstr_a \cup cstr_p, \ilv_f')}{
-  \seIf{\ienvF \; f = (\ilv_f, \{(\ilv_1, x_1), (\ilv_2, x_2), \dots, (\ilv_n, x_n)\}) \text{ and}} \\
+\csemeq{\iE}{f \tk ( E_1 \tk , E_2 \tk , \dots \tk , E_n \tk )}{\ienvL \; \ienvF}{(cstr_a \cup cstr_p \cup cstr_o, \ilv_f')}{
+  \seIf{\ienvF \; f = (\ilv_f, \{(\ilv_1, x_1), (\ilv_2, x_2), \dots, (\ilv_n, x_n)\}, \{ r_1, r_2, \dots, r_k \}) \text{ and}} \\
   \seWhere{replaceConstants(\ilv_f, \ienvL_2) = \ilv_f'} \\
   \seAnd{\icstr_a = \bigcup\limits_{i=1}^n \icstr_i} \\
   \seAnd{\icstr_p = \bigcup\limits_{i=1}^n \begin{cases}
