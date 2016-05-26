@@ -26,7 +26,9 @@ However, it is not possible to initialize a struct.
 It is only possible to make pointer declarations.
 Pointer dereferencing and address expressions are not allowed.
 It is deemed to big of a subject to handle within the scope of this report, especially when trying to take into consideration pointer arithmetics.\footnote{\url{https://www.securecoding.cert.org/confluence/display/c/EXP08-C.+Ensure+pointer+arithmetic+is+used+correctly}}
-In \cite{muller2015cif} the simple pointer operations are handled undifferently from any other declaration or assignment, and they prohibit the use of pointer arithmetic.\mikael{Skal stadig forklares bedre, men nu er kilderne der.}
+In \cite{muller2015cif} the simple pointer operations are handled undifferently from any other declaration or assignment, and they prohibit the use of pointer arithmetic.
+Similarly, in \cite{maciazek2016cbif} there is support for pointers with assignment of addresses.
+\mikael{Skal stadig forklares bedre, men nu er kilderne der.}
 
 Having pointer declarations allows us to reference arrays, even though we cannot initialize an array.
 
