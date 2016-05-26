@@ -32,8 +32,9 @@ The latter is not directly apparent here, as some syntactical details have been 
   \begin{align*}
     R         & ::= D \\
     D         & ::= D_F \gp D_V \gp D_1 \; D_2 \\
-    D_F       & ::= t_f \, l_f \, f \tk ( t_1 \, l_1 \, x_1 \tk , t_2 \, l_2 \, x_2 \tk , \dots \tk , t_n \, l_n \, x_n \tk ) S \\
-    D_V       & ::= t \, l \, x \tk = E \gp t \, l x \\
+    D_F       & ::= t_f \; l_f \; f \tk ( t_1 \; l_1 \; x_1 \tk , t_2 \; l_2 \; x_2 \tk , \dots \tk , t_n \; l_n \; x_n \tk ) S \\
+              & \gp p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{<-} \; t_f \; l_f \; f \tk ( t_1 \; l_1 \; x_1 \tk , t_2 \; l_2 \; x_2 \tk , \dots \tk , t_n \; l_n \; x_n \tk ) S \text{\mikaelin{Is ok?}} \\
+    D_V       & ::= t \; l \; x \tk = E \gp t \; l \; x \\
     S         & ::= E \gp S_1 \; S_2 \gp \varepsilon \\
               & \gp D_V \\
               & \gp \tk{while} \tk ( E \tk ) S \gp \tk{if} \tk ( E \tk ) S \gp \tk{if} \tk ( E \tk ) S_1 \tk{else} S_2 \\
@@ -44,7 +45,7 @@ The latter is not directly apparent here, as some syntactical details have been 
               & \gp \tk{<|} E \tk , l \tk{|>} \gp \tk{<|} E \tk{|>} \\
               & \gp f \tk{<{}<{}<} p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{>{}>{}>} \tk ( E_1 \tk , E_2 \tk , \dots \tk , E_n \tk ) \\
     L         & ::= \tk{\{\{} P \tk{\}\}} \gp \varepsilon \\
-    P       & ::= x \gp p_0 \tk{->} p_1 \tk , p_2 \tk , \dots \tk , p_k \gp P_1 \tk ; P_2 \gp \tk \_ \gp \tk{\^{}}
+    P         & ::= x \gp p_0 \tk{->} p_1 \tk , p_2 \tk , \dots \tk , p_k \gp P_1 \tk ; P_2 \gp \tk \_ \gp \tk{\^{}}
   \end{align*}
   \caption{Syntactic domains and abstract production rules}
   \label{ctif:rules}
@@ -62,12 +63,6 @@ No value (represented by $\varepsilon$) can be provided for any label declaratio
 When omitting a label the semantic rules specify a \textit{default} value for the label.
 This is initial step of label inference and allows unlabeled C to be recognized and evaluated using these rules.
 
-\paragraph{No principal declaration}
-Principals and possibly a principal hierarchy are expected to be extracted from some system information and not defined in the program code itself.
-In the rules below a function $principal$ is used to represent the lookup of principal names in some system.
-\mikkel{Is this an acceptable explanation?}
-\rene{Ja, men jeg tror I skal finde et sted tidligt i rapporten og forklare hvorfor I ikke har principal hierarchy med og hvorfor det er ok}
-
 \subsection{Semantic setup}
 This section will describe the semantic constituents which are used to translate a syntactical \thelang{} program into the semantical world.
 These constituents are based on the concepts: \emph{semantic domains}, \emph{semantic functions}, and \emph{semantic equations} from \cite[Chapter 9]{slonneger1995formal}.
@@ -78,13 +73,20 @@ For readability purposes, the semantic equations will be spread out over the fol
 The semantic domains of \thelang{} are primarily used to maintain state, and to give the final result of the constraint extraction: namely the constraints themselves as well as the different label types which are used to form the constraints.
 Note that we have no need for any numerals or type enumerations, since we are only interested in checking labels and forming constraints.
 
-The following list is an overview of these semantic domains ($\mathbb P$ denotes the power set):
+The following list is an overview of these semantic domains (Here $\mathcal P$ denotes the power set):
 \begin{align*}
 \iLV    & = v(\iVar) \cup c(\iVar) \cup p(\mathbb{L}) \cup j(\iLV \times \iLV) \\
-\iCstr  & = \mathbb P (\iLV \times \iLV) \\
-\iEnvF  & = \iFun \cup \{ \ifb \} \rightharpoonup \iLV \times \mathbb P (\iLV \times \iVar) \\
+\iCstr  & = \mathcal P (\iLV \times \iLV) \\
+\iEnvF  & = \iFun \cup \{ \ifb \} \rightharpoonup \iLV \times \mathcal P (\iLV \times \iVar) \times \mathcal P(\mathbb{P}) \\
 \iEnvL  & = \iVar \cup \{ \ia, \ib \} \rightharpoonup \iLV
 \end{align*}
+
+$\mathbb L$ denotes the set of all labels.
+
+$\mathbb P$ the set of all principals.
+Principals are expected to be extracted from some system information and not defined in the program code itself.
+Instead we make us of a function $principal$, which is used to represent the lookup of principal names in some system:
+\[ principal = \iPrin \rightarrow \mathbb P \]
 
 $\iLV$ is a set of \emph{label values}, not to be confused with actual labels.
 In order to differ between the different types of labels (as described in \cref{dlm:inf:types}), we utilize concept of \emph{tagged values}.
@@ -103,7 +105,7 @@ When we have both $\sqcup$ and $\sqsubseteq$ in a ``quoted expression'', the pre
 $\iEnvL$ is the label environment, which maps variable identifiers, and the two special identifiers $\ia$ (authority) and $\ib$ (block), to label values.
 The special values are propagated throughout a program, as they will change as the scope changes.
 
-$\iEnvF$ is the function environment, which maps function identifiers, and the special identifier $\ifb$ (function block), to a tuple containing the label value of the function along with all its arguments.
+$\iEnvF$ is the function environment, which maps function identifiers, and the special identifier $\ifb$ (function block), to a tuple containing the label value of the function along with all its arguments and output readers.
 Function identifiers are looked up when evaluating function calls.
 The function block identifier is used for return statements so that the ``surrounding'' function label can be looked up.
 
@@ -204,11 +206,12 @@ The latter allows for recursion.
 
 \begin{table}[H]
 \begin{semanticequations}
+% Without readers
 \csemeq{\iF}{t_f \, L_f \, f \tk ( t_1 \, l_1 \, x_1 \tk , t_2 \, l_2 \, x_2 \tk , \dots \tk , t_n \, l_n \, x_n \tk ) S}{\ienvL \; \ienvF}
 {(\icstr, \ienvF_2)}{
   \seWhere{\semeq{\iS}{S}{\ienvL_2 \; \ienvF_2}{(\icstr, \ienvL_3)}} \\
   \seAnd{\ienvL_2 = \ienvL[x_1 \mapsto \ilv_1', x_2 \mapsto \ilv_2', \dots, x_n \mapsto \ilv_n']} \\
-  \seAnd{\ienvF_2 = \ienvF[\ifb \mapsto (\ilv_f', \emptyset), f \mapsto (\ilv_f', \{(\ilv_1', x_1), (\ilv_2', x_2), \dots, (\ilv_n', x_n)\})]} \\
+  \seAnd{\ienvF_2 = \ienvF[\ifb \mapsto (\ilv_f', \emptyset, \emptyset), f \mapsto (\ilv_f', \{(\ilv_1', x_1), (\ilv_2', x_2), \dots, (\ilv_n', x_n)\}, \emptyset)]} \\
   \seAnd{\ilv_f' = \begin{cases}
     \mathlarger\sqcupl_{i = 1}^n \ilv_i' & \quad \text{if } \ilv_f = \varepsilon \\
     \ilv_f & \quad \text{otherwise}
@@ -219,6 +222,24 @@ The latter allows for recursion.
     \ilv_i & \quad otherwise
   \end{cases}} \\
   \seAnd{\iL\dblSq{L_i} \; \ienvL = \ilv_i \text{ for all } 0 \leq i \leq n}
+} \seSpace
+% With output readers
+\csemeq{\iF}{p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{<-} \; t_f \, L_f \, f \tk ( t_1 \, l_1 \, x_1 \tk , t_2 \, l_2 \, x_2 \tk , \dots \tk , t_n \, l_n \, x_n \tk ) S}{\ienvL \; \ienvF}
+{(\icstr, \ienvF_2)}{
+  \seWhere{\semeq{\iS}{S}{\ienvL_2 \; \ienvF_2}{(\icstr, \ienvL_3)}} \\
+  \seAnd{\ienvL_2 = \ienvL[x_1 \mapsto \ilv_1', x_2 \mapsto \ilv_2', \dots, x_n \mapsto \ilv_n']} \\
+  \seAnd{\ienvF_2 = \ienvF[\ifb \mapsto (\ilv_f', \emptyset, R_o), f \mapsto (\ilv_f', \{(\ilv_1', x_1), (\ilv_2', x_2), \dots, (\ilv_n', x_n)\}, R_o)]} \\
+  \seAnd{\ilv_f' = \begin{cases}
+    \mathlarger\sqcupl_{i = 1}^n \ilv_i' & \quad \text{if } \ilv_f = \varepsilon \\
+    \ilv_f & \quad \text{otherwise}
+  \end{cases}} \\
+  \seAnd{\iL\dblSq{L_f} \; \ienvL = \ilv_f} \\
+  \seAnd{\ilv_i' = \begin{cases}
+    c(x_i) & \quad \text{if } \ilv_i = \varepsilon \\
+    \ilv_i & \quad otherwise
+  \end{cases}} \\
+  \seAnd{\iL\dblSq{L_i} \; \ienvL = \ilv_i \text{ for all } 0 \leq i \leq n} \\
+  \seAnd{R_o = \{ p_i' | p_i' = principal p_i \}}
 }
 \end{semanticequations}
 \caption{Semantic equation for function declaration}
@@ -451,8 +472,8 @@ with the following definition:
   \seAnd{\semeq{\iE}{E_i}{\ienvL \; \ienvF}{(\icstr_i, \ilv_i)} \text{ for } 0 \leq i \leq n}
 } \seSpace
 % declared function call
-\csemeq{\iE}{f \tk ( E_1 \tk , E_2 \tk , \dots \tk , E_n \tk )}{\ienvL \; \ienvF}{(cstr_a \cup cstr_p, \ilv_f')}{
-  \seIf{\ienvF \; f = (\ilv_f, \{(\ilv_1, x_1), (\ilv_2, x_2), \dots, (\ilv_n, x_n)\}) \text{ and}} \\
+\csemeq{\iE}{f \tk ( E_1 \tk , E_2 \tk , \dots \tk , E_n \tk )}{\ienvL \; \ienvF}{(cstr_a \cup cstr_p \cup cstr_o, \ilv_f')}{
+  \seIf{\ienvF \; f = (\ilv_f, \{(\ilv_1, x_1), (\ilv_2, x_2), \dots, (\ilv_n, x_n)\}, \{ r_1, r_2, \dots, r_k \}) \text{ and}} \\
   \seWhere{replaceConstants(\ilv_f, \ienvL_2) = \ilv_f'} \\
   \seAnd{\icstr_a = \bigcup\limits_{i=1}^n \icstr_i} \\
   \seAnd{\icstr_p = \bigcup\limits_{i=1}^n \begin{cases}
@@ -460,7 +481,13 @@ with the following definition:
     \{ \literal{\ilv_{E_i} \sqsubseteq \ilv_i} \} & \text{otherwise}
     \end{cases}} \\
   \seAnd{\semeq{\iE}{E_i}{\ienvL \; \ienvF}{(cstr_i, \ilv_{E_i}) \text{ for } 0 \leq i \leq n}} \\
-  \seAnd{\ienvL_2 = \ienvL[x_1 \mapsto \ilv_{E_1}, x_2 \mapsto \ilv_{E_2}, \dots, x_n \mapsto \ilv_{E_n}]}
+  \seAnd{\ienvL_2 = \ienvL[x_1 \mapsto \ilv_{E_1}, x_2 \mapsto \ilv_{E_2}, \dots, x_n \mapsto \ilv_{E_n}]} \\
+  \seAnd{cstr_o = \begin{cases}
+      \bigcup\limits_{i=1}^n \{ \literal{lv_{E_i} \sqsubseteq lv_o} \} & \quad \text{if } k > 0 \\
+      \emptyset & \quad \text{otherwise}
+    \end{cases}} \\
+  \seAnd{lv_o = \bigcup_{p \in P}\{ p \rightarrow r_1, r_2, \dots, r_k \}} \\
+  \seAnd{P = \{ p' | (p \rightarrow p') \in principal \}}
 }
 \end{semanticequations}
 \caption{Semantic equations for function calls}
