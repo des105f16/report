@@ -412,6 +412,28 @@ This is a result of the definition
 Restriction for constant labels is undefined for certain label types.
 The definition below specifies how
 
+\subsection{Output channels}
+As previously described, the way output channels are checked is by comparing the reader set of the output with the effective reader set of the outputted value(s).
+This means that if we have an output channel $c$ with readers $R_c$ and some labeled output values $V$, we must have that
+\[ \forall v \in V.R_c \subseteq readers(\underline{v}) \]
+in order for the flow to be valid.
+
+We will instead opt for a different method, so that we can leave the checking of output channels to our inference algorithm, similar to any other inferrable construct.
+
+\begin{definition}{Output channel constraints}
+Say that we have the set of all readers $ * = \{p_1, p_2, \dots, p_k\} $ and an output channel $c$ with readers $R_c$ and labeled input values $V$.
+
+We then define the label for output channel $c$ as
+\[ L_c = \{ p_1 \rightarrow R_c; p_2 \rightarrow R_c, \dots, p_k \rightarrow R_c \} \]
+
+In order for values $V$ to flow through $c$, we must have that
+\[ \forall v \in V.\underline{v} \sqsubseteq L_c \]
+\end{definition}
+
+This definition instead relies on \cref{dlm:def:restrict} to compare the labels of the output channel and the inputs.
+By adding all principals to the owner set of $L_c$, the first criteria will always hold, and the $\sqsubseteq$ relation will effectively only be a comparison of readers.
+Similar to the former method of comparing the readers of the output channel to the effective reader set of output values, the check will only hold when all the readers declared by the output channel are apparent in the policies of the output values.
+
 \subsection{Inference algorithm}\label{dlm:inf:algsection}
 Using the established extensions of labels we present the inference algorithm (see \cref{dlm:inf:algorithm}).
 In the following we provide an informal description of the algorithm to aid the reader.
