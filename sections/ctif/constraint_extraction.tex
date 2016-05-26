@@ -173,7 +173,7 @@ As the label value for an undeclared label depends on its context, $\varepsilon$
 % Empty
 &\semeq{\iL}{\varepsilon}{\ienvL}{\varepsilon} \seSpace
 % Policy
-&\semeq{\iL}{\tk{\{\{} pol \tk{\}\}}}{\ienvL}{semeq{\iL}{pol}{\ienvL}} \seSpace % gives error when using semeq commands
+&\semeq{\iL}{\tk{\{\{} pol \tk{\}\}}}{\ienvL}{\iL [\![pol]\!] \; \ienvL} \seSpace % gives error when using semeq commands
 % Composite Policy
 \csemeq{\iL}{pol_1 \tk ; pol_2}{\ienvL}{j(\ilv_1, \ilv_2)}{
   \seWhere{\semeq{\iL}{pol_1}{\ienvL}{\ilv_1}} \\
@@ -193,7 +193,6 @@ As the label value for an undeclared label depends on its context, $\varepsilon$
 \caption{Semantic equations for label and policy}
 \label{cstr:label_policy}
 \end{table}
-\mikaelin{Fix weird latex that won't use the semeq command.}
 
 \subsection{Function Declarations}
 Function declaration (along with function call) can easily be considered the most complex rule(s).
@@ -408,14 +407,13 @@ Most rules for expression evaluation produce no constraints and have a simple de
   \seAnd{\semeq{\iE}{E_2}{\ienvL \; \ienvF}{(\icstr_2, \ilv_2)}}
 } \seSpace
 % Unary Operator
-&\semeq{\iE}{op_u \; E}{\ienvL \; \ienvF}{semeq{\iE}{E}{\ienvL \; \ienvF}{}} \seSpace % gives error when using semeq command
+&\semeq{\iE}{op_u \; E}{\ienvL \; \ienvF}{\iE [\![E]\!] \; \ienvL \; \ienvF} \seSpace % gives error when using semeq command
 % Parentheses
-&\semeq{\iE}{\tk ( E \tk )}{\ienvL \; \ienvF}{semeq{\iE}{E}{\ienvL \; \ienvF}{}}
+&\semeq{\iE}{\tk ( E \tk )}{\ienvL \; \ienvF}{\iE [\![E]\!] \; \ienvL \; \ienvF}
 \end{semanticequations}
 \caption{Semantic equations for expressions}
 \label{cstr:expressions}
 \end{table}
-\mikaelin{Fix weird latex that won't use the semeq command.}
 
 \subsection{Declassification}
 The two rules for declassification show some of the simplicity that is part of inference.
