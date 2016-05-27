@@ -17,20 +17,22 @@ Following the list will be some elaborations where necessary.
   \item External libraries
 \end{itemize}
 
-\myparagraph{Structs}
-It is possible to make struct definitions, so that the defined type can be used as any other type throughout a program.
-However, it is not possible to initialize a struct.
+\myparagraph{Structs and arrays}
+It is possible to make define structs, so that the defined type can be used similarly to any other type.
+Both structs and arrays can be declared, arrays by using pointer-notation.
+However, it is not possible to initialize neither struct or array.
+We still have index and element expressions, with a simple implementation, which only takes into account the label of the struct/array variables.
+
+We have chosen to leave initilization for structs and arrays out for now, as we found no proper solution for handling policies for individual fields and elements.
+The problems related to these become even more apparent when trying to include time policies.
 \mikael{Måske noget om vores problemer ift. tid? Og om det ulogiske ved label på en type?}
 
 \myparagraph{Pointers}
-It is only possible to make pointer declarations.
-Pointer dereferencing and address expressions are not allowed.
-It is deemed to big of a subject to handle within the scope of this report, especially when trying to take into consideration pointer arithmetics.\footnote{\url{https://www.securecoding.cert.org/confluence/display/c/EXP08-C.+Ensure+pointer+arithmetic+is+used+correctly}}
-In \cite{muller2015cif} the simple pointer operations are handled undifferently from any other declaration or assignment, and they prohibit the use of pointer arithmetic.
-Similarly, in \cite{maciazek2016cbif} there is support for pointers with assignment of addresses.
+Similar to both \cite{muller2015cif} and \cite{maciazek2016cbif} we allow for pointer declarations and for the two pointer operations dereference and address-of, but disallow pointer arithmetics.
+It is deemed to big of a subject to handle within the scope of this report, and without proper handling it is potentially highly error-prone.\footnote{\url{https://www.securecoding.cert.org/confluence/display/c/EXP08-C.+Ensure+pointer+arithmetic+is+used+correctly}}
 \mikael{Skal stadig forklares bedre, men nu er kilderne der.}
 
-Having pointer declarations allows us to reference arrays, even though we cannot initialize an array.
+Having pointer declarations allows us to reference arrays and array index expressions, even though we cannot initialize an array.
 
 \myparagraph{Boolean and arithmetic operators}
 The following boolean and arithmetic operators are allowed:
