@@ -68,12 +68,11 @@ The fully labeled source can be seen in \cref{example:code:check_password-explic
 
 \subsection{Function declarations}
 The first thing we would want to label in a program is what can be seen as the bigger components; the functions that either obtain data from outside or send data to outside the program -- our channels.
-In \thelang{} we have no distinction between input channels and any other function with a return value.
-However, output channels are distinguishable by having the \dlmc{<-} construct, preceded by one or more principals.
-Output channels are handled the same as other functions.
-Additionally, the effective reader sets of the labels of the arguments are compared with that of the output channel.
+In \thelang{} we have no distinction between input channels and any other function which has a return value.
+However, output channels are distinguishable by having the \dlmc{<-} construct, preceded by one or more principals (readers).
+Output channel declarations are initially checked as with any other function.
 
-For \dlmc{check_password} we have the 3 auxiliary functions as well as the \dlmc{check_password} function itself, which we would label as so:\\
+For \dlmc{check_password} we have the 3 auxiliary functions, as well as the \dlmc{check_password} function itself, which we would label as so:\\
 \begin{minipage}{\linewidth}
 \lstinputlisting[style=dlmc, numbers=left, linerange={11-15}, firstnumber=11]{dlm_examples/report/check_password-explicit.ncif}
 \end{minipage}
@@ -84,14 +83,12 @@ The password checker is a trusted principal which has access to the user databas
 The final output is sent to an output channel which is readable only be the user.
 
 \dlmc{check_password} returns the comparison result, which is owned by and readable by the user only.
-Here we also need to add labels to the parameters, otherwise we would not be able to statically check the function, as the actual labels for the parameters could differ between different calls to the function, but by supplying the labels we know that they will have policies no more strict.
+Here we also need to add labels to the parameters, otherwise we would not be able to statically check the function, as the actual labels for the parameters could differ between different calls to the function, but by supplying the labels we know that the policies will have to hold.
 When supplied with a label, parameters are treated as any other variable when evaluating a function declaration.
-However, if no label is supplied for a parameter, that parameter is recognized as a \emph{constant label}, which means that when running the inference algorithm we cannot lessen the label of a parameter in the same way we could a \emph{variable label}.
+However, if no label is supplied for a parameter, that parameter is recognized as labeled with a constant label.
 
 \myparagraph{Parameters}
 Another interesting possibility when declaring the return label is the ability to reference parameter labels.
-By default, an unlabeled function will have an implicit label which is the join of all of its parameters ($\bot$ if it has none).
-This is also how external functions are always labeled.
 This is done by simply stating the parameter name in the label, and possibly joining it with other policies by using the join operator.
 
 This ability to reference parameters is useful when declaring helper methods that should maintain the policies of its parameters.
@@ -102,7 +99,7 @@ Then we could have declared that function as: \\
   \dlmc{int \{\{s1;s2\}\} strcmp2(char * s1, char * s2, int \{\{_\}\} x);}
 \end{minipage}
 
-This is a form of label polymorphism, as the return label of \dlmc{strcmp2} will always depend on the calling arguments \dlmc{s1} and \dlmc{s2}, which can differ depending on its usage.
+This is a form of label polymorphism, as the return label of \dlmc{strcmp2} will always depend on the calling arguments \dlmc{s1} and \dlmc{s2}, which can differ between actual calls.
 
 \subsection{Variable declarations}
 The labeling of variable declarations is done mainly to oblige the return values of functions and input, given by either parameters or auxiliary function calls.
@@ -114,7 +111,7 @@ For \dlmc{check_password} we have the following labeling of variables:\\
 \end{minipage}
 
 The labeling applied here is done so that it obliges the different inputs to the method.
-The most noteworthy thing here is the labeling of \dlmc{match}, as it through its assignment within both the \dlmc{while} and \dlmc{if} blocks will implicitly obtain knowledge of all other labeled values.
+The most noteworthy here is the labeling of \dlmc{match}, as it through its assignment within both the \dlmc{while} and \dlmc{if} blocks will implicitly obtain knowledge of all other labeled values.
 It is therefore labeled with the join of all those labels: \dlmc{\{\{u->;pc->\}\}} so that it is at most as strict as all.
 
 \subsection{If-acts-for and declassification}\label{ctif:informal:ifactsfor_declassify}
@@ -130,9 +127,7 @@ For \dlmc{check_password} we need to declassify and return \dlmc{match}:\\
 As can be seen we also need to obtain the proper authority before such a declassification is possible.
 This is done by using the \emph{if-acts-for} statement, identified by the \dlmc{-->?}, which is preceded by type of authority and followed by principals to acquire authority for.
 During compile time checking we do not differ between the special keywords \dlmc{this} and \dlmc{caller}.
-
-In this case we need \dlmc{u} in order to add \dlmc{u} as a reader to its own policy.
-We also need to clear the return value's label of the policy of \dlmc{pc}, as explained in the beginning of this subsection.
+After obtaining the proper effective authority, we need to clear the return value's label of the policy of \dlmc{pc}, as explained in the beginning of this subsection.
 
 It is possible to leave out the explicit label of the declassification, as we will see in the following subsection.
 
