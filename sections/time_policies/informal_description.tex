@@ -12,7 +12,7 @@ As we have different principals in our system, which have different requirements
 To do this we extend the previously defined syntax for labels and include some language constructs that simplify how to work with time considerations.
 This language feature is not considered an extension of the labels defined by DLM.
 One of the reasons for this is that statically determining which time policy is the most restrictive and how to join two policies together present some difficulties.
-In \mikkel{Insert ref} we will go into details about these challenges.
+In \cref{time:inference} we will go into details about these challenges.
 
 Even though the time policies do not fit in the same model as the labels defined by DLM, we have chosen to provide a shared syntax for both types of security policies.
 Grouping all the security policies together like this, will make it easier for the programmer to identify which policies apply in a specific context.
@@ -68,6 +68,112 @@ If an interval is not declared but a period is, count specifies the number of re
   Another example \dlmc{\{\{u->u, ec@00:00-09:00 30m\}\}}, allows \dlmc{u} unlimited access.
   \dlmc{ec}, however, is restricted to reading between midnight and 9 in the morning, and with a minimum of 30 minutes passing between each access.
 \end{example}
+
+\mikkel{Time policies applied to the examples}
+
+\subsection{Inference of time policies}\label{time:inference}
+Having described how label information is propagated from declaration to dependencies we effectively allow the programmer to specify policies only where they make some intuitive sense.
+The many benefits of this has already been described and is due to the use of the inference algorithm.
+We would like for this algorithm to infer time policies in the same fashion as it infers owner/reader policies.
+To do that we would have to expand the label model with time policies.
+
+Time policies could be defined as a tuple $(p_s, p_e, i, c)$, describing the period, interval and count of the policy.
+Part of a label would then involve a function that defines the time policy of each of the labels principals.
+
+In the following we will use various tuple sizes for representing time policies, depending on which components are relevant to the context.
+A tuple that does not contain all four time policy components is meant to represent only a part of a policy.
+Which part will be clear from the use of $p$, $i$ and $c$ in each context.
+
+Examining the algorithm (page \pageref{dlm:inf:algorithm}) we see that in order to infer time policies we must be able to define the $\sqsubseteq$ and $\sqcap$ operations for these time policies.
+Additionally we would want to define $\sqcup$ for a complete lattice of time policies.
+
+\subsubsection{Time policy restriction}
+We will start with a definition for whether a time policy $(p_{s1}, p_{e1}, i_1, c_1)$ is no more restrictive than another $(p_{s2}, p_{e2}, i_2, c_2)$.
+Defining this operation for any single time policy component is quite simple:
+\begin{itemize}
+  \item If a period contains another period it is no more restrictive than that period; \\
+  $(p_{s1}, p_{e1}) \sqsubseteq (p_{s2}, p_{e2}) \text{ if } [p_{s1}; p_{e1}[ \; \supseteq [p_{s2}; p_{e2}[$
+  \item A time interval is no more restrictive than a longer time interval; \\
+  $i_1 \sqsubseteq i_2 \text{ if } i_1 \leq i_2$
+  \item A number of allowed counts is no more restrictive than a lower number of counts;
+  $c_1 \sqsubseteq c_2 \text{ if } c_1 \geq c_2$
+\end{itemize}
+
+When comparing two full time policies, we can start by comparing the time periods.
+If we find that a policy is more restrictive here, we say that the entire policy is more restrictive.
+If not, we will look at the interval and count component.
+We make this distinction, as the period component specifies at which point in time the remaining components apply.
+
+When comparing the interval and count the process is not as obvious, as we present three options for how these two components could be compared:
+
+\begin{enumerate}
+  \item Determine if interval is more restrictive and if not, determine count.
+  \item Determine if count is more restrictive and if not, determine interval.
+  \item Compare the two policies by the number of reads allowed per time unit; \\
+  $(i_1, c_1) \sqsubseteq (i_2, c_2) \text{ if } \displaystyle\frac{c_1}{i_1} \geq \frac{c_2}{i_2}$
+\end{enumerate}
+
+We do not consider either of these policies to be the \textit{correct} one.
+It might be tempting to consider the latter as the best choice since it simultaneously considers both interval and count.
+It does however not encompass all considerations.
+Below follows an example that illustrates the difficulty associated with selecting a definition:
+
+\begin{example}{Comparing time policies}
+  Consider the two time policies $t_1$ and $t_2$, declared as \dlmc{10m*10} and \dlmc{5m*5}.
+
+  If we apply the first definition, we note that \dlmc{10m} is more restrictive than \dlmc{5m} and so $t_1 \sqsubseteq t_2$ must be false.
+  As \dlmc{*10} is less restrictive than \dlmc{*5}, the second definition yields the same result.
+  Finally using the third definition $t_1 \sqsubseteq t_2$ must be true, as each policies allows for one read per minute.
+
+  If we flip the operands to $t_2 \sqsubseteq t_1$ the definitions yields true, true and true.
+  Thus the final definition is not able to establish an order for the two policies.
+
+  Having the freedom to do 10 reads at any time in 10 minutes does however provide some additional freedom over two times 5 reads in 5 minutes; the option to freely determine when the 10 reads are used.
+\end{example}
+
+We will not go into further details about selecting an appropriate definition.
+Selecting which to use could be left to the programmer when applying time policies to his application.
+
+\subsubsection{Combining time policies}
+Having an approximate definition for the $\sqsubseteq$ operation on time policies we will try to define a matching definition for joins and meets of time policies.
+As one is the inverse of the other we will only consider meets of policies.
+This fills our requirement for the inference algorithm.
+With a definition for meet it should be simple to also provide a definition for joins.
+The meet of two time policies should be:
+\begin{center}
+  \textit{The most restrictive policy that is no more restrictive than either operand.}
+\end{center}
+
+As above we start by only considering time policy periods, and provide the following definition:
+$$(p_{s1}, p_{e1}) \sqcap (p_{s2}, p_{e2}) = (\text{max}(p_{s1}, p_{s2}), \text{min}(p_{e1}, p_{e2})$$
+
+Again we note that time periods yields a simple definition for our operations.
+However when we examine intervals and count we run into difficulties.
+As with $\sqsubseteq$ we could opt for a per-component evaluation of policies.
+Thus we would use the least restrictive interval and count in our resulting policy.
+We could also employ the \textit{reads per time unit} definition and use some \textit{reasonable} interval and count for the resulting policy.
+
+Thus is it possible to define some set of operations for time policy inference.
+Unfortunately, given the example below, the result is of little use to us.
+
+\begin{example}{Issues with inference}
+  Consider two slots with the time policies \dlmc{10m*10} and \dlmc{5m*5}.
+  A natural use of inference is to store the sum of the two slots in a third slot, yielding a new time policy for that slot.
+  Reading the value from this slot does not require time policies, as it will not be updated with a new value until the two original slots are updated.
+  And these are protected by time policies.
+\end{example}
+
+The issue we encounter has to do with the nature of time policies as opposed to labels as we know them from DLM.
+Labels specify what we are allowed to do, but time policies specify only when we can do it.
+
+This is quite a different concept to handle, as understanding when something can happen should be evaluated at runtime, whereas our handling of labels and the tool we provide is based on static evaluation.
+We note that labels in DLM are idempotent, as meeting or joining any label $L$ with itself results in that same label.
+As this is one of the properties of a lattice, we would require our time policies to have this property as well.
+However if we chose to read from the same slot twice we would have used two reads and thus the resulting label could not be the same as that of the slot.
+
+From this it is clear that we can not provide inference of time policies in the same way that we do for labels.
+Though at the same time it is also clear that we do not stand to gain much from time policy inference, as demonstrated by the example above.
+Instead we have chosen to introduce certain language constructs that will allow time policies to be evaluated statically.
 
 \subsection{Time constructs}
 We have the two time constructs:
