@@ -41,7 +41,7 @@
 %mainmatter
 \pagenumbering{arabic} %use arabic page numbering in the mainmatter
 
-\chapter{Introduction}
+\chapter{Introduction}\label{introduction}
 \input{sections/introduction/introduction}
 \input{sections/introduction/security_problems}
 \input{sections/introduction/aiding_development}
@@ -54,12 +54,14 @@
 \input{sections/ctif/informal_description}
 \input{sections/ctif/constraint_extraction}
 
-\chapter{Time Policies}
+\chapter{Time Policies}\label{time}
 \input{sections/time_policies/ctif2_introduction}
 \input{sections/time_policies/informal_description}
 \input{sections/time_policies/pic}
 \input{sections/time_policies/timed_automata}
 \input{sections/time_policies/timed_dlm}
+
+\chapter{Conclusion}\label{conclusion}
 
 \printbibliography[heading=bibintoc]
 \label{bib:mybiblio}
