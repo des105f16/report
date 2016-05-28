@@ -33,14 +33,14 @@ The latter is not directly apparent here, as some syntactical details have been 
     R         & ::= D \\
     D         & ::= D_F \gp D_V \gp D_1 \; D_2 \\
     D_F       & ::= p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{<-} \; t_f \; l_f \; f \tk ( t_1 \; l_1 \; x_1 \tk , t_2 \; l_2 \; x_2 \tk , \dots \tk , t_n \; l_n \; x_n \tk ) S \\
-    D_V       & ::= t \; l \; x \tk = E \gp t \; l \; x \\
+    D_V       & ::= t \; l \; \tk * x \tk = E \gp t \; l \; \tk * x \\
     S         & ::= E \gp S_1 \; S_2 \gp \varepsilon \\
               & \gp D_V \\
               & \gp \tk{while} \tk ( E \tk ) S \gp \tk{if} \tk ( E \tk ) S \gp \tk{if} \tk ( E \tk ) S_1 \tk{else} S_2 \\
               & \gp x \tk = E \\
               & \gp \tk{return} E \gp \tk{return} \\
               & \gp \tk{this} \tk{-{}->?} p_1 \tk , p_2 \tk , \dots \tk , p_k \; S \gp \tk{caller} \tk{-{}->?} p_1 \tk , p_2 \tk , \dots \tk , p_k \; S \\
-    E         & ::= x \gp k \gp E_1 \; op_b \; E_2 \gp op_u \; E \gp \tk ( E \tk ) \gp E \texttt{.} x_f \gp x \texttt{[} E \texttt{]} \\
+    E         & ::= x \gp k \gp E_1 \; op_b \; E_2 \gp op_u \; E \gp \tk ( E \tk ) \gp E \texttt{.} x_f \gp E \texttt{->} x_f \gp x \texttt{[} E \texttt{]} \\
               & \gp \tk{<|} E \tk , l \tk{|>} \gp \tk{<|} E \tk{|>} \\
               & \gp f \tk{<{}<{}<} p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{>{}>{}>} \tk ( E_1 \tk , E_2 \tk , \dots \tk , E_n \tk ) \\
     L         & ::= \tk{\{\{} P \tk{\}\}} \gp \varepsilon \\
@@ -56,6 +56,16 @@ We will however briefly discuss a few details that might be of special interest:
 \paragraph{Simplified arithmetics}
 As the semantics, described in this section, only concerns how data \textit{flows} and not its value on execution we can simplify the possible binary and unary operations into two rules.
 Doing so provides for a less cluttered syntax and a clearer focus on the label semantics that are expressed.
+
+\paragraph{Pointer declaration}
+The \tk{*} used in variable declarations, to indicate a pointer declaration, is optional.
+Whether a variable is a pointer or not has no meaning for the evaluation of labels, so the handling of pointer type checking is completely left to the C compiler.
+Therefore it will not be apparent in the syntax in the rules for variable declaration.
+
+\paragraph{Struct fields}
+We make use of the special identifier $x_f$ for struct fields access.
+It has no meaning in evaluating the program, as will be apparent in the rules for the struct field expression.
+The actual checking of struct fields and the matching struct definition is handled by the C compiler.
 
 \paragraph{Empty labels}
 No value (represented by $\varepsilon$) can be provided for any label declaration.
@@ -394,7 +404,13 @@ Most rules for expression evaluation produce no constraints and have a simple de
 % Unary Operator
 &\semeq{\iE}{op_u \; E}{\ienvL \; \ienvF}{\iE [\![E]\!] \; \ienvL \; \ienvF} \seSpace % gives error when using semeq command
 % Parentheses
-&\semeq{\iE}{\tk ( E \tk )}{\ienvL \; \ienvF}{\iE [\![E]\!] \; \ienvL \; \ienvF}
+&\semeq{\iE}{\tk ( E \tk )}{\ienvL \; \ienvF}{\iE [\![E]\!] \; \ienvL \; \ienvF} \seSpace
+&\semeq{\iE}{E \texttt{.} x_f}{\ienvL \; \ienvF}{\iE [\![E]\!] \; \ienvL \; \ienvF} \seSpace
+&\semeq{\iE}{E \texttt{->} x_f}{\ienvL \; \ienvF}{\iE [\![E]\!] \; \ienvL \; \ienvF} \seSpace
+\csemeq{\iE}{x \texttt{[} E \texttt{]}}{\ienvL \; \ienvF}{(cstr_E, lv_x \sqcup lv_E)}{
+  \seWhere{\semeq{\iE}{x}{\ienvL \; \ienvF}{(\emptyset, \ilv_x)}} \\
+  \seAnd{\semeq{\iE}{E}{\ienvL \; \ienvF}{(\icstr_E, \ilv_E)}}
+}
 \end{semanticequations}
 \caption{Semantic equations for expressions}
 \label{cstr:expressions}
