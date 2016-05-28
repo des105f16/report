@@ -418,6 +418,7 @@ This means that if we have an output channel $c$ with readers $R_c$ and some lab
 in order for the flow to be valid.
 
 We will instead opt for a different method, so that we can leave the checking of output channels to our inference algorithm, similar to any other inferrable construct.
+This is so that we can use inference for output channels as well, which is not possible when using the ``simple'' comparison of reader sets.
 
 \begin{definition}{Output channel constraints}\label{dlm:def:outputconstraints}
 Say that we have the set of all readers $ * = \{p_1, p_2, \dots, p_k\} $ and an output channel $c$ with readers $R_c$ and labeled input values $V$.
@@ -432,7 +433,6 @@ In order for values $V$ to flow through $c$, we must have that
 This method instead relies on \cref{dlm:def:restrict} to compare the labels of the output channel and the inputs.
 By adding all principals to the owner set of $L_c$, (1) will always hold, and the $\sqsubseteq$ relation will effectively only be a comparison of readers.
 As can be seen in \cref{dlm:def:restrict_readers}, (2) will yield the same result as the simple comparison of reader sets.
-The check performed by $\sqsubseteq$ will then only hold when all the readers declared by the output channel are apparent in the policies of the output values.
 
 \begin{definition}{$\sqsubseteq$ and $readers$}\label{dlm:def:restrict_readers}
 Extending upon \cref{dlm:def:outputconstraints}, we will show that in order to use $\sqsubseteq$ for output channels, we must first show that
@@ -445,6 +445,8 @@ and from \cref{dlm:def:restrict} (2) we have that
 
 Through our definition of $L_c$, we have that
 \[ readers(L_c) = \bigcap\limits_{o \in *} readers(L_c, o) = \{p_1, p_2, \dots, p_k\} \]
+
+\mikaelin{Unfinished business, probably does not make sense.}
 \end{definition}
 
 \subsection{Inference algorithm}\label{dlm:inf:algsection}
