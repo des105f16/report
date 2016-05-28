@@ -25,15 +25,14 @@ The latter is not directly apparent here, as some syntactical details have been 
     L       & \in \iLbl \text{ -- Label declaration}\\
     P       & \in \iPol \text{ -- Policy declaration}\\
     op_b    & \in \{ \tk + ,  \tk - ,  \tk * ,  \tk / ,  \tk \% ,  \tk{||} ,  \tk{\&\&} ,  \tk < ,  \tk > ,  \tk{==} ,  \tk{<=} ,  \tk{>=} \} \\
-    op_u    & \in \{ \tk ! ,  \tk - \} \\
+    op_u    & \in \{ \tk ! ,  \tk - , \tk * , \tk \& \} \\
     k       & \in \{ \tk{true}, \tk{false} \} \cup \mathbf{Num} \cup \mathbf{Chr} \cup \mathbf{Str} \text{ -- Boolean, integer, char, and string literals} \\
-    t       & \in \mathbf{Types} \text{ -- C types}
+    t       & \in \mathbf{Types} \text{ -- C types (including defined structs)}
   \end{align*}
   \begin{align*}
     R         & ::= D \\
     D         & ::= D_F \gp D_V \gp D_1 \; D_2 \\
-    D_F       & ::= t_f \; l_f \; f \tk ( t_1 \; l_1 \; x_1 \tk , t_2 \; l_2 \; x_2 \tk , \dots \tk , t_n \; l_n \; x_n \tk ) S \\
-              & \gp p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{<-} \; t_f \; l_f \; f \tk ( t_1 \; l_1 \; x_1 \tk , t_2 \; l_2 \; x_2 \tk , \dots \tk , t_n \; l_n \; x_n \tk ) S \text{\mikaelin{Is ok?}} \\
+    D_F       & ::= p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{<-} \; t_f \; l_f \; f \tk ( t_1 \; l_1 \; x_1 \tk , t_2 \; l_2 \; x_2 \tk , \dots \tk , t_n \; l_n \; x_n \tk ) S \\
     D_V       & ::= t \; l \; x \tk = E \gp t \; l \; x \\
     S         & ::= E \gp S_1 \; S_2 \gp \varepsilon \\
               & \gp D_V \\
@@ -41,7 +40,7 @@ The latter is not directly apparent here, as some syntactical details have been 
               & \gp x \tk = E \\
               & \gp \tk{return} E \gp \tk{return} \\
               & \gp \tk{this} \tk{-{}->?} p_1 \tk , p_2 \tk , \dots \tk , p_k \; S \gp \tk{caller} \tk{-{}->?} p_1 \tk , p_2 \tk , \dots \tk , p_k \; S \\
-    E         & ::= x \gp k \gp E_1 \; op_b \; E_2 \gp op_u \; E \gp \tk ( E \tk ) \\
+    E         & ::= x \gp k \gp E_1 \; op_b \; E_2 \gp op_u \; E \gp \tk ( E \tk ) \gp E \texttt{.} x_f \gp x \texttt{[} E \texttt{]} \\
               & \gp \tk{<|} E \tk , l \tk{|>} \gp \tk{<|} E \tk{|>} \\
               & \gp f \tk{<{}<{}<} p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{>{}>{}>} \tk ( E_1 \tk , E_2 \tk , \dots \tk , E_n \tk ) \\
     L         & ::= \tk{\{\{} P \tk{\}\}} \gp \varepsilon \\
