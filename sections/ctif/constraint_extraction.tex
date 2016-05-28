@@ -96,6 +96,7 @@ $\mathbb P$ the set of all principals.
 Principals are expected to be extracted from some system information and not defined in the program code itself.
 Instead we make us of a function $principal$, which is used to represent the lookup of principal names in some system:
 \[ principal = \iPrin \rightarrow \mathbb P \]
+We will also make use of the special set $P^*$, where $P^* \subseteq \mathbb{P}$, representing all principals of the system.
 
 $\iLV$ is a set of \emph{label values}, not to be confused with actual labels.
 In order to differ between the different types of labels (as described in \cref{dlm:inf:types}), we utilize concept of \emph{tagged values}.
@@ -447,6 +448,7 @@ The final type of expression is a function call.
 There are two rules regarding function calls.
 One for functions that have label definitions and one for those that do not.
 The latter is meant for externally declared functions, such as library functions.
+For both rules we have that the caller authority $\tk{<{}<{}<} p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{>{}>{}>}$ is optional, and in neither rule does it have any effect, being a run-time concept.
 
 In order to evaluate function calls, where the function declaration uses constant parameters, we need to replace these constants with the corresponding argument label.
 In order to do this, we declare an auxiliary function:
@@ -463,15 +465,8 @@ with the following definition:
 
 \begin{table}[H]
 \begin{semanticequations}
-% library function call
-\csemeq{\iE}{f \tk{<{}<{}<} p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{>{}>{}>} \tk ( E_1 \tk , E_2 \tk , \dots E_n \tk )}{\ienvL \; \ienvF}{(\icstr_E, \ilv_f)}{
-  \seIf{\ienvF \; f = undefined} \text{ and} \\
-  \seWhere{\icstr_E = \bigcup_{i=1}^n \; \icstr_i} \\
-  \seAnd{\ilv_f = \sqcupl_{i=1}^n \; \ilv_i} \\
-  \seAnd{\semeq{\iE}{E_i}{\ienvL \; \ienvF}{(\icstr_i, \ilv_i)} \text{ for } 0 \leq i \leq n}
-} \seSpace
 % declared function call
-\csemeq{\iE}{f \tk ( E_1 \tk , E_2 \tk , \dots \tk , E_n \tk )}{\ienvL \; \ienvF}{(cstr_a \cup cstr_p \cup cstr_o, \ilv_f')}{
+\csemeq{\iE}{f \tk{<{}<{}<} p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{>{}>{}>} \tk ( E_1 \tk , E_2 \tk , \dots \tk , E_n \tk )}{\ienvL \; \ienvF}{(cstr_a \cup cstr_p \cup cstr_o, \ilv_f')}{
   \seIf{\ienvF \; f = (\ilv_f, \{(\ilv_1, x_1), (\ilv_2, x_2), \dots, (\ilv_n, x_n)\}, \{ r_1, r_2, \dots, r_k \}) \text{ and}} \\
   \seWhere{replaceConstants(\ilv_f, \ienvL_2) = \ilv_f'} \\
   \seAnd{\icstr_a = \bigcup\limits_{i=1}^n \icstr_i} \\
@@ -485,11 +480,16 @@ with the following definition:
       \bigcup\limits_{i=1}^n \{ \literal{lv_{E_i} \sqsubseteq lv_o} \} & \quad \text{if } k > 0 \\
       \emptyset & \quad \text{otherwise}
     \end{cases}} \\
-  \seAnd{lv_o = \bigcup_{p \in P}\{ p \rightarrow r_1, r_2, \dots, r_k \}} \\
-  \seAnd{P = \{ p' | (p \rightarrow p') \in principal \}}
+  \seAnd{lv_o = \bigcup_{p \in P^*}\{ p \rightarrow r_1, r_2, \dots, r_k \}}
+} \seSpace
+% library function call
+\csemeq{\iE}{f \tk{<{}<{}<} p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{>{}>{}>} \tk ( E_1 \tk , E_2 \tk , \dots E_n \tk )}{\ienvL \; \ienvF}{(\icstr_E, \ilv_f)}{
+  \seIf{\ienvF \; f = undefined} \text{ and} \\
+  \seWhere{\icstr_E = \bigcup_{i=1}^n \; \icstr_i} \\
+  \seAnd{\ilv_f = \sqcupl_{i=1}^n \; \ilv_i} \\
+  \seAnd{\semeq{\iE}{E_i}{\ienvL \; \ienvF}{(\icstr_i, \ilv_i)} \text{ for } 0 \leq i \leq n}
 }
 \end{semanticequations}
 \caption{Semantic equations for function calls}
 \label{cstr:functioncall}
 \end{table}
-\mikaelin{Reminder to do something about caller authority in function calls, possibly also in declaration.}
