@@ -85,20 +85,6 @@ Here we also need to add labels to the parameters, otherwise we would not be abl
 When supplied with a label, parameters are treated as any other variable when evaluating a function declaration.
 However, if no label is supplied for a parameter, that parameter is recognized as labeled with a constant label.
 
-\myparagraph{Parameters}
-Another interesting possibility when declaring the return label is the ability to reference parameter labels.
-This is done by simply stating the parameter name in the label, and possibly joining it with other policies by using the join operator.
-
-This ability to reference parameters is useful when declaring helper methods that should maintain the policies of its parameters.
-For example, we could have made a \dlmc{strcmp2} method which takes the two strings to compare, as well as some integer to limit the amount of characters we would want to compare.
-Then we could have declared that function as: \\
-\begin{minipage}{\linewidth}
-  \centering
-  \dlmc{int \{\{s1;s2\}\} strcmp2(char * s1, char * s2, int \{\{_\}\} x);}
-\end{minipage}
-
-This is a form of label polymorphism, as the return label of \dlmc{strcmp2} will always depend on the calling arguments \dlmc{s1} and \dlmc{s2}, which can differ between actual calls.
-
 \subsection{Variable declarations}
 The labeling of variable declarations is done mainly to oblige the return values of functions and input, given by either parameters or auxiliary function calls.
 This is also why most of these labels are easier to infer, and can therefore often be left out, as we shall see later in this section.
@@ -142,13 +128,48 @@ An overview of the different rules that apply are given here:
   \begin{tabularx}{\textwidth}{|l|X|}
     \hline
     \textbf{Construct} & \textbf{Default label} \\ \hline \hline
-    Function & The join of all parameter labels \\ \hline
-    Parameter & Constant label \\ \hline
     Variable & Variable label \\ \hline
     Declassification & Variable label \\ \hline
+    Function & The join of all parameter labels \\ \hline
+    Parameter & Constant label \\ \hline
   \end{tabularx}
   \caption{Default labels for unlabeled constructs}
   \label{informal:table:default_labels}
 \end{table}
 
-\mikaelin{Write about inference.}
+As described in \cref{dlm:inf:types}, we have the concepts of \emph{variable labels} and \emph{constant labels}.
+Variable labels are the main enablers of the inference algorithm, as it allows for implicitly labeling certain values that in themselves do not need a label, but are instead related to other values that do.
+Constant labels, in a similar fashion, allow for the abstraction of only applying labels where it is critical, allowing for some implicity when defining the security of functions.
+We have updated the password checker example (see \cref{example:code:check_password-implicit}), removing all explicitly declared labels that instead can be inferred.
+
+\lstinputlisting[float, style=dlmc, numbers=left, caption={Labeled Password checker example -- with default labels}, label=example:code:check_password-implicit]{dlm_examples/report/check_password-implicit.ncif}
+
+\myparagraph{Variable}
+As explained above, by removing the explicitly declared label for a variable, we instead rely on the inference algorithm to satisfy any constraints.
+Since we have explicitly declared the labels for all our channels and \dlmc{check_password}, we do not need to explicitly label all our variables as well.
+This results us in being able to leave out all label declarations for variables.
+
+\myparagraph{Declassification}
+Similar to variables, we can leave out the explicitly declared label for the declassification expression.
+This creates a variable label for that expression, so that we can rely on inference in a similar fashion as with any other value labeled with a variable label.
+
+\myparagraph{Functions and parameters}
+If no explicitly declared label is found for a function declaration, the label defaults to a join of all parameter labels ($\bot$ if the function has no parameters).
+This is based on an assumption about the minimum security needed for a function, in that whatever a function returns can be related to at most whatever arguments are given.
+This is useful for declaring auxiliary functions, without having to explicitly declare the security implications of such a function.
+
+For our password checker we could declare an auxiliary function \dlmc{strcicmp}, for doing a case-insensitive check of usernames, with the following prototype:\\
+\begin{minipage}{\linewidth}
+  \centering
+  \dlmc{bool strcicmp(char *a, char *b);}
+\end{minipage}
+\dlmc{stricmp} would then have the label \dlmc{\{\{a;b\}}}, per our default label for function declarations, and any evaluation of calls to \dlmc{stricmp} would result in a label which is the join of all its arguments.
+This is the default behaviour of library functions, which can be overridden by declaring a labeled prototype with the corresponding library function signature.
+
+Extending on the concept of referencing parameter labels in function return labels, we can choose which parameters to reference.
+If we take the function \dlmc{stricmp} and want to extend it with a maximum amount of characters to compare before failing, we could have that its signature was:\\
+\begin{minipage}{\linewidth}
+  \centering
+  \dlmc{bool \{\{a;b\}\} stricmp(char *a, char *b, int max_length);}
+\end{minipage}
+Similar to the previous example, we have that any calls to \dlmc{stricmp} will be evaluated to the join of its arguments, but this time only the arguments \dlmc{a} and \dlmc{b}, thus any security applied to \dlmc{max_length} will not affect the label of the return value.
