@@ -154,10 +154,10 @@ In order to check that security policies are enforced throughout a program, we n
 To do this we introduce the ``at most as restrictive as''-relation ($\sqsubseteq$) from \cite{myers1997}.
 
 \begin{definition}{Label Restrictiveness}\label{dlm:def:restrict}
-  Label $L_1$ is at most as restrictive as label $L_2$ ($L_1 \sqsubseteq L_2$) if it does not have more owners and each owner does not have a smaller reader set:
+  Label $L_1$ is at most as restrictive as label $L_2$ ($L_1 \sqsubseteq L_2$) if it (1) does not have more owners and (2) each owner does not have a smaller reader set:
   \begin{align*}
-    & owners(L_1) \subseteq owners(L_2) \text{ and} \\
-    & \forall o \in owners(L_1) , readers(L_1, o) \supseteq readers(L_2, o)
+    & \text{(1) } owners(L_1) \subseteq owners(L_2) \text{ and} \\
+    & \text{(2) } \forall o \in owners(L_1) . readers(L_1, o) \supseteq readers(L_2, o)
   \end{align*}
 \end{definition}
 
@@ -430,7 +430,7 @@ In order for values $V$ to flow through $c$, we must have that
 \end{definition}
 
 This definition instead relies on \cref{dlm:def:restrict} to compare the labels of the output channel and the inputs.
-By adding all principals to the owner set of $L_c$, the first criteria will always hold, and the $\sqsubseteq$ relation will effectively only be a comparison of readers.
+By adding all principals to the owner set of $L_c$, (1) will always hold, and the $\sqsubseteq$ relation will effectively only be a comparison of readers.
 Similar to the former method of comparing the readers of the output channel to the effective reader set of output values, the check will only hold when all the readers declared by the output channel are apparent in the policies of the output values.
 
 \subsection{Inference algorithm}\label{dlm:inf:algsection}
