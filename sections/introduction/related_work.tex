@@ -3,11 +3,11 @@
 \section{Related work}
 Despite DLM having been around for near two decades now \cite{myers1997}, not much work have been put into putting the theory into use.
 One exception is of course \emph{Java Information Flow} (JIF)\footnote{\url{https://www.cs.cornell.edu/jif/}}, a project related to the original authors.
-However, by using JIF, and thereby Java and a Java Virtual Machine (JVM), one is somewhat limited in actual applications.
+However, by using JIF, and thereby Java and a Java Virtual Machine (JVM), one is somewhat limited in actual applications, especially in regards to IoT devices.
 This is why we want to explore the possibility of applying DLM to C.
 
 Two recent projects have also explored this, \emph{C Information Flow} (CIF) \cite{muller2015cif} and \emph{Content-Based Information Flow Control} (CBIF) \cite{maciazek2016cbif}.
-The premise for both projects, and for our project as well, is very similar.
+These two projects, including our project as well, are very similar.
 All extend C with DLM constructs, making it possible to annotate code with security policies, and statically check that policies are not violated throughout program flow.
 None spend any time on run-time related concepts.
 
