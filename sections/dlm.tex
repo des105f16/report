@@ -64,7 +64,7 @@ He is however still allowed to change his policy.
 \myparagraph{The effective reader set}
 To ensure that the policies of all owners in a label are enforced, only readers that all owners ``agree'' can read from the slot associated with the label.
 This is known as the \emph{effective reader set}, which is the intersection of \emph{all} reader sets of a label:
-\begin{definition}{The effective reader set}
+\begin{definition}{The effective reader set}\label{dlm:def:effectivereaders}
   The reader set of a label $L$ is the set of readers that are in the reader set of all owners:
   $$readers(L) = \bigcap_{o \in *} readers(L, o)$$
 \end{definition}
@@ -419,7 +419,7 @@ in order for the flow to be valid.
 
 We will instead opt for a different method, so that we can leave the checking of output channels to our inference algorithm, similar to any other inferrable construct.
 
-\begin{definition}{Output channel constraints}
+\begin{definition}{Output channel constraints}\label{dlm:def:outputconstraints}
 Say that we have the set of all readers $ * = \{p_1, p_2, \dots, p_k\} $ and an output channel $c$ with readers $R_c$ and labeled input values $V$.
 
 We then define the label for output channel $c$ as
@@ -429,9 +429,23 @@ In order for values $V$ to flow through $c$, we must have that
 \[ \forall v \in V.\underline{v} \sqsubseteq L_c \]
 \end{definition}
 
-This definition instead relies on \cref{dlm:def:restrict} to compare the labels of the output channel and the inputs.
+This method instead relies on \cref{dlm:def:restrict} to compare the labels of the output channel and the inputs.
 By adding all principals to the owner set of $L_c$, (1) will always hold, and the $\sqsubseteq$ relation will effectively only be a comparison of readers.
-Similar to the former method of comparing the readers of the output channel to the effective reader set of output values, the check will only hold when all the readers declared by the output channel are apparent in the policies of the output values.
+As can be seen in \cref{dlm:def:restrict_readers}, (2) will yield the same result as the simple comparison of reader sets.
+The check performed by $\sqsubseteq$ will then only hold when all the readers declared by the output channel are apparent in the policies of the output values.
+
+\begin{definition}{$\sqsubseteq$ and $readers$}\label{dlm:def:restrict_readers}
+Extending upon \cref{dlm:def:outputconstraints}, we will show that in order to use $\sqsubseteq$ for output channels, we must first show that
+\[ \forall v \in V . \underline{v} \sqsubseteq L_c \equiv readers(c) \subseteq readers(\underline{v}) \]
+
+From \cref{dlm:def:effectivereaders} we have that
+\[ readers(L) = \bigcap_{o \in *} readers(L, o) \]
+and from \cref{dlm:def:restrict} (2) we have that
+\[ \forall o \in owners(\underline{v}) . readers(\underline{v}, o) \supseteq readers(L_c, o) \]
+
+Through our definition of $L_c$, we have that
+\[ readers(L_c) = \bigcap\limits_{o \in *} readers(L_c, o) = \{p_1, p_2, \dots, p_k\} \]
+\end{definition}
 
 \subsection{Inference algorithm}\label{dlm:inf:algsection}
 Using the established extensions of labels we present the inference algorithm (see \cref{dlm:inf:algorithm}).
