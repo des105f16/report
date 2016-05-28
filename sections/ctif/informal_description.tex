@@ -9,34 +9,32 @@ Following the list will be some elaborations where necessary.
 \begin{itemize}
   \item Variables
   \item Simple types (int, bool, char, string)
-  \item Struct type definitions
-  \item Pointer declarations
+  \item Structs
+  \item Pointers
   \item Function prototypes, declarations, and calls
   \item Boolean and arithmetic operators
-  \item \emph{if}- and \emph{while} control structures
+  \item \emph{if}- and \emph{while} control statements
   \item External libraries
 \end{itemize}
 
 \myparagraph{Structs and arrays}
-It is possible to make define structs, so that the defined type can be used similarly to any other type.
+It is possible to define structs, so that the defined type can be used similarly to any other type.
 Both structs and arrays can be declared, arrays by using pointer-notation.
 However, it is not possible to initialize neither struct or array.
 We still have index and element expressions, with a simple implementation, which only takes into account the label of the struct/array variables.
 
 We have chosen to leave initilization for structs and arrays out for now, as we found no proper solution for handling policies for individual fields and elements.
-The problems related to these become even more apparent when trying to include time policies.
-\mikael{Måske noget om vores problemer ift. tid? Og om det ulogiske ved label på en type?}
+In \cite{myers1997} labels can be applied to structs by labeling the variable.
+Additionally, fields can be labeled, resulting in a special rule for the evaluation of accessing struct fields, which is the label join of the struct label and the accessed field's label.
+We, however, find it somewhat illogical to label a type, since different usage of a certain type may call for different labeling.
 
 \myparagraph{Pointers}
 Similar to both \cite{muller2015cif} and \cite{maciazek2016cbif} we allow for pointer declarations and for the two pointer operations dereference and address-of, but disallow pointer arithmetics.
-It is deemed to big of a subject to handle within the scope of this report, and without proper handling it is potentially highly error-prone.\footnote{\url{https://www.securecoding.cert.org/confluence/display/c/EXP08-C.+Ensure+pointer+arithmetic+is+used+correctly}}
-\mikael{Skal stadig forklares bedre, men nu er kilderne der.}
-
-Having pointer declarations allows us to reference arrays and array index expressions, even though we cannot initialize an array.
+Pointer arithmetics is deemed too big of a subject to handle within the scope of this report, and without proper handling it is potentially highly error-prone.\footnote{\url{https://www.securecoding.cert.org/confluence/display/c/EXP08-C.+Ensure+pointer+arithmetic+is+used+correctly}}
 
 \myparagraph{Boolean and arithmetic operators}
 The following boolean and arithmetic operators are allowed:
-\[ \tk +, \tk - \text{(unary and binary)}, \tk *, \tk /, \tk{\&\&}, \tk{||}, \tk{!} \]
+\[ \tk +, \tk - \text{(unary and binary)}, \tk *, \tk /, \tk{\&\&}, \tk{||}, \tk{!}, \tk * , \tk \& \]
 
 Operator precedence has no say for our compiler, as we are only interested in what operands are used in expressions.
 The actual operator precedence checks are only used for, and therefore handled by, the C compiler.
