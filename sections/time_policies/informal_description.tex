@@ -176,18 +176,62 @@ Though at the same time it is also clear that we do not stand to gain much from 
 Instead we have chosen to introduce certain language constructs that will allow time policies to be evaluated statically.
 
 \subsection{Time constructs}
-We have the two time constructs:
+When calling a function that has a time policy we could, at runtime, be in one of two different states.
+Either we are in a state where the function can not be called or in one where it can.
+
+If the function can be called we would like to do so in as normal a fashion as possible.
+If the function can not be called we would require some means for how to handle a function anyway.
+To satisfy these considerations we introduce the following two language constructs, specific to time policies:
 
 \begin{itemize}
   \item if-can-call \dlmc{@?}
   \item await \dlmc{@}
 \end{itemize}
 
-The two constructs represent run-time checks.
-\dlmc{@?} takes one argument: a function identifier, and returns a boolean whether the function is callable or not, as per the time constraints.
-\dlmc{@} is placed before a function call, forcing the program to busy-wait until the function is callable.
+The two constructs represent run-time checks and are implemented as expressions with the same precedence as function call\footnote{\url{http://en.cppreference.com/w/c/language/operator_precedence}}.
+The \dlmc{@?} construct must precede a function identifier, and returns a boolean indicating whether that function is currently callable or not, as per the time constraints.
+The \dlmc{@} construct is used to extent function calls. Placing \dlmc{@} before a function call, forces the program to busy-wait until the function is callable and then calls the function.
 
-The constructs themselves currently have no run-time-related implementation.
-However, they are used during compile time checking to ensure that whenever we access data with a time policy, that we have used one of these to somehow handle the time policy.
+Using these constructs we can perform a check similar to a return-check where each branch of a functions control-flow will be evaluated using these constructs.
+They could for instance be used in a conditional expression:
+\begin{lstlisting}[style=dlmc]
+  if (@?foo) {
+    foo(); // Valid, due to above check.
+    foo(); // Invalid, due to above call of same function.
+  }
 
-\subsection{Applications}
+  if (@?foo) {
+    foo(); // Valid, due to above check.
+    @foo(); // Valid, will busy-wait if needed.
+  }
+
+  if (@?foo) {
+    @foo(); // Valid, but consumes check.
+    foo(); // Invalid, due to above call of same function.
+  }
+\end{lstlisting}
+Additionally we can include checks in the condition of a while loop, letting it continuously call a function until its time policy no longer allows it.
+We can also perform one-line checks and calls to evaluate the value returned from a function:
+\begin{lstlisting}[style=dlmc]
+  if (@?foo && foo() > 10) {
+    // The value was read and it was greater than 10.
+  }
+  else {
+    // The value could not be read, or was less than 10.
+  }
+\end{lstlisting}
+The same property does not apply to the \dlmc{||} operator due to short-circuit evaluation.
+However negation of a \dlmc{@?} check is possible, and will allow for calling the function in the else branch of a conditional statement.
+
+Using the ternary operator we can specify default values for functions that cannot be called.
+Here negation is also supported.
+
+\begin{lstlisting}[style=dlmc]
+  int a = @?foo ? foo() : -1; // Valid
+  int b = !@?foo ? -1 : foo(); // Valid, but somewhat confusing
+\end{lstlisting}
+
+\mikkel{Time constructs applied to the examples}
+
+As the tool developed only considers static evaluation we do not provide a run-time implementation of time policies or the effect of using the two constructs defined above.
+In \cref{automata:timepolicies} we describe how timed automata can be constructed from our time policies.
