@@ -450,6 +450,20 @@ The algorithm does not return a result, but instead works through the side effec
 \myparagraph{Initialization}
 As described in \cref{dlm:inf:types}, the initial current upper bound of a variable label must be $\top$.
 Thus for all constraints with a variable label on the left hand side, we set the current upper bound of that label.
+We use $\text{cub}(L)$ to denote the current upper bound of a variable label during execution of the algorithm.
+
+With this we define another function that takes a label as input and returns a new label where variables are replaced by their current upper bound.
+This function will be applied to labels in the algorithm before performing comparisons of those labels.
+
+\[
+\text{novar}(L) =
+\begin{cases}
+  \text{cub}(L) & \text{ if } L \text{ is a variable label}\\
+  \text{novar}(L_3) \sqcup \text{novar}(L_4) & \text{ if } L_1 = L_3 \sqcup L_4\\
+  \text{novar}(L_3) \sqcap \text{novar}(L_4) & \text{ if } L_1 = L_3 \sqcap L_4\\
+  L & \text{ otherwise}
+\end{cases}
+\]
 
 It could be the case that a constraint is on the form $L_1 \sqcup L_2 \sqsubseteq L_3$.
 If $L_1$ or $L_2$ is a variable label in such a constraint their current upper bound would not be set.

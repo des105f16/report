@@ -23,7 +23,7 @@
 {
   \If {$L_1$ is a variable label}
   {
-    $\lceil L_1 \rceil := \top$\;
+    $\text{cub}(L_1) := \top$\;
   }
 }
 \Checked := \False\;
@@ -36,7 +36,7 @@
     {
       \eIf {$L_1$ is a variable label}
       {
-        $\ceil{L_1} := \ceil{L_1} \sqcap \ceil{L_2}$\;
+        $\text{cub}(L_1) := \text{cub}(L_1) \sqcap \text{cub}(L_2)$\;
         \Checked := \False\;
       }
       {
