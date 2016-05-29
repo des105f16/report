@@ -17,12 +17,6 @@ In \cref{time:inference} we will go into details about these challenges.
 Even though the time policies do not fit in the same model as the labels defined by DLM, we have chosen to provide a shared syntax for both types of security policies.
 Grouping all the security policies together like this, will make it easier for the programmer to identify which policies apply in a specific context.
 
-We use the \dlmc{@} symbol for all time-related language constructs.
-It is used to ``attach'' time policies to principals in label declarations.
-Time policies can only apply to readers.
-If the owner of a policy has an attached time policy, it is meant to apply to all its readers.
-The \dlmc{@} symbol will also be used for the two time constructs \dlmc{@?} (\emph{if-can-call})  and \dlmc{@} (\emph{await}), explained later in this section.
-
 \subsection{Expressiveness}\label{time:expressiveness}
 We expand on the concept of labels using a set of properties that describe rules for when, and how often, data can be read.
 We want our time policies to be expressive, so that we can cover a wide variety of cases.
@@ -39,8 +33,7 @@ For a value $n \in \mathbb{N}$ followed by a postfix $T \in \mathbb{T}$, we have
 \end{cases}\]
 \myparagraph{Period}
 Period represents a start- and end-time, where access is only permitted within that period.
-E.g. \dlmc{\{\{u->u, ec@09:00-10:00\}\}} signifies that \dlmc{ec} is only allowed to access when the time is between 09:00 and 10:00 in the morning.
-In this is example there are no restrictions on the access \dlmc{u} has.
+E.g. \dlmc{\{\{u->u, ec@09:00-10:00\}\}} signifies that data can only be accessed when the time is between 09:00 and 10:00 in the morning.
 
 Formally we represent a period as the pair $(p_s, p_e)$ describing when a period starts (inclusive) and ends (exclusive).
 A period cannot specify rules for particular dates or days of the week.
@@ -62,12 +55,17 @@ If an interval is declared, count specifies the number of reads in that interval
 If an interval is not declared but a period is, count specifies the number of reads in that period (defaulting to $\infty$).
 
 \begin{example}{Time policies}
-  The \dlmc{\{\{pc->u@10m*3\}\}} policy, indicates that the principal \dlmc{u} is only allowed access thrice per 10 minutes.
+  The \dlmc{\{\{pc->u@10m*3\}\}} policy, indicates that access is only allowed access thrice per 10 minutes.
   Another way of explaining it; after the initial read another two reads \emph{can} follow, either way it is reset 10 minutes after the initial read.
 
-  Another example \dlmc{\{\{u->u, ec@00:00-09:00 30m\}\}}, allows \dlmc{u} unlimited access.
-  \dlmc{ec}, however, is restricted to reading between midnight and 9 in the morning, and with a minimum of 30 minutes passing between each access.
+  Another example \dlmc{\{\{u->u, ec @ u:00:00-24:00 30m; 00:00-09:00\}\}}, allows \dlmc{u} unlimited access.
+  Everyone else are however restricted to reading between midnight and 9 in the morning, and with a minimum of 30 minutes passing between each access.
 \end{example}
+
+From the above examples we have that a label can be extended with time policies using a \dlmc{@} followed by a list of time policies.
+All except the last policy are preceded with the name of the principal to whom the policy applies.
+The last policy is not associated with a principal and serves as the default time policy.
+In \cref{time:authority} we describe how a policy is selected from a such a declaration of policies.
 
 \mikkel{Time policies applied to the examples}
 
@@ -78,7 +76,7 @@ We would like for this algorithm to infer time policies in the same fashion as i
 To do that we would have to expand the label model with time policies.
 
 Time policies could be defined as a tuple $(p_s, p_e, i, c)$, describing the period, interval and count of the policy.
-Part of a label would then involve a function that defines the time policy of each of the labels principals.
+Part of a label would then involve a function that defines the time policy of each principal.
 
 In the following we will use various tuple sizes for representing time policies, depending on which components are relevant to the context.
 A tuple that does not contain all four time policy components is meant to represent only a part of a policy.
@@ -87,7 +85,7 @@ Which part will be clear from the use of $p$, $i$ and $c$ in each context.
 Examining the algorithm (page \pageref{dlm:inf:algorithm}) we see that in order to infer time policies we must be able to define the $\sqsubseteq$ and $\sqcap$ operations for these time policies.
 Additionally we would want to define $\sqcup$ for a complete lattice of time policies.
 
-\subsubsection{Time policy restriction}
+\subsubsection{Time policy restriction}\label{time:restriction}
 We will start with a definition for whether a time policy $(p_{s1}, p_{e1}, i_1, c_1)$ is no more restrictive than another $(p_{s2}, p_{e2}, i_2, c_2)$.
 Defining this operation for any single time policy component is quite simple:
 \begin{itemize}
@@ -230,6 +228,49 @@ Here negation is also supported.
   int a = @?foo ? foo() : -1; // Valid
   int b = !@?foo ? -1 : foo(); // Valid, but somewhat confusing
 \end{lstlisting}
+
+\subsection{Selecting a policy}\label{time:authority}
+As described in \cref{time:expressiveness}, a time policy can be associated with principal or it can be the default policy and thus apply to all other principals.
+A single label could specify multiple time policies applying to various principals.
+An example of such a set of policies is given below:
+\begin{lstlisting}[style=dlmc]
+  {{u->u, ec @ u:5m*10; 1h}}
+\end{lstlisting}
+Here the principal \dlmc{u} is allowed to access ten times in five minutes.
+All other principals will only be allowed access once an hour.
+
+To determine which policy applies in a given context we employ the effective authority, as described in \cref{dlm:auth_and_declass}.
+Thus for the above policies, a programmer will have to raise the effective authority if he wants to employ \dlmc{u}s time policy.
+The employed authority will be the least restrictive one available, given the effective authority when the function is called.
+As described in \cref{time:restriction} there are multiple ways to define which time label is the most restrictive.
+We do not provide means for declaring which type should be used by the tool.
+Such a check is only required for the runtime aspects of time policies and is therefore ignored in the context of our tool.
+
+In the example below we demonstrate how authority can be used to determine if and how a function should be called.
+
+\begin{minipage}{\linewidth}
+\begin{example}{Using authority for time policies}
+In the following code example we make use of all the constructs specific to time policies.
+We allow the program to busy-wait if we are allowed to act for the principal \dlmc{u}, otherwise we call the function \dlmc{foo} if we can do so without waiting.
+\begin{lstlisting}[style=dlmc]
+  int {{u->u, ec @ u:5m*10; 1h}} foo() {
+    // Method body
+  }
+  
+  int getfoo() {
+    this -->? u { // Executed if authority can be raised
+      return @foo(); // Will wait up to five minues before execution
+    }
+    else if (@?foo) { // Executed if the function can be called
+      return foo();
+    }
+    else {
+      return -1;
+    }
+  }
+\end{lstlisting}
+\end{example}
+\end{minipage}
 
 \mikkel{Time constructs applied to the examples}
 
