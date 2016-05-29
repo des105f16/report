@@ -464,7 +464,7 @@ If a constraint is not valid one of two things will happen, based on the type of
   \item If the label is a variable, we update its current upper bound to \textit{include} the right hand side of the constraint.
   This is achieved by meeting the two labels.
   \item If the label is not a variable, we can do nothing to relax it and the inference will fail.
-  This is the case we will end up in when considering a program with invalid information flow and only explicit labels.
+  This is the case we will end up in when considering a program with invalid information flow and only explicit labels.\mikael{Og hvis vi har en constant label på venstre-siden, vel?}
 \end{itemize}
 
 Overall the idea of the algorithm is to initialize all variable labels to $\top$ and then relax them until all constraints are valid.
