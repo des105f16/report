@@ -352,23 +352,10 @@ This is done by associating the label with another label value, known as its cur
 This upper bound will initially have the value $\top$, representing the most restrictive label.
 Using the inference algorithm we then relax the label, effectively making it less restrictive.
 
-To simplify the use of current upper bounds we define a current upper bound for all labels:
-
-\begin{definition}{Current upper bound}\label{dlm:def:upperbound}
-  The current upper bound of a variable label $L_{var}$ is given by the notation $\ceil{L_{var}}$.
-  For any other label types the following definition applies:
-  \[
-  \ceil{L} =
-  \begin{cases}
-    %upper(L) & \text{if } L \text{ is a variable label} \\
-    \ceil{L_1} \sqcup \ceil{L_2} & \text{if } L = L_1 \sqcup L_2 \\
-    \ceil{L_1} \sqcap \ceil{L_2} & \text{if } L = L_1 \sqcap L_2 \\
-    L & \text{otherwise}
-  \end{cases}
-  \]
-  Note that $\ceil{L_{var}}$, where $L_{var}$ is a variable label, can be a composite label (using joins and/or meets) but can never have variable labels as subcomponents.
-  \renein{Forklar med ord (substitution).}
-\end{definition}
+A variable label can be seen as a free variable, enabling us to perform a substitution.
+For labels, a substitution constitutes replacing all variable labels by their current upper bound.
+So for a label $L$ we denote its current upper bound $\ceil{L}$, yielding some label $L'$, no longer having any variable labels.
+We allow for updating of the current upper bound for a variable label by the notation $\ceil{L} := L''$.
 
 \myparagraph{Joins and meets}
 As variable labels are not directly associated with policies the join or meet of variable labels is only represented as a composite structure.
@@ -376,20 +363,10 @@ This is true regardless of the label the variable label is joined or met with (i
 
 Our interest in variable labels is only temporary, in order to determine the most restrictive upper bounds that allows for information flow.
 Because of this we are content using a composite representation.
-When inference has been applied to constraints these composite labels can be removed using \cref{dlm:def:upperbound}.
+When inference has been applied to constraints these composite labels can be removed by substituting all variable labels with their current upper bound.
 
 \myparagraph{Label restriction}
-Label restriction (represented by $\sqsubseteq$) is redefined to include variable labels.
-We do this by simply employing the current upper bound of both labels in the comparison:
-\begin{definition}{Label Restrictiveness}\label{dlm:def:restrictupperbound}
-  Let $\sqsubseteq^*$ represent the definition given in \cref{dlm:def:restrict}.
-  We then redefine $\sqsubseteq$ such that:
-  \[
-    L_1 \sqsubseteq L_2 = \ceil{L_1} \sqsubseteq^* \ceil{L_2}
-  \]
-  Note that given \cref{dlm:def:upperbound} this definition does not alter the pre-existing meaning of $\sqsubseteq$ but merely expands it to include variable labels.
-  \renein{Et lille eksempel eller, endnu bedre, et argument for hvorfor det holder ville være godt. Det er relateret til spørgsmålet om hvorvidt mængden af labels under denne ordning udgør et lattice}
-\end{definition}
+Is not applicable for variable labels, as we want to perform the substitution with their current upper bounds before performing any restrictiveness comparison.
 
 \subsubsection{Constant labels}
 A \textit{constant label} represents a label that is not associated with a set of policies, and one that should \textit{not} be computed through inference.
@@ -401,15 +378,9 @@ Constant labels use the same definition for joins and meets as variable labels, 
 This way we maintain the notion that a constant label is present without knowledge of any information flow policies.
 
 A constant label could be part of the a variable labels current upper bound and thus replacing it with a set of policies, the variable labels upper bound would include those policies.
-Here it should be noted that \cref{dlm:def:upperbound} applies to constant labels.
 
 \myparagraph{Label restriction}
-\mikkelin{This paragraph is incomplete. Nothing to see here, move along.}
-In order to define restriction for constant labels, we must also define it for the composite label types.
-We provide a definition for join labels but not meet labels.
-This is a result of the definition
-Restriction for constant labels is undefined for certain label types.
-The definition below specifies how
+\mikaelin{How to explain this...}
 
 \subsection{Output channels}
 As previously described, the way output channels are checked is by comparing the reader set of the output with the effective reader set of the outputted value(s).
