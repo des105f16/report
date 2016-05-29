@@ -141,8 +141,11 @@ As described in \cref{dlm:inf:types}, we have the concepts of \emph{variable lab
 Variable labels are the main enablers of the inference algorithm, as it allows for implicitly labeling certain values that in themselves do not need a label, but are instead related to other values that do.
 Constant labels, in a similar fashion, allow for the abstraction of only applying labels where it is critical, allowing for some implicity when defining the security of functions.
 We have updated the password checker example (see \cref{example:code:check_password-implicit}), removing all explicitly declared labels that instead can be inferred.
+Similarly, the calculate bill example has been labeled as well (see \cref{example:code:calculate_bill-implicit}).
 
-\lstinputlisting[float, style=dlmc, numbers=left, caption={Labeled Password checker example -- with default labels}, label=example:code:check_password-implicit]{dlm_examples/report/check_password-implicit.ncif}
+\lstinputlisting[float, style=dlmc, numbers=left, caption={Labeled password checker example -- with default labels}, label=example:code:check_password-implicit]{dlm_examples/report/check_password-implicit.ncif}
+
+\lstinputlisting[float, style=dlmc, numbers=left, caption={Labeled smart meter bill calculation example -- with default labels}, label=example:code:calculate_bill-implicit]{dlm_examples/report/calculate_bill-implicit.ncif}
 
 \myparagraph{Variable}
 As explained above, by removing the explicitly declared label for a variable, we instead rely on the inference algorithm to satisfy any constraints.
