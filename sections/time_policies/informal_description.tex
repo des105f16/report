@@ -67,7 +67,49 @@ All except the last policy are preceded with the name of the principal to whom t
 The last policy is not associated with a principal and serves as the default time policy.
 In \cref{time:authority} we describe how a policy is selected from a such a declaration of policies.
 
-\mikkel{Time policies applied to the examples}
+\subsection{Applying time policies to the examples}
+With the language constructs described in the previous section, we will now revisit our two code examples.
+In the following we will discuss how time policies can be added to the password checker and the bill calculator (see \cref{example:code:check_password-implicit,example:code:calculate_bill-implicit} on pages \pageref{example:code:check_password-implicit} and \pageref{example:code:calculate_bill-implicit} respectively).
+
+As with labels we will only apply time policies where they directly apply to data sources.
+The programmer should not be forced to declare additional policies in order to satisfy certain constraints that the compiler is trying to enforce.
+In \cref{time:inference} we describe difficulties in using inference for time policies and in \cref{time:constructs} we define a set of constructs that the programmer can use to define how his time policies should be handled.
+
+\myparagraph{Password checker}
+In the password checker we would like to restrict how often the collection of user information \dlmc{get_users} can be accessed.
+To achieve this effect we update the function declaration:
+
+\begin{lstlisting}[style=dlmc]
+  user_info {{pc-> @ 10m * 3}} *get_users(){};
+\end{lstlisting}
+
+Access to the data will then be restricted to three times every ten minutes, rendering brute force attacks very slow.
+Unfortunately this time policy is shared across all principals, meaning that all principals/users will have to share the three accesses every ten minutes.
+A simple solution to this is to define a time policy for each principal, and possibly the same policy for all.
+
+This does not provide a dynamic solution when the number of principals is not known in advance.
+But as \thelang{} was primarily developed for smaller embedded devices it can be expected that the set of principals will not be expanded dynamically.
+
+\myparagraph{Bill calculation}
+In the bill calculator we would like to restrict how often different principals are allowed to retrieve the consumption data of a users smart meter.
+To do this we add a time policy to the \dlmc{get_latest_usage} function:
+
+\begin{lstlisting}[style=dlmc]
+  usage {{u->u, ec @ u: 1s, 00:00-01:00 14d}} *get_latest_usage(){};
+\end{lstlisting}
+
+Here we specify that the user is allowed to read his usage data every second, but that everyone else can only read once every other week and only during the first hour of the day.
+The granularity of these policies could naturally be altered if so needed, but this policy demonstrates how easy it is to define a timed privacy policy.
+The user will be able to closely watch his consumption data, while the electrical company will retrieve billable consumption data every other week.
+
+It should be noted that in order to make this example work, the \dlmc{get_latest_usage} function would have to be maintain a list of what data each principal has received.
+Though this could be handled strictly using static evaluation (using the acts for construct), it would prove a more dynamic solution to use some runtime information about which principal is executing the function.
+
+\myparagraph{Runtime issues}
+Having expanded the examples with time policies, we have noted that there are some difficulties with providing principal-specific feedback from functions.
+If the set of principals is fixed (which might often be the case for embedded devices) the issues can be handled at compile time.
+Should we however desire a dynamic solution for principals we would require specific runtime handling of principals.
+This has not been part of \thelang{}.
 
 \subsection{Inference of time policies}\label{time:inference}
 Having described how label information is propagated from declaration to dependencies we effectively allow the programmer to specify policies only where they make some intuitive sense.
@@ -173,7 +215,7 @@ From this it is clear that we can not provide inference of time policies in the 
 Though at the same time it is also clear that we do not stand to gain much from time policy inference, as demonstrated by the example above.
 Instead we have chosen to introduce certain language constructs that will allow time policies to be evaluated statically.
 
-\subsection{Time constructs}
+\subsection{Time constructs}\label{time:constructs}
 When calling a function that has a time policy we could, at runtime, be in one of two different states.
 Either we are in a state where the function can not be called or in one where it can.
 
