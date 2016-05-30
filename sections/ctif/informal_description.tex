@@ -4,13 +4,14 @@
 We have tried to include as many C constructs as possible, in order to properly ascertain the usefulness of \thelang.
 However, certain aspects of C have been either simplified or completely left out.
 
-In the following is a crude list with what is currently supported in \thelang.
-Following the list will be some elaborations where necessary.
+In the following is a crude list of the constructs that are supported by \thelang.
+Additionally we provide elaborate descriptions for some of these constructs, as we make certain observations about their use.
+
 \begin{itemize}
   \item Variables
   \item Simple types (int, bool, char, string)
   \item Structs
-  \item Pointers
+  \item Pointers, including basic pointer operators
   \item Function prototypes, declarations, and calls
   \item Boolean and arithmetic operators
   \item \emph{if}- and \emph{while} control statements
@@ -32,13 +33,6 @@ We, however, find it somewhat illogical to label a type, since different usage o
 \myparagraph{Pointers}
 Similar to both \cite{muller2015cif} and \cite{maciazek2016cbif} we allow for pointer declarations and for the two pointer operations dereference and address-of, but disallow pointer arithmetics.
 Pointer arithmetics is deemed too big of a subject to handle within the scope of this report, and without proper handling it is potentially highly error-prone.\footnote{\url{https://www.securecoding.cert.org/confluence/display/c/EXP08-C.+Ensure+pointer+arithmetic+is+used+correctly}}
-
-\myparagraph{Boolean and arithmetic operators}
-The following boolean and arithmetic operators are allowed:
-\[ \tk +, \tk - \text{(unary and binary)}, \tk *, \tk /, \tk{\&\&}, \tk{||}, \tk{!}, \tk * , \tk \& \]
-
-Operator precedence has no say for our compiler, as we are only interested in what operands are used in expressions.
-The actual operator precedence checks are only used for, and therefore handled by, the C compiler.
 
 \section{Informal Description}
 \thelang{} extends the C language with the ability to declare labels for values and functions.
