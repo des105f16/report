@@ -1,15 +1,15 @@
 % !TEX root = ../../master.tex
 
 \section{Related work}
-Despite DLM having been around for near two decades now \cite{myers1997}, not much work have been put into putting the theory into use.
-One exception is of course \emph{Java Information Flow} (JIF)\footnote{\url{https://www.cs.cornell.edu/jif/}}, a project related to the original authors.
+Despite DLM having been around for near two decades now \cite{myers1997}, not much work has been put into putting the theory to use.
+One exception is the \emph{Java Information Flow} (JIF)\footnote{\url{https://www.cs.cornell.edu/jif/}} project, a project related to the original authors.
 However, by using JIF, and thereby Java and a Java Virtual Machine (JVM), one is somewhat limited in actual applications, especially in regards to IoT devices.
-This is why we want to explore the possibility of applying DLM to C.
+This is why we explore the possibility of applying DLM to C.
 
-Two recent projects have also explored this, \emph{C Information Flow} (CIF) \cite{muller2015cif} and \emph{Content-Based Information Flow Control} (CBIF) \cite{maciazek2016cbif}.
-These two projects, including our project as well, are very similar.
-All extend C with DLM constructs, making it possible to annotate code with security policies, and statically check that policies are not violated throughout program flow.
-None spend any time on run-time related concepts.
+Two recent projects have also explored this; \emph{C Information Flow} (CIF) \cite{muller2015cif} and \emph{Content-Based Information Flow Control} (CBIF) \cite{maciazek2016cbif}.
+These projects are very similar and demonstrate some of the properties that we seek to develop as well.
+All three extend C with DLM constructs, making it possible to annotate code with security policies, and statically check that policies are not violated throughout program flow.
+None of the three discuss the run-time concepts of DLM.
 
 In CIF, a simple approach has been chosen, having only the bare essentials needed for static checking.
 Besides providing static checking of DLM policies, CIF also outputs information flow graphs, providing a visual overview of the flow for a program.
@@ -17,5 +17,5 @@ Besides providing static checking of DLM policies, CIF also outputs information 
 In CBIF, a very different approach is used, focusing on extending the syntax with new constructs, so that model checking can be applied.
 CBIF is also very domain-specific, having a focus on avionics-related use.
 
-Little is said inferring labels in neither CIF nor CBIF, which is why CTIF will explore this further.
-Additionally, CTIF will explore the possibility of extending the security policies with time constraints, adding further possibilities for modeling security for programs.
+Not much is said about inferring labels in neither CIF nor CBIF, which is why CTIF will explore this further.
+Additionally, CTIF will explore the possibility of extending the security policies with time constraints, adding further possibilities for modeling security of programs.

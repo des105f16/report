@@ -8,7 +8,7 @@ This is exactly what is going to happen when the current electrical meters are g
 It will open up for problems already found in similar devices, which in general is any IoT device.
 
 One of the focuses we had in \cite{prespecialization} was on the privacy issues related to such an exposed device.
-We would like to explore this problem further, while coming up with a solution which will aid in the securing of privacy in IoT devices.
+We would like to explore this problem further, while coming up with a solution that will aid the programmer in the securing IoT devices.
 Many of the security problems associated with privacy could possibly also be minimized by adding the concept of time constraints, which we will also discuss here.
 
 \subsection{Privacy}
@@ -17,11 +17,11 @@ There will be endless possibilities in easing our everyday lives, both at a pers
 At the personal level, we will be able to access devices that monitor and control our homes.
 On the communal level, many of the tasks that previously had to be done by people can now be pushed to remote devices, such as monitoring the health of patients or changing traffic signs on a freeway.\mikael{Kilder ift. health of smart pacemaker.}
 
-All these things have of course major potential risks if they should be compromised.
+All these things are associated with major potential risks, should they be compromised.
 At the personal level, we do not wish to give up any information about our personal lives, and we don't want anyone else controlling our devices.
 At the community level the risks can be even larger, especially those devices linked to health care, such as a ``smart'' pacemaker.
 
-Some of these risks are associated with bad protocols or the implementation of these.
+Some of these risks are associated with faulty protocols or erroneous implementations of protocols.
 However, privacy can still be an issue even with a ``good'' protocol.
 The problem here is that it is not easy ensuring that the information managed by an IoT device is distributed as intended.
 This is especially true if different policies apply to different users, as is more than likely with IoT devices.
@@ -29,9 +29,13 @@ This could for instance be power consumption data which have different policies 
 It is also possible to have \emph{passive cheaters}, users of the system who follow the rules, but try to acquire more information than is intended possible.
 
 \subsection{Time constraints}
-Properly handling timing within a system is an already-exising and quite common problem.
+Properly handling timing within a system is an already-existing and quite common problem.
+\footnote{\url{http://www.nist.gov/pml/div688/timing-031915.cfm}}
 It is something that is hard to both model and ensure that any such modeling holds.
-This is especially true for IoT devices which operate in the real world and any potentional mistakes can result in great consequence.\footnote{\url{http://www.nist.gov/pml/div688/timing-031915.cfm}}
+This is especially true for IoT devices which operate in the real world where any potential mistakes can result in great consequence.
 
 To further the concept of protecting privacy, it would make sense to limit functionality of a device based on time constraints.
 By doing this, it could be further ensured that any leak of information from a system is minimal.
+
+\mikkelin{Include \emph{generic} description of how this applies to a password checker and consumption data.
+Motivation for the code examples.}
