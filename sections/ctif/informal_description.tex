@@ -14,6 +14,7 @@ Following the list will be some elaborations where necessary.
   \item Function prototypes, declarations, and calls
   \item Boolean and arithmetic operators
   \item \emph{if}- and \emph{while} control statements
+  \item The ternary operator
   \item External libraries
 \end{itemize}
 
@@ -51,21 +52,21 @@ The syntax for labels consists of 5 components:
   \item special values \dlmc{_} (underscore, for bottom label) and \dlmc{^} (caret, for top label)
 \end{itemize}
 
-Besides the actual labels we also have the 3 related constructs, which were presented in \cref{dlm:auth_and_declass,dlm:channels}:
+Besides the actual labels we also have the related constructs, which were presented in \cref{dlm:auth_and_declass,dlm:channels}:
 \begin{itemize}
   \item output channel \dlmc{p1, p2 <- foo();}
   \item if acts for \dlmc{-->? p1, p2 \{ /* statements */ \}}
   \item declassify \dlmc{<|v, l|>}
+  \item function call \dlmc{bar<<<p1, p2>>>();}
 \end{itemize}
 
 The following subsections will describe how labels are used in \thelang.
 The descriptions will follow the password checker example from \cref{example:sec:check_password}.
-The fully labeled source can be seen in \cref{example:code:check_password-explicit}.
-
-\lstinputlisting[float, style=dlmc, numbers=left, caption={Labelled password checker example}, label=example:code:check_password-explicit]{dlm_examples/report/check_password-explicit.ncif}
+The fully labeled source can be seen in \cref{example:code:check_password-explicit}, on page \pageref{example:code:check_password-explicit}.
+We make use of the \dlmc{principal} declaration in the example to simulate the actual obtaining of system principals.
 
 \subsection{Function declarations}
-The first thing we would want to label in a program is what can be seen as the bigger components; the functions that either obtain data from outside or send data to outside the program -- our channels.
+The first thing we would want to label in a program is what can be seen as the bigger components; the functions that either obtain data from outside or send data to outside the program -- our channels.\mikael{Omformuler så det handler om channels.}
 In \thelang{} we have no distinction between input channels and any other function which has a return value.
 However, output channels are distinguishable by having the \dlmc{<-} construct, preceded by one or more principals (readers).
 Output channel declarations are initially checked as with any other function.
@@ -75,7 +76,7 @@ For \dlmc{check_password} we have the 3 auxiliary functions, as well as the \dlm
 \lstinputlisting[style=dlmc, numbers=left, linerange={11-15}, firstnumber=11]{dlm_examples/report/check_password-explicit.ncif}
 \end{minipage}
 
-Here we have two principals: user (u) and password checker (pc).\footnote{We make use of the \dlmc{principal} declaration in the full example to simulate the actual obtaining of system principals.}
+Here we have two principals: user (u) and password checker (pc).
 The user provides some login information, to which he is the owner.
 The password checker is a trusted principal which has access to the user database.
 The final output is sent to an output channel which is readable only be the user.
@@ -87,7 +88,7 @@ However, if no label is supplied for a parameter, that parameter is recognized a
 
 \subsection{Variable declarations}
 The labeling of variable declarations is done mainly to oblige the return values of functions and input, given by either parameters or auxiliary function calls.
-This is also why most of these labels are easier to infer, and can therefore often be left out, as we shall see later in this section.
+This is also why most of these labels are easier to infer, and can therefore often be left out, as we shall see in \cref{ctif:informal:inference}.
 
 For \dlmc{check_password} we have the following labeling of variables:\\
 \begin{minipage}{\linewidth}
@@ -115,7 +116,7 @@ After obtaining the proper effective authority, we need to clear the return valu
 
 It is possible to leave out the explicit label of the declassification, as we will see in the following subsection.
 
-\subsection{Inference}
+\subsection{Inference}\label{ctif:informal:inference}
 As we have argued repeatedly throughout this report, having to declare labels for every value or function can be time-consuming and can cause a clutter in a program.
 Therefore we can rely on inference so that many labels can be omitted.
 In \cite{myers1997} it is only described what leaving out labels for variables and parameters mean, and not functions.
@@ -142,10 +143,6 @@ Variable labels are the main enablers of the inference algorithm, as it allows f
 Constant labels, in a similar fashion, allow for the abstraction of only applying labels where it is critical, allowing for some implicity when defining the security of functions.
 We have updated the password checker example (see \cref{example:code:check_password-implicit}), removing all explicitly declared labels that instead can be inferred.
 Similarly, the calculate bill example has been labeled as well (see \cref{example:code:calculate_bill-implicit}).
-
-\lstinputlisting[float, style=dlmc, numbers=left, caption={Labeled password checker example -- with default labels}, label=example:code:check_password-implicit]{dlm_examples/report/check_password-implicit.ncif}
-
-\lstinputlisting[float, style=dlmc, numbers=left, caption={Labeled smart meter bill calculation example -- with default labels}, label=example:code:calculate_bill-implicit]{dlm_examples/report/calculate_bill-implicit.ncif}
 
 \myparagraph{Variable}
 As explained above, by removing the explicitly declared label for a variable, we instead rely on the inference algorithm to satisfy any constraints.
@@ -176,3 +173,9 @@ If we take the function \dlmc{stricmp} and want to extend it with a maximum amou
   \dlmc{bool \{\{a;b\}\} stricmp(char *a, char *b, int max_length);}
 \end{minipage}
 Similar to the previous example, we have that any calls to \dlmc{stricmp} will be evaluated to the join of its arguments, but this time only the arguments \dlmc{a} and \dlmc{b}, thus any security applied to \dlmc{max_length} will not affect the label of the return value.
+
+\lstinputlisting[float, style=dlmc, numbers=left, caption={Labelled password checker example}, label=example:code:check_password-explicit]{dlm_examples/report/check_password-explicit.ncif}
+
+\lstinputlisting[float, style=dlmc, numbers=left, caption={Labeled password checker example -- with default labels}, label=example:code:check_password-implicit]{dlm_examples/report/check_password-implicit.ncif}
+
+\lstinputlisting[float, style=dlmc, numbers=left, caption={Labeled smart meter bill calculation example -- with default labels}, label=example:code:calculate_bill-implicit]{dlm_examples/report/calculate_bill-implicit.ncif}

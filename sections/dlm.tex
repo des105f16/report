@@ -28,7 +28,7 @@ Value-holders are collectively known as \emph{slots}, which cover constructs suc
 In order to ensure that a certain assignment is legal, such that no information is unintentionally leaked, we assign \emph{labels} to slots so that their ``security'' can be compared.
 This way we can ensure that an assignment is only legal in the cases where higher-security values aren't assigned to lower-security slots.
 The same concept applies to more complex language constructs, such as functions (and their return values).
-\mikkel{Function labels? Mangler vi en oversigt over hvor det er muligt at deklarere labels?}
+\mikael{Skriv om så vi benævner at labels kan anvendes alle steder der er type, da det er sådan DLM har defineret det.}
 
 Each slot is associated with a label, that describes how the data in the slot can be handled.
 We denote the label of slot $s$ as $\underline{s}$.
@@ -351,7 +351,7 @@ A \emph{variable label} represents a label that should be computed through infer
 When applying inference the label is associated with another label value, known as its current upper bound.
 This upper bound will initially have the value $\top$, representing the most restrictive label and will be relaxed as the algorithm progresses.
 
-When the algorithm completes the current upper bound of a variable label represents the most restrictive label that could be employed instead of the variable label.
+When the algorithm completes, the current upper bound of a variable label represents the most restrictive label that could be employed instead of the variable label.
 This effectively represents the inferred label.
 
 \subsubsection{Constant labels}
@@ -368,7 +368,7 @@ As the two new label types are not directly associated with policies, the join o
 This is true regardless of the label they are being joined or met with.
 
 Our interest in these labels is only temporary.
-Either to determine the most restrictive upper bound or for the purpose of polymorphism.
+Either to determine the most restrictive upper bound or for the purpose of label polymorphism.
 Because of this we are content using a composite representation.
 When replacing a variable or constant label with an actual set of policies the composite structure will be removed by virtue of \cref{dlm:def:join,dlm:def:meet}.
 
@@ -384,7 +384,7 @@ Because of this we will never directly compare variable labels with other labels
 For any constant label $L_c$ we define that $L_c \not \sqsubseteq L$ and $L \not \sqsubseteq L_c$ for any label $L$, with the natural exception of $L_c = L$.
 For label joins we merely seek to identify those cases where we are sure that the comparison evaluates to true, and let the remaining evaluate to false.
 This could result in some false negatives.
-With some insight into the algorithm, as presented in \cref{dlm:inf:algsection}, we note that the effect of false negatives is that the labels inferred could be more relaxed that possibly needed.
+With some insight into the algorithm, as presented in \cref{dlm:inf:algsection}, we note that the effect of false negatives is that the labels inferred could be more relaxed than possibly needed.
 The algorithm does however ensure that all information flow constraints are still valid.
 
 We provide the following definitions given the above description:
@@ -442,7 +442,7 @@ Note that the input for the algorithm is a set of constraints.
 In \cref{extraction} we detail how to extract all constraints from source code, though the input for the algorithm can be \textit{any} set of constraints (see \cref{dlm:constraints}).
 The only exception from this rule is that $\sqcap$ labels are not allowed on the left side of a constraint.
 Why this is the case will become apparent as we walk through the algorithm.
-The algorithm does not return a result, but instead works through the side effect of updating the variable labels current upper bound.
+The algorithm does not return a result, but instead works through the side effect of updating the current upper bound for variable labels.
 
 \input{algorithms/inference.tex}
 
@@ -485,7 +485,7 @@ Because meet labels are not allowed in label declarations, we can be sure that t
 \myparagraph{Computing labels}
 Having taking the necessary initializing steps the algorithm checks that each constraint in the constraints set is valid.
 If all constraints are valid we know that the information flow of the program is valid and the algorithm can terminate.
-Thus, if we have explicit stated all labels, the algorithm simply performs a check of weather the information flow is valid.
+Thus, if we have explicitly stated all labels, the algorithm simply performs a check of weather the information flow is valid.
 
 If a constraint is not valid one of two things will happen, based on the type of label on the left hand side of the constraint:
 \begin{itemize}
