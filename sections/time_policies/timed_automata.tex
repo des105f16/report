@@ -94,7 +94,11 @@ Instead, we need only ensure the period constraint for each read, as well as res
 \end{figure}
 
 \subsubsection{Interval and count}
+When extending an interval-only policy with a specific count, something interesting happens.
+In order to visualize this, we will here make us of a concrete count, so that we have a policy: $(i, 2)$.
+This results in 4 states, one state representing each possible combination of consecutive reads, having that we have performed reads: none, first only, first followed by second, second only, second followed by first (after a reset).
 
+Generally, we will have $2^c$ states, and the ability to transition from any state where we either perform a new read or the clock variable for a former read has been reset.
 
 \begin{figure}[H]
   \centering
@@ -102,9 +106,8 @@ Instead, we need only ensure the period constraint for each read, as well as res
   \caption{Abstract policy with interval and count ($c = 2$)}
 \end{figure}
 
-
 \subsubsection{Period, interval, and count}
-
+If we now try to combine all three time policy constituents, while still having a concrete count: $(p_s, p_e, i, 2)$, we can see that little change is needed.
 
 \begin{figure}[H]
   \centering
