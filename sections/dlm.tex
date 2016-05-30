@@ -28,8 +28,7 @@ Throughout a program, values are declared, initialized, and assigned to variable
 Value-holders are collectively known as \emph{slots}, which cover constructs such as variables, structs, and other storage locations.
 In order to ensure that a certain assignment is legal, such that no information is unintentionally leaked, we assign \emph{labels} to slots so that their ``security'' can be compared.
 This way we can ensure that an assignment is only legal in the cases where higher-security values aren't assigned to lower-security slots.
-The same concept applies to more complex language constructs, such as functions (and their return values).
-\mikael{Skriv om så vi benævner at labels kan anvendes alle steder der er type, da det er sådan DLM har defineret det.}
+In \cite{myers1997} labels are seen as an extension to types, and would therefore be applicable anywhere a type normally would be applicable.
 
 Each slot is associated with a label, that describes how the data in the slot can be handled.
 We denote the label of slot $s$ as $\underline{s}$.
@@ -252,7 +251,7 @@ int {{a->y}} cond = 1;
 if (cond) {
   val++;
 }
--->? a {
+this -->? a {
   return <|x, {{a->y,z}}|>;
 }
 return -1;
@@ -260,7 +259,14 @@ return -1;
   While we still leak some information about \dlmc{cond}, we now do it explicitly.
 \end{example}
 
-\mikkelin{Describe how authority applies to function calls, and how this affects the use of \dlmc{this} and \dlmc{caller}.}
+Worth noting in the above example is the use of the special keyword \dlmc{this} in the if-acts-for statement.
+This is a run-time concept that signifies from where the specified authority (here \dlmc{a}) should be obtained from.
+When the \dlmc{this} keyword is used, it refers to an implicit principal that represents the function itself.
+Alternatively, if instead the \dlmc{caller} keyword was stated, the specified authority is compared with an explicit authority declared for each call to the function.
+Using our syntax, such a function call would look like:
+\begin{center}
+  \dlmc{foo<<<a>>>();}
+\end{center}
 
 \section{Label constraints}\label{dlm:constraints}
 Using the concept of labels as described in the above sections, code can be annotated to express what type of information flow is permissible.
