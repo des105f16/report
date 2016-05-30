@@ -10,8 +10,9 @@ Following the setup, we will present semantic equations, which describe how cons
 
 \subsection{Syntax}
 Below follows an abstract syntax that describes the structure of our grammar.
-The grammar is made to represent the C programming language in both structure and actual syntax.
-The latter is not directly apparent here, as some syntactical details have been removed to achieve a higher level of abstraction.
+The grammar is made to replicate the structure of the C programming language, extended with the DLM specific language constructs described in \cref{ctif:informal}.
+To do this we have created an unambiguous parser in which certain details of are abstracted away.
+This parser will, for instance, manage operator precedence when reading input, but represent it using the abstraction below.
 
 \begin{table}[p]
   \begin{align*}
@@ -68,7 +69,7 @@ Therefore it will not included in the abstract syntax.
 
 \paragraph{Struct fields}
 We make use of the special variable identifier $x_f$ for struct field access.
-It has no meaning in evaluating the program, as will be apparent in the rules for the struct field expression.
+It has no meaning in evaluation of the program, as will be apparent in the rules for the struct field expression.
 The actual checking of struct fields and the matching struct definition is handled by the C compiler.
 
 \paragraph{Empty labels}
@@ -115,7 +116,7 @@ Then we have that:
 \[ \literal{\ilv_1 \sqcup \ilv_2} \equiv j(\ilv_1, \ilv_2) \]
 
 $\iCstr$ is a set of constraint tuples, where any $(\ilv_1, \ilv_2) \in \iCstr$ can be seen as representing a constraint: $" \; \ilv_1 \sqsubseteq \ilv_2 \; "$.
-Similar to the join label above, we will have the latter notation in quotes having the same meaning as the aforementioned tuple, such that:
+Similar to the join label above, we use the quoted notation to represent one of the aforementioned tuple, such that:
 \[ \literal{\ilv_1 \sqsubseteq \ilv_2} \equiv (\ilv_1, \ilv_2) \]
 
 $\iEnvL$ is the label environment, which maps variable identifiers, and the two special identifiers $\ia$ (authority, see \cref{dlm:auth_and_declass}) and $\ib$ (program counter, see \cref{dlm:implicit_flows}), to label values.
