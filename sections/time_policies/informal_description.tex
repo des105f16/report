@@ -372,3 +372,9 @@ Naturally we replace the old \dlmc{get_latest_usage} function call with one to \
 With these new constructs the time policies are handled in the both code examples.
 We saw that the constructs made it easy to express simple means of handling time policies, that there are multiple ways to handle policies, and that sets of multiple time policies can easily make use of multiple handling methods.
 
+In \cref{example:code:check_password-time,example:code:calculate_bill-time} we present the updated code examples, including time policies and the handling of these.
+
+\lstinputlisting[float, style=dlmc, numbers=left, caption={Timed password checker example}, label=example:code:check_password-time]{dlm_examples/report/check_password-time.ncif}
+
+\lstinputlisting[float, style=dlmc, numbers=left, linerange={13-57}, firstnumber=13, basicstyle={\ttfamily\small}, caption={
+[Timed smart meter bill calculation example]Timed smart meter bill calculation example. Struct declarations have not been included here to make the code example fit in a single page. The structs are unchanged from \cref{example:code:calculate_bill-implicit}}, label=example:code:calculate_bill-time]{dlm_examples/report/calculate_bill-time.ncif}
