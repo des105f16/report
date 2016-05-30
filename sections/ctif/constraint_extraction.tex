@@ -5,8 +5,8 @@
 \mikkelin{Along with the page header...}
 In this section we will give a formal definition of how constraints are extracted from a \thelang~ program.
 This formal definition will be based on denotational semantics, and will therefore utilize the concepts thereof.
-We will define our syntactic and semantic setup, which will serve as a base for the rules for how constraints are extracted from a \thelang~ program.
-Following the setup, we will present the semantic equations, which describe how constraints are extracted from the individual program constructs.
+We will define our syntactic and semantic setup, which will be used to define how constraints are extracted from a \thelang~ program.
+Following the setup, we will present semantic equations, which describe how constraints are extracted from the individual program constructs.
 
 \subsection{Syntax}
 Below follows an abstract syntax that describes the structure of our grammar.
@@ -34,8 +34,9 @@ The latter is not directly apparent here, as some syntactical details have been 
   \begin{align*}
     R         & ::= D \\
     D         & ::= D_F \gp D_V \gp D_1 \; D_2 \\
-    D_F       & ::= p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{<-} \; t_f \; l_f \; f \tk ( t_1 \; l_1 \; x_1 \tk , t_2 \; l_2 \; x_2 \tk , \dots \tk , t_n \; l_n \; x_n \tk ) S \\
-    D_V       & ::= t \; l \; \tk * x \tk = E \gp t \; l \; \tk * x \\
+    D_F       & ::= t_f \; l_f \; f \tk ( t_1 \; l_1 \; x_1 \tk , t_2 \; l_2 \; x_2 \tk , \dots \tk , t_n \; l_n \; x_n \tk ) S \\
+              & \gp p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{<-} \; t_f \; l_f \; f \tk ( t_1 \; l_1 \; x_1 \tk , t_2 \; l_2 \; x_2 \tk , \dots \tk , t_n \; l_n \; x_n \tk ) S \\
+    D_V       & ::= t \; l \; x \tk = E \gp t \; l \; x \\
     S         & ::= E \gp S_1 \; S_2 \gp \varepsilon \\
               & \gp D_V \\
               & \gp \tk{while} \tk ( E \tk ) S \gp \tk{if} \tk ( E \tk ) S \gp \tk{if} \tk ( E \tk ) S_1 \tk{else} S_2 \\
@@ -44,6 +45,7 @@ The latter is not directly apparent here, as some syntactical details have been 
               & \gp \tk{this} \tk{-{}->?} p_1 \tk , p_2 \tk , \dots \tk , p_k \; S \gp \tk{caller} \tk{-{}->?} p_1 \tk , p_2 \tk , \dots \tk , p_k \; S \\
     E         & ::= x \gp k \gp E_1 \; op_b \; E_2 \gp op_u \; E \gp \tk ( E \tk ) \gp E \texttt{.} x_f \gp E \texttt{->} x_f \gp x \texttt{[} E \texttt{]} \\
               & \gp \tk{<|} E \tk , l \tk{|>} \gp \tk{<|} E \tk{|>} \\
+              & \gp f \tk ( E_1 \tk , E_2 \tk , \dots \tk , E_n \tk ) \\
               & \gp f \tk{<{}<{}<} p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{>{}>{}>} \tk ( E_1 \tk , E_2 \tk , \dots \tk , E_n \tk ) \\
     L         & ::= \tk{\{\{} P \tk{\}\}} \gp \varepsilon \\
     P         & ::= x \gp p_0 \tk{->} p_1 \tk , p_2 \tk , \dots \tk , p_k \gp P_1 \tk ; P_2 \gp \tk \_ \gp \tk{\^{}}
@@ -52,27 +54,27 @@ The latter is not directly apparent here, as some syntactical details have been 
   \label{ctif:rules}
 \end{table}
 
-\Cref{ctif:rules} primarily serve as a reference-point for the following sections.
-We will however briefly discuss a few details that might be of special interest:
+\Cref{ctif:rules} contains our syntactic domains and abstract prodution rules, and will serve as a reference-point for the following sections.
+A few details might be of special interest:
 
 \paragraph{Simplified arithmetics}
 As the semantics, described in this section, only concerns how data \textit{flows} and not its value on execution we can simplify the possible binary and unary operations into two rules.
 Doing so provides for a less cluttered syntax and a clearer focus on the label semantics that are expressed.
 
 \paragraph{Pointer declaration}
-The \tk{*} used in variable declarations, to indicate a pointer declaration, is optional.
+The \tk{*} used to indicate a pointer type, can be optionally declared for any variable or parameter.
 Whether a variable is a pointer or not has no meaning for the evaluation of labels, so the handling of pointer type checking is completely left to the C compiler.
-Therefore it will not be apparent in the syntax in the rules for variable declaration.
+Therefore it will not included in the abstract syntax.
 
 \paragraph{Struct fields}
-We make use of the special identifier $x_f$ for struct fields access.
+We make use of the special variable identifier $x_f$ for struct field access.
 It has no meaning in evaluating the program, as will be apparent in the rules for the struct field expression.
 The actual checking of struct fields and the matching struct definition is handled by the C compiler.
 
 \paragraph{Empty labels}
 No value (represented by $\varepsilon$) can be provided for any label declaration.
-When omitting a label the semantic rules specify a \textit{default} value for the label.
-This is initial step of label inference and allows unlabeled C to be recognized and evaluated using these rules.
+When omitting a label the semantic rules specify a \textit{default} value for the label (see \cref{ctif:informal:inference}).
+This is the initial step of label inference and allows unlabeled C to be recognized and evaluated using these rules.
 
 \subsection{Semantic setup}
 This section will describe the semantic constituents which are used to translate a syntactical \thelang{} program into the semantical world.
