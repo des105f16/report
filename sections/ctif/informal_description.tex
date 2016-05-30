@@ -68,7 +68,8 @@ In \thelang{} we have no distinction between input channels and any other functi
 However, output channels are distinguishable by having the \dlmc{<-} construct, preceded by one or more principals (readers).
 Output channel declarations are initially checked as with any other function.
 
-For \dlmc{check_password} we have the 3 auxiliary functions, as well as the \dlmc{check_password} function itself, which we would label as so:\\
+\myparagraph{Labeling the example}
+For \dlmc{check_password} we have 3 auxiliary functions, as well as the \dlmc{check_password} function itself, which we would label as so:\\
 \begin{minipage}{\linewidth}
 \lstinputlisting[style=dlmc, numbers=left, linerange={11-15}, firstnumber=11]{dlm_examples/report/check_password-explicit.ncif}
 \end{minipage}
@@ -76,16 +77,18 @@ For \dlmc{check_password} we have the 3 auxiliary functions, as well as the \dlm
 Here we have two principals: user (u) and password checker (pc).
 The user provides some login information, to which he is the owner.
 The password checker is a trusted principal which has access to the user database.
-The final output is sent to an output channel which is readable only be the user.
+The final output is sent to an output channel which is readable only by the user.
 
 \dlmc{check_password} returns the comparison result, which is owned by and readable by the user only.
 Here we also need to add labels to the parameters, otherwise we would not be able to statically check the function, as the actual labels for the parameters could differ between different calls to the function, but by supplying the labels we know that the policies will have to hold for all usage.
 When supplied with a label, parameters are treated as any other variable when evaluating a function declaration.
 However, if no label is supplied for a parameter, that parameter is recognized as labeled with a constant label.
+This is used to provide label inference for function parameters, as we shall see in 
 
 \subsection{Variable declarations}
 The labeling of variable declarations is done mainly to oblige the return values of functions and input, given by either parameters or auxiliary function calls.
 This is also why most of these labels are easier to infer, and can therefore often be left out, as we shall see in \cref{ctif:informal:inference}.
+For now we will explicitly include all labels, to properly demonstrate the information flow.
 
 For \dlmc{check_password} we have the following labeling of variables:\\
 \begin{minipage}{\linewidth}
