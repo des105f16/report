@@ -83,13 +83,14 @@ The automaton can now be stuck in state $s_1$, while waiting for the interval co
 \end{figure}
 
 \subsubsection{Period and count}
-When adding a specific count value, we must now add clock variables in order to limit the amount of consecutive reads.
-In addition, since we do not have an interval, we need the negated period constraint in order to properly reset the count whenever the system time is no longer within the period.
+Similar to the interval-only policy, when extending a period-only policy with a specific count: $(p_s, p_e, c)$, we will need a state for each count in order to represent how many consecutive reads have been performed.
+Unlike the interval-only policy, we do not need a clock variable.
+Instead, we need only ensure the period constraint for each read, as well as reset (by returning to $s_0$) whenever we are no longer within the period.
 
 \begin{figure}[H]
   \centering
   \input{figures/timed_automata/general_period_2count.tikz}
-  \caption{Abstract policy with a period and count ($c = 2$)}
+  \caption{Abstract policy with a period and count}
 \end{figure}
 
 \subsubsection{Interval and count}
