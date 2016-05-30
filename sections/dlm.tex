@@ -414,7 +414,7 @@ Then for an output channel with readers $R_c$ and labeled input values $V$, we d
 \[ L_c = \{ p_1 \rightarrow R_c; p_2 \rightarrow R_c, \dots, p_k \rightarrow R_c \} \]
 
 That is, a label owned by all the principals in the system, where each owner allows all principals in $R_c$ to read.
-With this label, the output channel is associated with the following set of constraints:
+With this label, we give the following definition for the output channel:
 
 \[ \forall v \in V.\underline{v} \sqsubseteq L_c \]
 \end{definition}
@@ -427,13 +427,13 @@ Below we demonstrate that this approach is equivalent to comparing reader sets, 
 When evaluating the above constraint we note that (\ref{dlm:def:restrict:owners}) in \cref{dlm:def:restrict} will always be true, as $owners(L_c)$ is the set of all principals.
 We will then apply (\ref{dlm:def:restrict:readers}) to the same constraint to get
 
-\[ \forall o \in owners(v) . readers(v, o) \supseteq readers(L_c, o) \]
+\[ \forall o \in owners(\underline{v}) . readers(\underline{v}, o) \supseteq readers(L_c, o) \]
 
 From \cref{dlm:def:outputconstraints} we know that $readers(L_c, o) = R_c$, for any principal $o$ in the system.
-Finally we see from \cref{dlm:def:effectivereaders} that $readers(v, o) \supseteq readers(v)$, for any principal $o$ in the system.
+Finally we see from \cref{dlm:def:effectivereaders} that $readers(\underline{v}, o) \supseteq readers(\underline{v})$, for any principal $o$ in the system.
 Thus we know that
 
-\[ readers(v, o) \supseteq readers(v) \supseteq R_c \text{, for any } o \in owners(v) \]
+\[ readers(\underline{v}, o) \supseteq readers(\underline{v}) \supseteq R_c \text{, for any } o \in owners(\underline{v}) \]
 
 \subsection{Inference algorithm}\label{dlm:inf:algsection}
 Using the established extensions of labels we present the inference algorithm (see \cref{dlm:inf:algorithm}).
