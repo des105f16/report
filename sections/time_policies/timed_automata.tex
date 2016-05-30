@@ -49,27 +49,51 @@ Once enough time has passed, we can carry out the transition and once again we a
 \end{example}
 
 \subsection{Time policies and timed automata}\label{automata:timepolicies}
+In this section, we will show how it is possible to transform \thelang{} time policies into timed automata.
+This will be done by defining abstract time policies, which represent special cases, and showing for each of these a corresponding timed automaton.
 
-\begin{definition}{General \thelang{} Time Policy Timed Automaton}
-  If we have a general time policy:
-  \[(p_s, p_e, i, c)\]
+We assume having a special clock variable $\tau_s$ representing the current system time, which will be used for comparing period constraints.
+For readability, whenever we have a period $(p_s, p_e)$ we will use the constraint $\delta_p$, representing our period constraint:
+\[ \delta_p = (p_s \leq \tau_s < p_e) \]
+and its negation
+\[ \lnot\delta_p = (p_s > \tau_s \geq p_e) \]
 
-  Then we can define a timed automaton:
+\subsubsection{Period}
+A period-only policy can be seen as a tuple $(p_s, p_e, c)$, where we previously defined it as having an implicit count value of $c = \infty$.
+This, however, simply means that we can read without further restrictions, as long as our period restriction holds.
 
-  \begin{itemize}
-    \item $\Sigma = \{ v \} \cup \{ \varepsilon \}$
-    \item $S = \{ s_0 \} \cup \{ s_1, s_2, \dots, s_c \}$
-    \item $S_0 = \{ s_0 \}$
-    \item $C = \{ x_1, x_2, \dots, x_c \} \cup \{ \tau_s \}$
-    \item $\begin{aligned}E =& \{ (s_0, s_1, v, \{ x_1 \}, \{ \delta_p \}), (s_1, s_2, v, \{ x_2 \}, \{ \delta_p \}), \dots, (s_{c-1}, s_c, v, \{ x_c \}, \{ \delta_p \})\} \\ &\cup \{ (s_1, s_0, \varepsilon, \emptyset, \{ x_1 \geq i \}), (s_2, s_0, \varepsilon, \emptyset, \{ x_2 \geq i \}), \dots, (s_c, s_0, \varepsilon, \emptyset, \{ x_c \geq i \}) \}\end{aligned}$
-  \end{itemize}
+\begin{figure}[H]
+  \centering
+  \input{figures/timed_automata/general_period.tikz}
+\end{figure}
 
-  Where we have the period clock constraint $\delta_p$ defined as \[p_s \leq \tau_s \leq p_e\]
-  and $\tau_s$ represents the system time.
-\end{definition}
+\subsubsection{Interval}
+An interval-only policy is represented by a tuple $(i, c)$, with the defined implicit count value of $c = 1$.
+Unlike the period-only policy, we now need a clock variable in order to limit the number of consecutive reads.
+Additionally, the automaton can now be stuck in state $s_1$, while the count clock variable $c_1$ is incrementing.
 
-\begin{figure}[h]
-  \resizebox{\linewidth}{!}{\input{figures/ta_general.tikz}}
-  \caption{Visualization of the general \thelang{} time policy translated to a timed automaton.}
-  \label{time:fig:generaltimedautomata}
+\begin{figure}[H]
+  \centering
+  \input{figures/timed_automata/general_interval.tikz}
+\end{figure}
+
+\subsubsection{Period and count}
+When adding a specific count value, we must now add clock variables in order to limit the amount of consecutive reads.
+In addition, since we do not have an interval, we need the negated period constraint in order to properly reset the count whenever the system time is no longer within the period.
+
+\begin{figure}[H]
+  \centering
+  \input{figures/timed_automata/general_period_2count.tikz}
+\end{figure}
+
+\subsubsection{Interval and count}
+
+
+\subsubsection{Period, interval, and count}
+
+
+
+\begin{figure}[H]
+  \centering
+  \input{figures/timed_automata/general_period_interval_2count.tikz}
 \end{figure}
