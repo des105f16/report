@@ -1,7 +1,8 @@
 % !TEX root = ../../master.tex
 
 \section{Timed Automata}\label{automata}
-Here we will shortly define and describe timed automata, based on \cite{alur1994theory}.
+As the first step towards formalising the time policies of \thelang, we will show how they can be translated into timed automata.
+Before doing so, in \cref{automata:timepolicies}, we will first shortly define and describe timed automata, based on \cite{alur1994theory}.
 
 The timed automata is an extension to the $\omega$-automata formalism, allowing for the manipulation of clock-variables, as well as clock-based restrictions.
 The formal definition for a timed automaton can be seen in \cref{time:def:timedautomaton}.
@@ -50,12 +51,12 @@ Once enough time has passed, we can carry out the transition and once again we a
 
 \subsection{Time policies and timed automata}\label{automata:timepolicies}
 In this section, we will show how it is possible to transform \thelang{} time policies into timed automata.
-This will be done by defining abstract time policies, which represent special cases, and showing for each of these a corresponding timed automaton.
+This will be done by defining abstract time policies, which represent our special cases, and showing for each of these a corresponding timed automaton.
 
-We assume having a special clock variable $\tau_s$ representing the current system time, which will be used for comparing period constraints.
-For readability, whenever we have a period $(p_s, p_e)$ we will use the constraint $\delta_p$, representing our period constraint:
+We assume having a special clock variable $\tau_s$ representing the current system time, which will be used for evaluating period constraints.
+For readability purposes, whenever we have a time policy with a period $(p_s, p_e)$ we will use the constraint $\delta_p$, representing our period constraint:
 \[ \delta_p = (p_s \leq \tau_s < p_e) \]
-and its negation
+along with its negation
 \[ \lnot\delta_p = (p_s > \tau_s \geq p_e) \]
 
 \subsubsection{Period}
@@ -65,6 +66,7 @@ This, however, simply means that we can read without further restrictions, as lo
 \begin{figure}[H]
   \centering
   \input{figures/timed_automata/general_period.tikz}
+  \caption{Abstract period-only policy}
 \end{figure}
 
 \subsubsection{Interval}
@@ -75,6 +77,7 @@ Additionally, the automaton can now be stuck in state $s_1$, while the count clo
 \begin{figure}[H]
   \centering
   \input{figures/timed_automata/general_interval.tikz}
+  \caption{Abstract interval-only policy (with implicit $c = 1$)}
 \end{figure}
 
 \subsubsection{Period and count}
@@ -84,6 +87,7 @@ In addition, since we do not have an interval, we need the negated period constr
 \begin{figure}[H]
   \centering
   \input{figures/timed_automata/general_period_2count.tikz}
+  \caption{Abstract policy with a period and count ($c = 2$)}
 \end{figure}
 
 \subsubsection{Interval and count}
@@ -96,9 +100,11 @@ In addition, since we do not have an interval, we need the negated period constr
 \end{figure}
 
 
+\subsubsection{Period, interval, and count}
 
 
 \begin{figure}[H]
   \centering
   \input{figures/timed_automata/general_period_interval_2count.tikz}
+  \caption{Abstract policy with period, interval, and count ($c = 2$)}
 \end{figure}
