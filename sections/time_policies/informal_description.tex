@@ -67,7 +67,7 @@ All except the last policy are preceded with the name of the principal to whom t
 The last policy is not associated with a principal and serves as the default time policy.
 In \cref{time:authority} we describe how a policy is selected from a such a declaration of policies.
 
-\subsection{Applying time policies to the examples}
+\subsection{Applying time policies to the examples}\label{time:policy_examples}
 With the language constructs described in the previous section, we will now revisit our two code examples.
 In the following we will discuss how time policies can be added to the password checker and the bill calculator (see \cref{example:code:check_password-implicit,example:code:calculate_bill-implicit} on pages \pageref{example:code:check_password-implicit} and \pageref{example:code:calculate_bill-implicit} respectively).
 
@@ -291,14 +291,14 @@ Such a check is only required for the runtime aspects of time policies and is th
 In the example below we demonstrate how authority can be used to determine if and how a function should be called.
 
 \begin{minipage}{\linewidth}
-\begin{example}{Using authority for time policies}
+\begin{example}{Using authority for time policies}\label{time:complexcall}
 In the following code example we make use of all the constructs specific to time policies.
 We allow the program to busy-wait if we are allowed to act for the principal \dlmc{u}, otherwise we call the function \dlmc{foo} if we can do so without waiting.
 \begin{lstlisting}[style=dlmc]
   int {{u->u, ec @ u:5m*10; 1h}} foo() {
     // Method body
   }
-  
+
   int getfoo() {
     this -->? u { // Executed if authority can be raised
       return @foo(); // Will wait up to five minues before execution
@@ -314,7 +314,61 @@ We allow the program to busy-wait if we are allowed to act for the principal \dl
 \end{example}
 \end{minipage}
 
-\mikkel{Time constructs applied to the examples}
-
 As the tool developed only considers static evaluation we do not provide a run-time implementation of time policies or the effect of using the two constructs defined above.
 In \cref{automata:timepolicies} we describe how timed automata can be constructed from our time policies.
+
+\subsection{Applying time constructs to the examples}\label{time:construct_examples}
+Now that we have defined time specific language constructs we will demonstrate how they can be used to handle the time policies defined in \cref{time:policy_examples}.
+The constructs will only be used in conjunction with the functions that we applied time policies to.
+
+\myparagraph{Password checker}
+Handling the time policy of the password checker will be done in a very simplistic fashion.
+If the collection of user information cannot be accessed, due to time restrictions, the function will simply return false.
+This is achieved by inserting the following lines in the start of the function:
+
+\begin{lstlisting}[style=dlmc]
+  if (!@?get_users)
+    return false;
+\end{lstlisting}
+
+As the \dlmc{get_users} function call is performed only once after this check, the code is now valid.
+When more than three attempts to validate a password has been made, the function will fail validation on all requests.
+Alternatively we could make the user wait for a response from the server, by simply prepending the \dlmc{get_users} function call with a \dlmc{@}:
+
+\begin{lstlisting}[style=dlmc]
+  user_info *users = @get_users();
+\end{lstlisting}
+
+In this case the response time of the function is massively increased when too many request are made.
+The function will however not produce any false negatives.
+
+\myparagraph{Bill calculation}
+For bill calculation it would not be wise to simply just employ the \dlmc{@} wait construct for usage retrieval.
+The electrical company could then theoretically request data and await 14 days for the result.
+Instead we utilize the scheme for function calls that was demonstrated in \cref{time:complexcall}, and define a helper function for the \dlmc{get_latest_usage} function:
+
+\begin{lstlisting}[style=dlmc]
+  usage *get_latest_usage_timed()
+  {
+    this -->? u
+      return @get_latest_usage();
+    else if (@?get_latest_usage)
+      return get_latest_usage();
+    else
+      return NULL;
+  }
+\end{lstlisting}
+
+As \dlmc{u} can read every second we will accept the waiting period for the users request.
+The electrical company will receive a null pointer value when the time policy does not allow a read.
+
+Naturally we replace the old \dlmc{get_latest_usage} function call with one to \dlmc{get_latest_usage_timed} and include the following check:
+\begin{lstlisting}[style=dlmc]
+  if (usage == NULL)
+    return -1;
+\end{lstlisting}
+
+\myparagraph{Timed code examples}
+With these new constructs the time policies are handled in the both code examples.
+We saw that the constructs made it easy to express simple means of handling time policies, that there are multiple ways to handle policies, and that sets of multiple time policies can easily make use of multiple handling methods.
+
