@@ -57,7 +57,7 @@ In the sections below we describe how these constructs are handled in \thelang.
   \item function call \dlmc{bar<<<p1, p2>>>();}
 \end{itemize}
 
-The following subsections will describe how labels are used in \thelang.
+The following sections will describe how labels are used in \thelang.
 The descriptions will follow the password checker example from \cref{example:sec:check_password}.
 The fully labeled source can be seen in \cref{example:code:check_password-explicit}, on page \pageref{example:code:check_password-explicit}.
 We make use of the \dlmc{principal} declaration in the example to simulate the actual obtaining of system principals.
@@ -114,7 +114,7 @@ This is done by using the \emph{if-acts-for} statement, identified by the \dlmc{
 During compile-time checking we do not differ between the special keywords \dlmc{this} and \dlmc{caller} (see \cref{dlm:functioncall_authority}).
 After obtaining the proper effective authority, we can declassify the label of \dlmc{match}.
 
-It is possible to leave out the explicit label of the declassification, as we will see in the following subsection.
+It is possible to leave out the explicit label of the declassification, as we will see in the following section.
 
 \subsection{Inference}\label{ctif:informal:inference}
 As we have argued repeatedly throughout this report, having to declare labels for every value or function can be time-consuming and can cause clutter in a program.
