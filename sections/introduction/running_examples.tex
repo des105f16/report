@@ -15,8 +15,13 @@ In the code source, the logic in the main function will also not represent an ac
 Related to the protection of smart meter data, we have created a simple example (see \cref{example:code:calculate_bill} and \cref{example:graph:calculate_bill}) which uses data from both consumer and electrical company in order to calculate a bill.
 Here we make use of 4 declared auxiliary functions: \dlmc{get_latest_usage}, \dlmc{get_latest_prices}, \dlmc{send_to_consumer}, and \dlmc{send_to_electrical_company}.
 The actual implementation of these is not important, they are only seen to represent ways of either obtaining data from outside the program, or sending data to outside of the program.
-\mikkelin{Describe how the use of two nested while loops is enough to make it hard for the programmar to determine what the actual information flow is.}
-\mikkelin{Include itemize with forward reference for labeled version of the example and time-construct thingies.}
+Similarly, the implemenation of the \dlmc{calculate_bill} function is not important, it is however worth noting that in even such a small example it can easily become difficult to assert how information flows.
+
+Updated versions of the example, appearing later:
+\begin{itemize}
+  \item With inferred labels -- \cref{example:code:calculate_bill-implicit}, page \pageref{example:code:calculate_bill-implicit}
+  \item Added use of time constructs -- \cref{example:code:calculate_bill-time}, page \pageref{example:code:calculate_bill-time}
+\end{itemize}
 
 \lstinputlisting[float, style=dlmc, numbers=left, caption={Smart meter bill calculation example}, label=example:code:calculate_bill]{dlm_examples/report/calculate_bill.ncif}
 \begin{figure}
@@ -27,10 +32,16 @@ The actual implementation of these is not important, they are only seen to repre
 \end{figure}
 
 \subsection{Password checker}\label{example:sec:check_password}
-A more general example is a password checker (see \cref{example:code:check_password} and \cref{example:graph:check_password}), which takes a username and password combination and checks it against the user database, giving a response to the user whether it was correct or not.
-\mikkel{Why is the password checker more general? - Password checking is found in many devices.}
+This more general example represents a means of authentication, which could be found in many different IoT devices.
+The password checker (see \cref{example:code:check_password} and \cref{example:graph:check_password}) takes a username and password combination and checks it against the user database, giving a response to the user whether it was correct or not.
 Here we have 3 auxiliary functions: \dlmc{get_login}, \dlmc{get_users}, and \dlmc{send_response} -- they represent the two inputs needed, as well as the response to be given.
-\mikkelin{Include itemize with forward reference for labeled version of the example and time-construct thingies.}
+
+Updated versions of the example, appearing later:
+\begin{itemize}
+  \item Fully labeled -- \cref{example:code:check_password-explicit}, page \pageref{example:code:check_password-explicit}
+  \item With inferred labels -- \cref{example:code:check_password-implicit}, page \pageref{example:code:check_password-implicit}
+  \item Added use of time constructs -- \cref{example:code:check_password-time}, page \pageref{example:code:check_password-time}
+\end{itemize}
 
 \lstinputlisting[float, style=dlmc, numbers=left, caption={Password checker example}, label=example:code:check_password]{dlm_examples/report/check_password.ncif}
 \begin{figure}
