@@ -351,7 +351,7 @@ A \emph{variable label} represents a label that should be computed through infer
 When applying inference the label is associated with another label value, known as its current upper bound.
 This upper bound will initially have the value $\top$, representing the most restrictive label and will be relaxed as the algorithm progresses.
 
-When the algorithm completes the current upper bound of a variable label represents the most restrictive label that could be employed instead of the variable label.
+When the algorithm completes, the current upper bound of a variable label represents the most restrictive label that could be employed instead of the variable label.
 This effectively represents the inferred label.
 
 \subsubsection{Constant labels}
@@ -368,7 +368,7 @@ As the two new label types are not directly associated with policies, the join o
 This is true regardless of the label they are being joined or met with.
 
 Our interest in these labels is only temporary.
-Either to determine the most restrictive upper bound or for the purpose of polymorphism.
+Either to determine the most restrictive upper bound or for the purpose of label polymorphism.
 Because of this we are content using a composite representation.
 When replacing a variable or constant label with an actual set of policies the composite structure will be removed by virtue of \cref{dlm:def:join,dlm:def:meet}.
 
@@ -384,7 +384,7 @@ Because of this we will never directly compare variable labels with other labels
 For any constant label $L_c$ we define that $L_c \not \sqsubseteq L$ and $L \not \sqsubseteq L_c$ for any label $L$, with the natural exception of $L_c = L$.
 For label joins we merely seek to identify those cases where we are sure that the comparison evaluates to true, and let the remaining evaluate to false.
 This could result in some false negatives.
-With some insight into the algorithm, as presented in \cref{dlm:inf:algsection}, we note that the effect of false negatives is that the labels inferred could be more relaxed that possibly needed.
+With some insight into the algorithm, as presented in \cref{dlm:inf:algsection}, we note that the effect of false negatives is that the labels inferred could be more relaxed than possibly needed.
 The algorithm does however ensure that all information flow constraints are still valid.
 
 We provide the following definitions given the above description:
