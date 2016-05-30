@@ -442,7 +442,7 @@ Note that the input for the algorithm is a set of constraints.
 In \cref{extraction} we detail how to extract all constraints from source code, though the input for the algorithm can be \textit{any} set of constraints (see \cref{dlm:constraints}).
 The only exception from this rule is that $\sqcap$ labels are not allowed on the left side of a constraint.
 Why this is the case will become apparent as we walk through the algorithm.
-The algorithm does not return a result, but instead works through the side effect of updating the variable labels current upper bound.
+The algorithm does not return a result, but instead works through the side effect of updating the current upper bound for variable labels.
 
 \input{algorithms/inference.tex}
 
@@ -485,7 +485,7 @@ Because meet labels are not allowed in label declarations, we can be sure that t
 \myparagraph{Computing labels}
 Having taking the necessary initializing steps the algorithm checks that each constraint in the constraints set is valid.
 If all constraints are valid we know that the information flow of the program is valid and the algorithm can terminate.
-Thus, if we have explicit stated all labels, the algorithm simply performs a check of weather the information flow is valid.
+Thus, if we have explicitly stated all labels, the algorithm simply performs a check of weather the information flow is valid.
 
 If a constraint is not valid one of two things will happen, based on the type of label on the left hand side of the constraint:
 \begin{itemize}
