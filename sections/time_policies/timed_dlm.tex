@@ -7,9 +7,9 @@
 \section{The Timed Decentralized Label Model}
 The Timed Decentralized Label Model (TDLM) is an extension to the original DLM which uses the concepts of DLM and extends the security labels with time policies. \cite{pedersen2015}.
 The TDLM time policies are attached to read or write policies, adding time-based access restrictions to labeled data.
-As opposed to \thetool, it also employs differing between read and write policies, as well as principal hierarchies, these will however not be addressed for time being.
+As opposed to \thelang, it also employs differing between read and write policies, as well as principal hierarchies, these will however not be addressed here.
 What we are interested in is the usage of TDLM and what kinds of policies can be expressed.
-Therefore we will first explore its usage and afterwards point out its shortcomings.
+Therefore we will first explore its usage and then compare it to \thelang.
 
 \subsection{Usage}
 The overall idea is that \emph{clock comparisons} rules can be added to the policies of labels.
@@ -38,6 +38,8 @@ $?xreset$ names a reset event name for $x$, while $*xreset$ triggers the event $
 Now, instead of resetting every 1 second, $x$ is reset to 0 any time that $r_1$ reads the attached value, effectively limiting $r_1$ to wait at least 500 ms between each read.
 
 \subsection{Comparison}
+We will here make a simple comparison of time constraints expressed in TDLM and with those expressed in \thelang.
+The goal here is to ascertain the expressibility and simplicity of \thelang.
 
 \begin{tabular}{|l|l|}
   \hline
