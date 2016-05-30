@@ -117,7 +117,7 @@ After obtaining the proper effective authority, we can declassify the label of \
 It is possible to leave out the explicit label of the declassification, as we will see in the following subsection.
 
 \subsection{Inference}\label{ctif:informal:inference}
-As we have argued repeatedly throughout this report, having to declare labels for every value or function can be time-consuming and can cause a clutter in a program.
+As we have argued repeatedly throughout this report, having to declare labels for every value or function can be time-consuming and can cause clutter in a program.
 Therefore we can instead rely on inference so that some labels may be omitted.
 In \cite{myers1997} it is only described what leaving out labels for variables and parameters mean, and not functions.
 Therefore we have reasoned about the implications of leaving out the function label and come up with a reasonable solution, so that we can leave out those labels and still expect proper results.
@@ -152,13 +152,14 @@ Because of this we are able to leave out all label declarations for variables.
 
 \myparagraph{Declassification}
 Similar to variables, we can leave out the explicitly declared label for the declassification expression.
-This creates a variable label for that expression, so that we can rely on inference in a similar fashion as with any other value labeled with a variable label.
+This creates a variable label for that expression, such that we can let inference determine which declassification will satisfy our remaining constraints.
 
 \myparagraph{Functions and parameters}
 If no explicitly declared label is found for a function declaration, the label defaults to a join of all parameter labels ($\bot$ if the function has no parameters).
 This is based on an assumption about the minimum security needed for a function, in that whatever a function returns can be related to at most whatever arguments are given.
-This is useful for declaring auxiliary functions, without having to explicitly declare the security implications of such a function.
+If this is not the case the label of the source where the function retrieves data is included in the functions information flow and will most likely result in an invalid constraint.
 
+The use of implicit function return labels is useful for declaring auxiliary functions, without having to explicitly declare the security implications of such a function.
 For our password checker we could declare an auxiliary function \dlmc{strcicmp}, for doing a case-insensitive check of usernames, with the following prototype:
 \begin{center}
   \dlmc{bool strcicmp(char *a, char *b);}
