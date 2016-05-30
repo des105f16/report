@@ -52,7 +52,7 @@ Once enough time has passed, we can carry out the transition and from there we a
 
 \subsection{Time policies and timed automata}\label{automata:timepolicies}
 In this section, we will show how it is possible to transform \thelang{} time policies into timed automata.
-This will be done by defining several abstract time policies, representing any variation, and showing for each of these a corresponding timed automaton.
+This will be done by defining several abstract time policies, representing any variation depending on the included time constituents, and showing for each of these a corresponding timed automaton.
 
 We assume having a special clock variable $\tau_s$ representing the current system time, which will be used for evaluating period constraints.
 For readability purposes, whenever we have a time policy with a period $(p_s, p_e)$ we will use the constraint $\delta_p$, representing our period constraint:
@@ -61,7 +61,7 @@ along with its negation
 \[ \lnot\delta_p = (p_s > \tau_s \geq p_e) \]
 
 \subsubsection{Period}
-A period-only policy is represented as a tuple $(p_s, p_e, \infty)$, since we previously defined it as having an implicit count value of $c = \infty$.
+A period-only policy is represented by a tuple $(p_s, p_e, \infty)$, since we previously defined it as having an implicit count value of $c = \infty$.
 In this case, however, $c = \infty$ simply means that we can read without further restrictions, as long as our period constraint holds.
 
 \begin{figure}[H]
@@ -72,7 +72,7 @@ In this case, however, $c = \infty$ simply means that we can read without furthe
 
 \subsubsection{Interval}
 An interval-only policy is represented by a tuple $(i, 1)$, with the implicit count value of $c = 1$.
-We will now need a clock variable in order to limit the number of consecutive reads.
+We will now need a clock variable in order to limit the number of consecutive reads within the given interval.
 Additionally, $s_1$ will now also represent a state in which the first (and in this case only) read has been performed.
 The automaton can now be stuck in state $s_1$, while waiting for the interval constraint to be fulfilled.
 
