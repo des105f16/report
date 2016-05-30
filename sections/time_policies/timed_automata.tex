@@ -2,9 +2,9 @@
 
 \section{Timed Automata}\label{automata}
 As the first step towards formalising the time policies of \thelang, we will show how they can be translated into timed automata.
-Before doing so, in \cref{automata:timepolicies}, we will first shortly define and describe timed automata, based on \cite{alur1994theory}.
+Before doing so in \cref{automata:timepolicies}, we will first shortly define and describe timed automata, based on \cite{alur1994theory}.
 
-The timed automata is an extension to the $\omega$-automata formalism, allowing for the manipulation of clock-variables, as well as clock-based restrictions.
+The timed automata is an extension to the $\omega$-automata formalism, allowing for the manipulation of clock-variables, as well as clock-based constraints.
 The formal definition for a timed automaton can be seen in \cref{time:def:timedautomaton}.
 
 \begin{definition}{Timed automaton}\label{time:def:timedautomaton}
@@ -22,11 +22,11 @@ A timed automaton is a tuple $(\Sigma, S, S_0, C, E)$, where
 
 In \cref{time:ex:visualrepresentation} can be seen a visualization of a timed automaton.
 Generally, for each edge we have the input $\sigma$, clock resets $\lambda$, and clock constraints $\phi(C)$.
-In our examples, the input will symbolize an action performed along with the transition, reading a value with the corresponding name.
-Clock resets are denoted $x := 0$, which corresponds to $\lambda = \{ x \}$, and will reset the clock variable $x$ to 0.
-Finally, clock constraints are declared, denoted $(x >= 10m)?$, which is a single clock constraint for the clock variable $x$.
-Several input characters, clock resets, and clock constraints can be defined for a single edge, the syntax should make it clear which are which.
-It should also be noted that the time constants used will use the same time factors as those described for our time policies (see \cref{time:expressiveness}).
+In our automata, the input will represent the action of reading a value with the corresponding name.
+Clock resets are denoted $x := 0$, which corresponds to $\lambda = \{ x \}$, and in this case will reset the clock variable $x$ to 0.
+Clock constraints are denoted $(x >= 10m)?$, which is a single clock constraint for the clock variable $x$.
+Several input characters, clock resets, and clock constraints can be defined for a single edge, the syntax is used to distinct between them.
+It should also be noted that, in our clock constraints, we will use the same concept of time factors as those described for our time policies (see \cref{time:expressiveness}).
 
 \begin{example}{Visual representation}\label{time:ex:visualrepresentation}
 In this example we have a timed automata with the following characteristica:
@@ -39,9 +39,10 @@ In this example we have a timed automata with the following characteristica:
 \end{itemize}
 This timed automaton is concerned with protecting the value of $v$, which should be read with at least 10 minutes inbetween reads.
 We start in state $s_0$, with all clock variables initially set to $0$ (although this is not important for this example).
-At some point, we make the transition from $s_0$ to $s_1$, which is an unrestricted transition, $x$ will be reset and we perform the action of reading $v$.
-Now, in $s_1$, we cannot transition back to our initial state before we have waited for at least 10 minutes, hence the restriction on the edge going from $s_1$ to $s_0$.
-Once enough time has passed, we can carry out the transition and once again we are permitted to perform the first transition in order to read $v$.
+At some point, we can make the transition from $s_0$ to $s_1$, which is an unconstrained transition.
+Once we do this $x$ will be reset and we perform the action of reading $v$.
+Now, in $s_1$, we cannot transition back to $s_0$ before we have waited for at least 10 minutes, hence the constraint on the edge going from $s_1$ to $s_0$.
+Once enough time has passed, we can carry out the transition and from there we are again permitted to perform the transition from $s_0$ to $s_1$ in order to read $v$.
 
   \begin{figure}[H]
     \centering
