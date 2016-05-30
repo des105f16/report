@@ -1,6 +1,6 @@
 % !TEX root = ../../master.tex
 
-\section{Constraint Extraction}\label{extraction}
+\section{Constraint extraction}\label{extraction}
 \mikaelin{Page numbers disappear somewhere around here...}
 \mikkelin{Along with the page header...}
 In this section we will give a formal definition of how constraints are extracted from a \thelang~ program.
@@ -212,7 +212,7 @@ As the label value for an undeclared label depends on its context, $\varepsilon$
 \label{cstr:label_policy}
 \end{table}
 
-\subsection{Function Declarations}
+\subsection{Function declarations}
 Function declaration (along with function call) can easily be considered the most complex rule(s).
 
 For the return label $\ilv_f$ for a function declaration it is possible to reference the parameters of that function.
@@ -249,7 +249,7 @@ When no readers have been declared, $R_o$ obtained from the condition $R_o = \{ 
 \label{cstr:functiondeclaration}
 \end{table}
 
-\subsection{Variable Declaration}
+\subsection{Variable declaration}
 New labels are introduced when declaring variables.
 A variable declaration without initialization uses $\bot$ as the label value for the missing initialization value.
 
