@@ -22,16 +22,16 @@ Additionally we provide elaborate descriptions for some of these constructs, as 
 \myparagraph{Structs and arrays}
 It is possible to define structs, so that the defined type can be used similarly to any other type.
 Both structs and arrays can be declared, arrays by using pointer-notation.
-However, it is not possible to initialize neither struct or array.
-We still have index and element expressions, with a simple implementation, which only takes into account the label of the struct/array variables.
+For this we allow for index and element expressions, with a simple implementation, which only takes into account the label of the struct/array variables.
 
-We have chosen to leave initilization for structs and arrays out for now, as we found no proper solution for handling policies for individual fields and elements.
+We have chosen to leave out labeling of individual struct field and array elements.
 In \cite{myers1997} labels can be applied to structs by labeling the variable.
 Additionally, fields can be labeled, resulting in a special rule for the evaluation of accessing struct fields, which is the label join of the struct label and the accessed field's label.
 We, however, find it somewhat illogical to label a type, since different usage of a certain type may call for different labeling.
 
 \myparagraph{Pointers}
-Similar to both \cite{muller2015cif} and \cite{maciazek2016cbif} we allow for pointer declarations and for the two pointer operations dereference and address-of, but disallow pointer arithmetics.
+Similar to both \cite{muller2015cif} and \cite{maciazek2016cbif} we allow for pointer declarations and for the two pointer operations dereference and address-of.
+There is no restriction on the use of pointer arithmetics in \thelang.
 Pointer arithmetics is deemed too big of a subject to handle within the scope of this report, and without proper handling it is potentially highly error-prone.\footnote{\url{https://www.securecoding.cert.org/confluence/display/c/EXP08-C.+Ensure+pointer+arithmetic+is+used+correctly}}
 
 \section{Informal Description}
@@ -46,7 +46,10 @@ The syntax for labels consists of 5 components:
   \item special values \dlmc{_} (underscore, for bottom label) and \dlmc{^} (caret, for top label)
 \end{itemize}
 
-Besides the actual labels we also have the related constructs, which were presented in \cref{dlm:auth_and_declass,dlm:channels}:
+Besides the actual labels we also have the following related language constructs.
+The theory for these was described in \cref{dlm:auth_and_declass,dlm:channels}.
+In the sections below we describe how these constructs are handled in \thelang.
+
 \begin{itemize}
   \item output channel \dlmc{p1, p2 <- foo();}
   \item if acts for \dlmc{-->? p1, p2 \{ /* statements */ \}}
