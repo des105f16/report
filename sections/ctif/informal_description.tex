@@ -63,9 +63,10 @@ Besides the actual labels we also have the related constructs, which were presen
 The following subsections will describe how labels are used in \thelang.
 The descriptions will follow the password checker example from \cref{example:sec:check_password}.
 The fully labeled source can be seen in \cref{example:code:check_password-explicit}, on page \pageref{example:code:check_password-explicit}.
+We make use of the \dlmc{principal} declaration in the example to simulate the actual obtaining of system principals.
 
 \subsection{Function declarations}
-The first thing we would want to label in a program is what can be seen as the bigger components; the functions that either obtain data from outside or send data to outside the program -- our channels.
+The first thing we would want to label in a program is what can be seen as the bigger components; the functions that either obtain data from outside or send data to outside the program -- our channels.\mikael{Omformuler så det handler om channels.}
 In \thelang{} we have no distinction between input channels and any other function which has a return value.
 However, output channels are distinguishable by having the \dlmc{<-} construct, preceded by one or more principals (readers).
 Output channel declarations are initially checked as with any other function.
@@ -75,7 +76,7 @@ For \dlmc{check_password} we have the 3 auxiliary functions, as well as the \dlm
 \lstinputlisting[style=dlmc, numbers=left, linerange={11-15}, firstnumber=11]{dlm_examples/report/check_password-explicit.ncif}
 \end{minipage}
 
-Here we have two principals: user (u) and password checker (pc).\footnote{We make use of the \dlmc{principal} declaration in the full example to simulate the actual obtaining of system principals.}
+Here we have two principals: user (u) and password checker (pc).
 The user provides some login information, to which he is the owner.
 The password checker is a trusted principal which has access to the user database.
 The final output is sent to an output channel which is readable only be the user.
@@ -87,7 +88,7 @@ However, if no label is supplied for a parameter, that parameter is recognized a
 
 \subsection{Variable declarations}
 The labeling of variable declarations is done mainly to oblige the return values of functions and input, given by either parameters or auxiliary function calls.
-This is also why most of these labels are easier to infer, and can therefore often be left out, as we shall see later in this section.
+This is also why most of these labels are easier to infer, and can therefore often be left out, as we shall see in \cref{ctif:informal:inference}.
 
 For \dlmc{check_password} we have the following labeling of variables:\\
 \begin{minipage}{\linewidth}
@@ -115,7 +116,7 @@ After obtaining the proper effective authority, we need to clear the return valu
 
 It is possible to leave out the explicit label of the declassification, as we will see in the following subsection.
 
-\subsection{Inference}
+\subsection{Inference}\label{ctif:informal:inference}
 As we have argued repeatedly throughout this report, having to declare labels for every value or function can be time-consuming and can cause a clutter in a program.
 Therefore we can rely on inference so that many labels can be omitted.
 In \cite{myers1997} it is only described what leaving out labels for variables and parameters mean, and not functions.
