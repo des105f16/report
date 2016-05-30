@@ -154,11 +154,11 @@ In order to check that security policies are enforced throughout a program, we n
 To do this we introduce the ``at most as restrictive as''-relation ($\sqsubseteq$) from \cite{myers1997}.
 
 \begin{definition}{Label Restrictiveness}\label{dlm:def:restrict}
-  Label $L_1$ is at most as restrictive as label $L_2$ ($L_1 \sqsubseteq L_2$) if it (1) does not have more owners and (2) each owner does not have a smaller reader set:
-  \begin{align*}
-    & \text{(1) } owners(L_1) \subseteq owners(L_2) \text{ and} \\
-    & \text{(2) } \forall o \in owners(L_1) . readers(L_1, o) \supseteq readers(L_2, o)
-  \end{align*}
+  Label $L_1$ is at most as restrictive as label $L_2$ ($L_1 \sqsubseteq L_2$) if it (\ref{dlm:def:restrict:owners}) does not have more owners and (\ref{dlm:def:restrict:readers}) each owner does not have a smaller reader set:
+  \begin{align}
+    & owners(L_1) \subseteq owners(L_2) \text{ and} \label{dlm:def:restrict:owners} \\
+    & \forall o \in owners(L_1) . readers(L_1, o) \supseteq readers(L_2, o) \label{dlm:def:restrict:readers}
+  \end{align}
 \end{definition}
 
 We can employ this definition to determine if two labels are equal:
@@ -399,41 +399,40 @@ These definitions for determining how restrictive labels are will be used for th
 
 \subsection{Output channels}
 As previously described, the way output channels are checked is by comparing the reader set of the output with the effective reader set of the outputted value(s).
-This means that if we have an output channel $c$ with readers $R_c$ and some labeled output values $V$, we must have that
+This means that for an output channel with readers $R_c$ and some labeled output values $V$, we must have that
 \[ \forall v \in V.R_c \subseteq readers(\underline{v}) \]
-in order for the flow to be valid.
+in order for the information flow to be valid.
 
 We will instead opt for a different method, so that we can leave the checking of output channels to our inference algorithm, similar to any other inferrable construct.
 This is so that we can use inference for output channels as well, which is not possible when using the ``simple'' comparison of reader sets.
 
 \begin{definition}{Output channel constraints}\label{dlm:def:outputconstraints}
-Say that we have the set of all readers $ * = \{p_1, p_2, \dots, p_k\} $ and an output channel $c$ with readers $R_c$ and labeled input values $V$.
+Let $ \{p_1, p_2, \dots, p_k\} $ be the set of all principals in a system.
+Then for an output channel with readers $R_c$ and labeled input values $V$, we define an associated label:
 
-We then define the label for output channel $c$ as
 \[ L_c = \{ p_1 \rightarrow R_c; p_2 \rightarrow R_c, \dots, p_k \rightarrow R_c \} \]
 
-In order for values $V$ to flow through $c$, we must have that
+That is, a label owned by all the principals in the system, where each owner allows all principals in $R_c$ to read.
+With this label, the output channel is associated with the following set of constraints:
+
 \[ \forall v \in V.\underline{v} \sqsubseteq L_c \]
 \end{definition}
 
-This method instead relies on \cref{dlm:def:restrict} to compare the labels of the output channel and the inputs.
-By adding all principals to the owner set of $L_c$, (1) will always hold, and the $\sqsubseteq$ relation will effectively only be a comparison of readers.
-As can be seen in \cref{dlm:def:restrict_readers}, (2) will yield the same result as the simple comparison of reader sets.
+This approach will allow the inference algorithm to check the reader set of an output channel, effectively providing inference for any values that are passed to an output channel.
+Below we demonstrate that this approach is equivalent to comparing reader sets, by showing that
 
-\begin{definition}{$\sqsubseteq$ and $readers$}\label{dlm:def:restrict_readers}
-Extending upon \cref{dlm:def:outputconstraints}, we will show that in order to use $\sqsubseteq$ for output channels, we must first show that
-\[ \forall v \in V . \underline{v} \sqsubseteq L_c \equiv readers(c) \subseteq readers(\underline{v}) \]
+\[ \underline{v} \sqsubseteq L_c \Rightarrow R_c \subseteq readers(\underline{v}) \text{, for any } v \in V \]
 
-From \cref{dlm:def:effectivereaders} we have that
-\[ readers(L) = \bigcap_{o \in *} readers(L, o) \]
-and from \cref{dlm:def:restrict} (2) we have that
-\[ \forall o \in owners(\underline{v}) . readers(\underline{v}, o) \supseteq readers(L_c, o) \]
+When evaluating the above constraint we note that (\ref{dlm:def:restrict:owners}) will always be true, as $owners(L_c)$ is the set of all principals.
+We will then apply (\ref{dlm:def:restrict:readers}) to the same constraint to get
 
-Through our definition of $L_c$, we have that
-\[ readers(L_c) = \bigcap\limits_{o \in *} readers(L_c, o) = \{p_1, p_2, \dots, p_k\} \]
+\[ \forall o \in owners(v) . readers(v, o) \supseteq readers(L_c, o) \]
 
-\mikaelin{Unfinished business, probably does not make sense.}
-\end{definition}
+From \cref{dlm:def:outputconstraints} we know that $readers(L_c, o) = R_c$, for any principal $o$ in the system.
+Finally we see from \cref{dlm:def:effectivereaders} that $readers(v, o) \supseteq readers(v)$, for any principal $o$ in the system.
+Thus we know that
+
+\[ readers(v, o) \supseteq readers(v) \supseteq R_c \text{, for any } o \in owners(v) \]
 
 \subsection{Inference algorithm}\label{dlm:inf:algsection}
 Using the established extensions of labels we present the inference algorithm (see \cref{dlm:inf:algorithm}).
