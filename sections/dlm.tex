@@ -52,6 +52,7 @@ This set contains all the principals in a system.
 \myparagraph{Labels}
 A label can be described as a set of policies, where a policy consists of an owner principal $o$ and a set of reader principals $r_1, r_2, \dots, r_n$.
 Formally we provide the following, equivalent definition:
+
 \begin{definition}{Labels}\label{dlm:def:label}
 A label $L$ is a set of owners $owners(L)$, and a function $readers(L, o)$ that retrieves the set of reader principals that $o$ allows to read.
 Note that given this definition we have that $$o \notin owners(L) \Rightarrow readers(L, o) = *$$
@@ -65,6 +66,7 @@ He is however still allowed to change his policy.
 \myparagraph{The effective reader set}
 To ensure that the policies of all owners in a label are enforced, only readers that all owners ``agree'' can read from the slot associated with the label.
 This is known as the \emph{effective reader set}, which is the intersection of \emph{all} reader sets of a label:
+
 \begin{definition}{The effective reader set}\label{dlm:def:effectivereaders}
   The reader set of a label $L$ is the set of readers that are in the reader set of all owners:
   $$readers(L) = \bigcap_{o \in *} readers(L, o)$$

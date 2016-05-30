@@ -4,16 +4,20 @@
 \def\theoremframecommand{{\color{gray!50}\vrule width 5pt \hspace{5pt}}}
 \newshadedtheorem{exa}{Example}[chapter]
 \newenvironment{example}[1]{%
+	\begin{minipage}{\linewidth}
 		\begin{exa}[#1]
 }{%
 		\end{exa}
+	\end{minipage}
 }
 
 \newshadedtheorem{defini}{Definition}[chapter]
 \newenvironment{definition}[1]{%
+	\begin{minipage}{\linewidth}
     \begin{defini}[#1]
 }{%
     \end{defini}
+	\end{minipage}
 }
 
 \newcommand{\gp}{\; | \;} % extra margin grammar pipe
