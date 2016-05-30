@@ -52,11 +52,12 @@ The syntax for labels consists of 5 components:
   \item special values \dlmc{_} (underscore, for bottom label) and \dlmc{^} (caret, for top label)
 \end{itemize}
 
-Besides the actual labels we also have the 3 related constructs, which were presented in \cref{dlm:auth_and_declass,dlm:channels}:
+Besides the actual labels we also have the related constructs, which were presented in \cref{dlm:auth_and_declass,dlm:channels}:
 \begin{itemize}
   \item output channel \dlmc{p1, p2 <- foo();}
   \item if acts for \dlmc{-->? p1, p2 \{ /* statements */ \}}
   \item declassify \dlmc{<|v, l|>}
+  \item function call \dlmc{bar<<<p1, p2>>>();}
 \end{itemize}
 
 The following subsections will describe how labels are used in \thelang.
