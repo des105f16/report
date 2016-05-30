@@ -424,8 +424,8 @@ Below we demonstrate that this approach is equivalent to comparing reader sets, 
 
 \[ \underline{v} \sqsubseteq L_c \Rightarrow R_c \subseteq readers(\underline{v}) \text{, for any } v \in V \]
 
-When evaluating the above constraint we note that (\ref{dlm:def:restrict:owners}) in \cref{dlm:def:restrict} will always be true, as $owners(L_c)$ is the set of all principals.
-We will then apply (\ref{dlm:def:restrict:readers}) to the same constraint to get
+When evaluating the above constraint we note that \cref{dlm:def:restrict:owners} in \cref{dlm:def:restrict} will always be true, as $owners(L_c)$ is the set of all principals.
+We will then apply \cref{dlm:def:restrict:readers} to the same constraint to get
 
 \[ \forall o \in owners(\underline{v}) . readers(\underline{v}, o) \supseteq readers(L_c, o) \]
 
