@@ -12,6 +12,8 @@
 \SetKw{True}{true}
 \SetKwData{Checked}{checked}
 \SetKwFunction{Unjoin}{unjoin}
+\SetKwFunction{Cub}{cub}
+\SetKwFunction{Novar}{novar}
 \KwData{A set $Q$ of constraints $"L_1 \sqsubseteq L_2"$}
 
 \ForEach {$"L_1 \sqsubseteq L_2" \in Q$}
@@ -23,7 +25,7 @@
 {
   \If {$L_1$ is a variable label}
   {
-    $\text{cub}(L_1) := \top$\;
+    $\Cub(L_1) := \top$\;
   }
 }
 \Checked := \False\;
@@ -32,11 +34,11 @@
   \Checked := \True\;
   \ForEach {$"L_1 \sqsubseteq L_2" \in Q$}
   {
-    \If {$L_1 \not\sqsubseteq L_2$}
+    \If {$\Novar(L_1) \not\sqsubseteq \Novar(L_2)$}
     {
       \eIf {$L_1$ is a variable label}
       {
-        $\text{cub}(L_1) := \text{cub}(L_1) \sqcap \text{cub}(L_2)$\;
+        $\Cub(L_1) := \Cub(L_1) \sqcap \Novar(L_2)$\;
         \Checked := \False\;
       }
       {
