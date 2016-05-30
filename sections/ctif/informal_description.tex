@@ -83,7 +83,7 @@ The final output is sent to an output channel which is readable only by the user
 Here we also need to add labels to the parameters, otherwise we would not be able to statically check the function, as the actual labels for the parameters could differ between different calls to the function, but by supplying the labels we know that the policies will have to hold for all usage.
 When supplied with a label, parameters are treated as any other variable when evaluating a function declaration.
 However, if no label is supplied for a parameter, that parameter is recognized as labeled with a constant label.
-This is used to provide label inference for function parameters, as we shall see in 
+This is used to provide label inference for function parameters, as we shall see in
 
 \subsection{Variable declarations}
 The labeling of variable declarations is done mainly to oblige the return values of functions and input, given by either parameters or auxiliary function calls.
@@ -97,28 +97,28 @@ For \dlmc{check_password} we have the following labeling of variables:\\
 
 The labeling applied here is done so that it obliges the different inputs to the method.
 The most noteworthy here is the labeling of \dlmc{match}, as it through its assignment within both the \dlmc{while} and \dlmc{if} blocks will implicitly obtain knowledge of all other labeled values.
-It is therefore labeled with the join of all those labels: \dlmc{\{\{u->u;pc->\}\}} so that it is at most as strict as all.
+It is therefore labeled with the join of all those labels: \dlmc{\{\{u->u;pc->\}\}} so that it matches them all.
 
 \subsection{If-acts-for and declassification}\label{ctif:informal:ifactsfor_declassify}
 Going into \dlmc{check_password} we have data that is privy to the user as well as data that is not.
-So before we can return the result to the user, we need to explicitly declare that in this particular case it is an intentional leak of the password checker's data (the user db).
+So before we can return the result to the user, we need to explicitly declare that in this particular case it is an intentional leak of the password checker's data (the collection of all user data).
 
-This is done with the declassification delimiter \dlmc{<| |>} which takes two arguments, an expression to be declassified and the new label.
+This is done with the declassification operator \dlmc{<| |>} which has two operands, an expression to be declassified and the new label.
 For \dlmc{check_password} we need to declassify and return \dlmc{match}:\\
 \begin{minipage}{\linewidth}
 \lstinputlisting[style=dlmc, numbers=left, linerange={28-30}, firstnumber=28]{dlm_examples/report/check_password-explicit.ncif}
 \end{minipage}
 
 As can be seen we also need to obtain the proper authority before such a declassification is possible.
-This is done by using the \emph{if-acts-for} statement, identified by the \dlmc{-->?} syntax, which is preceded by type of authority and followed by principals to acquire authority for.
-During compile-time checking we do not differ between the special keywords \dlmc{this} and \dlmc{caller}.
-After obtaining the proper effective authority, we need to clear the return value's label of the policy of \dlmc{pc}, as explained in the beginning of this subsection.
+This is done by using the \emph{if-acts-for} statement, identified by the \dlmc{-->?} operator, which is preceded by type of authority and followed by principals to acquire authority for.
+During compile-time checking we do not differ between the special keywords \dlmc{this} and \dlmc{caller} (see \cref{dlm:functioncall_authority}).
+After obtaining the proper effective authority, we can declassify the label of \dlmc{match}.
 
 It is possible to leave out the explicit label of the declassification, as we will see in the following subsection.
 
 \subsection{Inference}\label{ctif:informal:inference}
 As we have argued repeatedly throughout this report, having to declare labels for every value or function can be time-consuming and can cause a clutter in a program.
-Therefore we can rely on inference so that many labels can be omitted.
+Therefore we can instead rely on inference so that some labels may be omitted.
 In \cite{myers1997} it is only described what leaving out labels for variables and parameters mean, and not functions.
 Therefore we have reasoned about the implications of leaving out the function label and come up with a reasonable solution, so that we can leave out those labels and still expect proper results.
 
@@ -126,14 +126,15 @@ As we have seen, explicit labels can be applied to the three types of declaratio
 Here we will explain what it means to leave out any of those labels in a program.
 An overview of the different rules that apply are given here:
 \begin{table}[H]
-  \begin{tabularx}{\textwidth}{|l|X|}
+  \centering
+  \begin{tabular}{|l|l|}
     \hline
     \textbf{Construct} & \textbf{Default label} \\ \hline \hline
     Variable & Variable label \\ \hline
     Declassification & Variable label \\ \hline
     Function & The join of all parameter labels \\ \hline
     Parameter & Constant label \\ \hline
-  \end{tabularx}
+  \end{tabular}
   \caption{Default labels for unlabeled constructs}
   \label{informal:table:default_labels}
 \end{table}
@@ -147,7 +148,7 @@ Similarly, the calculate bill example has been labeled as well (see \cref{exampl
 \myparagraph{Variable}
 As explained above, by removing the explicitly declared label for a variable, we instead rely on the inference algorithm to satisfy any constraints.
 Since we have explicitly declared the labels for all our channels and \dlmc{check_password}, we do not need to explicitly label all our variables as well.
-This results us in being able to leave out all label declarations for variables.
+Because of this we are able to leave out all label declarations for variables.
 
 \myparagraph{Declassification}
 Similar to variables, we can leave out the explicitly declared label for the declassification expression.
@@ -158,21 +159,26 @@ If no explicitly declared label is found for a function declaration, the label d
 This is based on an assumption about the minimum security needed for a function, in that whatever a function returns can be related to at most whatever arguments are given.
 This is useful for declaring auxiliary functions, without having to explicitly declare the security implications of such a function.
 
-For our password checker we could declare an auxiliary function \dlmc{strcicmp}, for doing a case-insensitive check of usernames, with the following prototype:\\
-\begin{minipage}{\linewidth}
-  \centering
+For our password checker we could declare an auxiliary function \dlmc{strcicmp}, for doing a case-insensitive check of usernames, with the following prototype:
+\begin{center}
   \dlmc{bool strcicmp(char *a, char *b);}
-\end{minipage}
-\dlmc{stricmp} would then have the label \dlmc{\{\{a;b\}}}, per our default label for function declarations, and any evaluation of calls to \dlmc{stricmp} would result in a label which is the join of all its arguments.
+\end{center}
+\dlmc{strcicmp} would then have the label $\underline{\texttt{a}} \sqcup \underline{\texttt{b}}$, per our default label for function declarations, and any evaluation of calls to \dlmc{strcicmp} would result in a label which is the join of all its arguments.
 This is the default behaviour of library functions, which can be overridden by declaring a labeled prototype with the corresponding library function signature.
 
 Extending on the concept of referencing parameter labels in function return labels, we can choose which parameters to reference.
-If we take the function \dlmc{stricmp} and want to extend it with a maximum amount of characters to compare before failing, we could have that its signature was:\\
-\begin{minipage}{\linewidth}
-  \centering
-  \dlmc{bool \{\{a;b\}\} stricmp(char *a, char *b, int max_length);}
-\end{minipage}
-Similar to the previous example, we have that any calls to \dlmc{stricmp} will be evaluated to the join of its arguments, but this time only the arguments \dlmc{a} and \dlmc{b}, thus any security applied to \dlmc{max_length} will not affect the label of the return value.
+If we take the function \dlmc{stricmp} and want to extend it with a maximum amount of characters to compare before failing, we could have that its signature was:
+\begin{center}
+  \dlmc{bool \{\{a;b\}\} strcicmp(char *a, char *b, int max_length);}
+\end{center}
+Similar to the previous example, we have that any calls to \dlmc{strcicmp} will be evaluated to the join of its arguments, but this time only the arguments \dlmc{a} and \dlmc{b}, thus any security applied to \dlmc{max_length} will not affect the label of the return value.
+
+Alternatively, we could have opted to label the latter definition as below:
+\begin{center}
+  \dlmc{bool strcicmp(char *a, char *b, int \{\{_\}\} max_length);}
+\end{center}
+Even though we have a joined label of all parameters, \dlmc{max_length} would be omitted by any evaluation of labels.
+The label is effectively the same, namely $\underline{\texttt{a}} \sqcup \underline{\texttt{b}}$.
 
 \lstinputlisting[float, style=dlmc, numbers=left, caption={Labelled password checker example}, label=example:code:check_password-explicit]{dlm_examples/report/check_password-explicit.ncif}
 

@@ -5,8 +5,8 @@
 \mikkelin{Along with the page header...}
 In this section we will give a formal definition of how constraints are extracted from a \thelang~ program.
 This formal definition will be based on denotational semantics, and will therefore utilize the concepts thereof.
-We will define our syntactic and semantic setup, which will serve as a base for the rules for how constraints are extracted from a \thelang~ program.
-Following the setup, we will present the semantic equations, which describe how constraints are extracted from the individual program constructs.
+We will define our syntactic and semantic setup, which will be used to define how constraints are extracted from a \thelang~ program.
+Following the setup, we will present semantic equations, which describe how constraints are extracted from the individual program constructs.
 
 \subsection{Syntax}
 Below follows an abstract syntax that describes the structure of our grammar.
@@ -34,8 +34,9 @@ The latter is not directly apparent here, as some syntactical details have been 
   \begin{align*}
     R         & ::= D \\
     D         & ::= D_F \gp D_V \gp D_1 \; D_2 \\
-    D_F       & ::= p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{<-} \; t_f \; l_f \; f \tk ( t_1 \; l_1 \; x_1 \tk , t_2 \; l_2 \; x_2 \tk , \dots \tk , t_n \; l_n \; x_n \tk ) S \\
-    D_V       & ::= t \; l \; \tk * x \tk = E \gp t \; l \; \tk * x \\
+    D_F       & ::= t_f \; l_f \; f \tk ( t_1 \; l_1 \; x_1 \tk , t_2 \; l_2 \; x_2 \tk , \dots \tk , t_n \; l_n \; x_n \tk ) S \\
+              & \gp p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{<-} \; t_f \; l_f \; f \tk ( t_1 \; l_1 \; x_1 \tk , t_2 \; l_2 \; x_2 \tk , \dots \tk , t_n \; l_n \; x_n \tk ) S \\
+    D_V       & ::= t \; l \; x \tk = E \gp t \; l \; x \\
     S         & ::= E \gp S_1 \; S_2 \gp \varepsilon \\
               & \gp D_V \\
               & \gp \tk{while} \tk ( E \tk ) S \gp \tk{if} \tk ( E \tk ) S \gp \tk{if} \tk ( E \tk ) S_1 \tk{else} S_2 \\
@@ -44,6 +45,7 @@ The latter is not directly apparent here, as some syntactical details have been 
               & \gp \tk{this} \tk{-{}->?} p_1 \tk , p_2 \tk , \dots \tk , p_k \; S \gp \tk{caller} \tk{-{}->?} p_1 \tk , p_2 \tk , \dots \tk , p_k \; S \\
     E         & ::= x \gp k \gp E_1 \; op_b \; E_2 \gp op_u \; E \gp \tk ( E \tk ) \gp E \texttt{.} x_f \gp E \texttt{->} x_f \gp x \texttt{[} E \texttt{]} \\
               & \gp \tk{<|} E \tk , l \tk{|>} \gp \tk{<|} E \tk{|>} \\
+              & \gp f \tk ( E_1 \tk , E_2 \tk , \dots \tk , E_n \tk ) \\
               & \gp f \tk{<{}<{}<} p_1 \tk , p_2 \tk , \dots \tk , p_k \tk{>{}>{}>} \tk ( E_1 \tk , E_2 \tk , \dots \tk , E_n \tk ) \\
     L         & ::= \tk{\{\{} P \tk{\}\}} \gp \varepsilon \\
     P         & ::= x \gp p_0 \tk{->} p_1 \tk , p_2 \tk , \dots \tk , p_k \gp P_1 \tk ; P_2 \gp \tk \_ \gp \tk{\^{}}
@@ -52,78 +54,81 @@ The latter is not directly apparent here, as some syntactical details have been 
   \label{ctif:rules}
 \end{table}
 
-\Cref{ctif:rules} primarily serve as a reference-point for the following sections.
-We will however briefly discuss a few details that might be of special interest:
+\Cref{ctif:rules} contains our syntactic domains and abstract prodution rules, and will serve as a reference-point for the following sections.
+A few details might be of special interest:
 
 \paragraph{Simplified arithmetics}
 As the semantics, described in this section, only concerns how data \textit{flows} and not its value on execution we can simplify the possible binary and unary operations into two rules.
 Doing so provides for a less cluttered syntax and a clearer focus on the label semantics that are expressed.
 
 \paragraph{Pointer declaration}
-The \tk{*} used in variable declarations, to indicate a pointer declaration, is optional.
+The \tk{*} used to indicate a pointer type, can be optionally declared for any variable or parameter.
 Whether a variable is a pointer or not has no meaning for the evaluation of labels, so the handling of pointer type checking is completely left to the C compiler.
-Therefore it will not be apparent in the syntax in the rules for variable declaration.
+Therefore it will not included in the abstract syntax.
 
 \paragraph{Struct fields}
-We make use of the special identifier $x_f$ for struct fields access.
+We make use of the special variable identifier $x_f$ for struct field access.
 It has no meaning in evaluating the program, as will be apparent in the rules for the struct field expression.
 The actual checking of struct fields and the matching struct definition is handled by the C compiler.
 
 \paragraph{Empty labels}
 No value (represented by $\varepsilon$) can be provided for any label declaration.
-When omitting a label the semantic rules specify a \textit{default} value for the label.
-This is initial step of label inference and allows unlabeled C to be recognized and evaluated using these rules.
+When omitting a label the semantic rules specify a \textit{default} value for the label (see \cref{ctif:informal:inference}).
+This is the initial step of label inference and allows unlabeled C to be recognized and evaluated using these rules.
 
 \subsection{Semantic setup}
-This section will describe the semantic constituents which are used to translate a syntactical \thelang{} program into the semantical world.
+This section will describe the semantic constituents which are used to translate a \thelang{} program into the semantical world.
 These constituents are based on the concepts: \emph{semantic domains}, \emph{semantic functions}, and \emph{semantic equations} from \cite[Chapter 9]{slonneger1995formal}.
-The semantic domains and semantic functions will be described in the next two subsections.
-For readability purposes, the semantic equations will be spread out over the following subsections.
+The semantic domains and semantic functions will be described in the next two sections.
+For readability purposes, the semantic equations will be spread out over the following sections.
 
 \subsubsection{Semantic domains}
-The semantic domains of \thelang{} are primarily used to maintain state, and to give the final result of the constraint extraction: namely the constraints themselves as well as the different label types which are used to form the constraints.
+The semantic domains of \thelang{} are primarily used to maintain state, and to give the final result of the constraint extraction: the constraints themselves as well as the different label types which are used to form the constraints.
 Note that we have no need for any numerals or type enumerations, since we are only interested in checking labels and forming constraints.
 
-The following list is an overview of these semantic domains (Here $\mathcal P$ denotes the power set):
+The following is an overview of these semantic domains (Here $\mathcal P$ denotes the power set):
+\begin{table}[H]
 \begin{align*}
 \iLV    & = v(\iVar) \cup c(\iVar) \cup p(\mathbb{L}) \cup j(\iLV \times \iLV) \\
 \iCstr  & = \mathcal P (\iLV \times \iLV) \\
 \iEnvF  & = \iFun \cup \{ \ifb \} \rightharpoonup \iLV \times \mathcal P (\iLV \times \iVar) \times \mathcal P(\mathbb{P}) \\
 \iEnvL  & = \iVar \cup \{ \ia, \ib \} \rightharpoonup \iLV
 \end{align*}
+\caption{Semantic domains}
+\label{cstr:semantic_domains}
+\end{table}
 
 $\mathbb L$ denotes the set of all labels.
 
-$\mathbb P$ the set of all principals.
-Principals are expected to be extracted from some system information and not defined in the program code itself.
-Instead we make us of a function $principal$, which is used to represent the lookup of principal names in some system:
+$\mathbb P$ denotes the set of all principals.
+Principals are expected to be extracted from some system information and not defined in the source code itself.
+Instead we make use of a function $principal$, which represents the lookup of principal names in some system:
 \[ principal = \iPrin \rightarrow \mathbb P \]
 We will also make use of the special set $P^*$, where $P^* \subseteq \mathbb{P}$, representing all principals of the system.
 
 $\iLV$ is a set of \emph{label values}, not to be confused with actual labels.
-In order to differ between the different types of labels (as described in \cref{dlm:inf:types}), we utilize concept of \emph{tagged values}.
-Each element in $\iLV$ is then on the form $t(v)$, where $t$ is the type of label and $v$ is the value, which then differs depending on the type of label.
+In order to differ between the different types of labels (as described in \cref{dlm:inf:types}), we utilize the concept of \emph{tagged values}.
+Each element in $\iLV$ is then on the form $t(v)$, where $t$ is the type of label and $v$ is the value, which differs depending on the type of label.
 
 To further increase readability when using \emph{join labels}, we will introduce another notation using quotes to signify that the value is the constituents and not the evaluated expression.
 Then we have that:
 \[ \literal{\ilv_1 \sqcup \ilv_2} \equiv j(\ilv_1, \ilv_2) \]
 
-$\iCstr$ is a set of constraint tuples, where any $(\ilv_1, \ilv_2) \in \iCstr$ can be seen as representing a constraint: $" \; LV_1 \sqsubseteq LV_2 \; "$.
+$\iCstr$ is a set of constraint tuples, where any $(\ilv_1, \ilv_2) \in \iCstr$ can be seen as representing a constraint: $" \; \ilv_1 \sqsubseteq \ilv_2 \; "$.
 Similar to the join label above, we will have the latter notation in quotes having the same meaning as the aforementioned tuple, such that:
 \[ \literal{\ilv_1 \sqsubseteq \ilv_2} \equiv (\ilv_1, \ilv_2) \]
 
-When we have both $\sqcup$ and $\sqsubseteq$ in a ``quoted expression'', the precedence is $\sqcup$ before $\sqsubseteq$.
+$\iEnvL$ is the label environment, which maps variable identifiers, and the two special identifiers $\ia$ (authority, see \cref{dlm:auth_and_declass}) and $\ib$ (program counter, see \cref{dlm:implicit_flows}), to label values.
+The special values are propagated throughout a program, as they will be updated as the scope changes.
 
-$\iEnvL$ is the label environment, which maps variable identifiers, and the two special identifiers $\ia$ (authority) and $\ib$ (block), to label values.
-The special values are propagated throughout a program, as they will change as the scope changes.
-
-$\iEnvF$ is the function environment, which maps function identifiers, and the special identifier $\ifb$ (function block), to a tuple containing the label value of the function along with all its arguments and output readers.
+$\iEnvF$ is the function environment, which maps function identifiers, and the special identifier $\ifb$ (current function), to a tuple containing the label value of the function along with all its arguments and output readers.
 Function identifiers are looked up when evaluating function calls.
-The function block identifier is used for return statements so that the ``surrounding'' function label can be looked up.
+$\ifb$ is used to look up the function currently being evaluated.
+This is used when evaluating \texttt{return} statements, as we have no means of obtaining the function name for lookup.
 
 \subsubsection{Semantic functions}
-The semantic functions describe how the syntactic domains (see \cref{ctif:rules}) will be transformed into the semantic domains described above.
-We have a function for each domain from which we need to extract constraints, or from which we need to derive the labels used in forming constraints.
+The semantic functions describe how the syntactic domains (see \cref{ctif:rules}) will be transformed into the semantic domains (see \cref{cstr:semantic_domains}).
+We have a function for each domain, that will extract constraints, or derive the labels used in forming constraints.
 The formal definitions of the semantic functions can be seen in \cref{cstr:semantic_functions}.
 
 \begin{table}[H]
@@ -141,11 +146,11 @@ The formal definitions of the semantic functions can be seen in \cref{cstr:seman
 \end{table}
 
 The ``entry point'' of a \thelang{} program is simply one or more declarations, and the result of evaluating such a program is always a set of constraints.
-The transformation of declarations will result in a set of constraints, as well as a changed environment: function for function declarations and label for variable declarations.
-Statements are where most constraints will originate from, as this is where we have both variable declarations and assignments.
-Expressions will also generate constraints, due to the ability to use declassifications.
-Due to the simplicity of the label syntactic domain, its rules has been merged with those of policy.
-Unlike the previous semantic functions, labels and policies are only evaluated to a label value in order to use them in the forming of constraints.
+The transformation of declarations will result in a set of constraints, as well as a changed environment: the function environment for function declarations and the label environment for variable declarations.
+Statements are where most constraints will originate from, as this is where we have variable declarations, assignments, and control structures.
+Expressions will also generate constraints, due to declassifications.
+Due to the simplicity of the label syntactic domain, its rules have been merged with those of policy.
+Unlike the other semantic functions, labels and policies are evaluated to a label value so that they can be used in the forming of constraints.
 
 \subsection{Program and declarations}
 The rules for program and declarations are simple, as their main purpose is providing an entry point, as well as the ability to have variable and function declarations appear in the global scope, and in arbitrary order.
