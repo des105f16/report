@@ -20,8 +20,25 @@ When developing these time constructs, the focus on programmer-first was maintai
 This resulted in a minimalistic, yet quite expressive, set of time policy constructs for the language.
 Furthermore we have demonstrated how these policies can be represented as timed automata, providing a formalism that is associated with much existing theory.
 
-In the following we will discuss some of the difficulties we have noted in our work with DLM and time policies.
+In the following we will attempt to evaluate our results with respect to the above, and discuss some of the difficulties we have noted in our work with DLM and time policies.
 These range from issues that we would have liked to have solved with our tool, to some that would require a different type of tool than the one we have created.
+
+\section{Runtime model}
+A common denominator for many of the difficulties we have had is the lack of a runtime representation of our model.
+This applies to both the formalization of DLM and our time policies.
+One example of this is the lack of runtime labels.
+DLM fully describes labels as an extension of a type system, and as such you are allowed to operate on labels as first-order types.
+
+Our model has a different perspective on labels, considering only the static declarations.
+Not being able to pass label values as function parameters, hinders some aspects of label polymorphism and provides for a less flexible model.
+On the other hand, a less flexible model is also a sturdier one.
+The fact that all our evaluation can be done at compile time allows us to provide feedback to the programmer, about every label in his program, while he is editing code.
+We consider this a strength of our tool, though recognizing that lack of flexibility it brings.
+
+The same can be said for time policies, where it can be particularly difficult to define dynamic handling of request from different users, as described in \cref{time:policy_examples}.
+However, as the domain we wish our tool to apply to is mainly IoT embedded devices, we recognize that the need for a dynamic approach to labels and/or authority will not be of much importance.
+
+\section{Code generation}
 
 %- Principal hierarchy
 %-- Possibly with time restrictions
