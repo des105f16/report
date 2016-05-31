@@ -1,7 +1,7 @@
 % !TEX root = ../master.tex
 In this report we have provided a formalization of the static label checking of the Decentralized Label Model.
 We have provided a formal set of semantic functions describing the constraints that are associated with a program.
-By further specifying default label values for any missing label declaration we are able to apply this specification to both labeled and unlabeled programs.
+By further specifying default label values for any missing label declaration, we are able to apply this specification to both labeled and unlabeled programs.
 This is achieved through an algorithm that infers labels for these missing label declarations.
 The algorithm is originally described in \cite{myers1997}.
 In this report we have presented an actual algorithm that replicates this description.
@@ -10,15 +10,15 @@ All of the above have been implemented in a tool for checking information flow i
 Using simple constructs they have been created as an extension of the C programming language.
 This language was chosen in order to provide a simple-to-use security model for a low level language, that is used for embedded devices.
 
-Trough the development process we have continuously experimented with the use of labels in programs.
+Through the development process we have continuously experimented with the use of labels in programs.
 Because of this hands-on experience the tool has been developed bottom-up, with a focus on what the programmer requires.
 The result of this is a tool that provides feedback for the programmer similar to a modern IDE.
 This feedback describes if any information flow policies are invalid or could not be determined through inference.
 
-Further we have developed a set of language constructs for describing time policies alongside the exist labels.
+Further we have developed a set of language constructs for describing time policies alongside the existing labels.
 When developing these time constructs, the focus on programmer-first was maintained.
 This resulted in a minimalistic, yet quite expressive, set of time policy constructs for the language.
-Furthermore we have demonstrated how these policies can be represented as timed automata, providing a formalism that is associated with much existing theory.
+Furthermore, we have demonstrated how these policies can be represented as timed automata, providing a formalism that is associated with much existing theory.
 
 In the following we will attempt to evaluate our results with respect to the above, and discuss some of the difficulties we have noted in our work with DLM and time policies.
 These range from issues that we would have liked to have solved with our tool, to some that would require a different type of tool than the one we have created.
@@ -30,12 +30,12 @@ One example of this is the lack of runtime labels.
 DLM fully describes labels as an extension of a type system, and as such you are allowed to operate on labels as first-order types.
 
 Our model has a different perspective on labels, considering only the static declarations.
-Not being able to pass label values as function parameters, hinders some aspects of label polymorphism and provides for a less flexible model.
+Not being able to pass label values as function parameters hinders some aspects of label polymorphism and provides for a less flexible model.
 On the other hand, a less flexible model is also a sturdier one.
 The fact that all our evaluation can be done at compile time allows us to provide feedback to the programmer, about every label in his program, while he is editing code.
 We consider this a strength of our tool, though recognizing that lack of flexibility it brings.
 
-The same can be said for time policies, where it can be particularly difficult to define dynamic handling of request from different users, as described in \cref{time:policy_examples}.
+The same can be said for time policies, where it can be particularly difficult to define dynamic handling of requests from different users, as described in \cref{time:policy_examples}.
 However, as the domain we wish our tool to apply to is mainly IoT embedded devices, we recognize that the need for a dynamic approach to labels and/or authority will not be of much importance.
 
 \section{Code generation}
@@ -43,7 +43,7 @@ Dual to the lack of a runtime model, the developed tool does not perform code ge
 We expect a finalized version of the tool to output C code that meets the requirements of the policies defined.
 Though in terms of code generation we identify a distinction between labels and the time policies.
 
-As labels are statically evaluated and since we do not support runtime labels, code generation is almost as simple as removing any label-specific policies.
+As labels are statically evaluated, and since we do not support runtime labels, code generation is almost as simple as removing any label-specific policies.
 The only addition to that is the acts-for construct.
 This requires us to generate some system-dependent code that will manage the authority under which code is being executed.
 Asides from this management of authority, labels provide no additional overhead on the generated code.
@@ -58,7 +58,7 @@ Because of this, the implementation might differ from a strict implementation of
 The language constructs used to handle time policies (if-can-call \dlmc{@?} and await \dlmc{@}) have not been included in the timed automata described in \cref{automata:timepolicies}.
 The use of these could lead to race conditions.
 Since the constructs have not been included in the automata, we cannot determine if that is the case for the use of one individual time policy.
-We have however already demonstrated examples of race conditions: 
+We have however already demonstrated examples of race conditions:
 
 \begin{lstlisting}[style=dlmc]
   if (@?foo)
