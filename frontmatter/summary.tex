@@ -2,9 +2,9 @@
 \chapter*{Summary\markboth{Summary}{Summary}}\label{ch:summary}
 \addcontentsline{toc}{chapter}{Summary}
 
-This report represents the project \thelanglong{} (\thelang), which resulted in a tool of the same name.
+This report presents the project \thelanglong{} (\thelang), which resulted in a tool of the same name.
 The \thelang{} tool allows for writing C programs, with the ability to express security policies in order to ensure information flow.
-These security policies are based upon those of \emph{The Decentralized Label Model} (DLM), with a focus on making its use as seamless as possible, by allowing for sophisticated inferrence.
+These security policies are based upon those of \emph{The Decentralized Label Model} (DLM), with a focus on making its use as seamless as possible.
 Further, these security policies are extended with the ability to express simple and powerful time policies.
 
 The project provides two main contributions.
@@ -12,7 +12,7 @@ Firstly, formalizations of important DLM concepts are provided.
 Especially those concepts related to label inferrence, and constraint checking -- the main driver of inferrence, have been formalized by providing an extended description, as well as a denotational semantics.
 Secondly, an extension to the DLM security policies has been provided in the form of time policies.
 These time policies were created as to have a focus on their practical applications.
-However, it is also shown how they can be formalized by being translated into timed automata, as well as a comparison with a related model \emph{The Timed Decentralized Label Model}.
+However, it is also shown how they can be formalized by being translated into \emph{timed automata}, as well as a comparison with a related model \emph{The Timed Decentralized Label Model}.
 
 The tool itself was written in C\#, employing the SablePP toolbox to generate the compiler, which allows for easy extensibility.
 The use of SablePP allowed us to incrementally extend our C language scope, increasing the practical applications of \thelang{}.
@@ -20,4 +20,4 @@ It also allowed for great flexibility in defining both syntax and semantics, all
 
 \thelang{} provides a practical and highly usable way of annotating new and existing C source code, allowing for easy analysis of information flow while requiring only minor extension.
 Very few constructs are added to the C syntax, as to not over-complicate its potential uses, while keeping it both highly useful and powerful.
-This is true for both the security policies, as well as time policies.
+This is true for the security policies, as well as time policies.
