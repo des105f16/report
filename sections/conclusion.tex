@@ -1,4 +1,27 @@
 % !TEX root = ../master.tex
+In this report we have provided a formalization of the static label checking of the Decentralized Label Model.
+We have provided a formal set of semantic functions describing the constraints that are associated with a program.
+By further specifying default label values for any missing label declaration we are able to apply this specification to both labeled and unlabeled programs.
+This is achieved through an algorithm that infers labels for these missing label declarations.
+The algorithm is originally described in \cite{myers1997}.
+In this report we have presented an actual algorithm that replicates this description.
+
+All of the above have been implemented in a tool for checking information flow in programs.
+Using simple constructs they have been created as an extension of the C programming language.
+This language was chosen in order to provide a simple-to-use security model for a low level language, that is used for embedded devices.
+
+Trough the development process we have continuously experimented with the use of labels in programs.
+Because of this hands-on experience the tool has been developed bottom-up, with a focus on what the programmer requires.
+The result of this is a tool that provides feedback for the programmer similar to a modern IDE.
+This feedback describes if any information flow policies are invalid or could not be determined through inference.
+
+Further we have developed a set of language constructs for describing time policies alongside the exist labels.
+When developing these time constructs, the focus on programmer-first was maintained.
+This resulted in a minimalistic, yet quite expressive, set of time policy constructs for the language.
+Furthermore we have demonstrated how these policies can be represented as timed automata, providing a formalism that is associated with much existing theory.
+
+In the following we will discuss some of the difficulties we have noted in our work with DLM and time policies.
+These range from issues that we would have liked to have solved with our tool, to some that would require a different type of tool than the one we have created.
 
 %- Principal hierarchy
 %-- Possibly with time restrictions
