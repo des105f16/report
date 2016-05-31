@@ -37,25 +37,50 @@ $?xreset$ names a reset event name for $x$, while $*xreset$ triggers the event $
 Now, instead of resetting every 1 second, $x$ is reset to 0 any time that $r_1$ reads the attached value, effectively limiting $r_1$ to wait at least 500 ms between each read.
 
 \subsection{Comparison}
-We will here make a simple comparison of time constraints expressed in TDLM and with those expressed in \thelang.
-The goal here is to ascertain the expressibility and simplicity of \thelang.
-In order to fairly compare the labels, we have removed the concept of write policies, even though it is employed by TDLM.
+We now proceed to compare the time constraints expressed in TDLM and \thelang.
+We note that a major difference between the two models is that TDLM supports write policies and that \thelang{} does not.
+As described in \cref{dlm:policies} the concepts of read and write policies are similar, and we expect that any actual application of \thelang{} would require an extension to support write policies.
+Thus we consider a comparison of read policies to be a fair comparison of the two models.
 
-From \cite{pedersen2015} we have a policy attached to smart meter consumption data (stripped of write policies):
+Naturally we identify that TDLM supports some complex time policies that cannot be expressed in \thelang.
+However which policies that includes is not apparent.
+
+We consider this the main strength of the time policies defined by \thelang.
+Due to the simplicity of the time policies we are able to clearly express properties of \thelang{}s time constraints.
+One such property is the ability to define a count in a time policy, which is not directly possible to do in TDLM.
+The fact that this can be expressed in such understandable terms demonstrates the practical nature of \thelang.
+
+From \cite{pedersen2015} we have a policy attached to smart meter consumption data.
+We have removed write policies from it, to get the policy below:
+
 \[ \{s_i : u_i, e_j (x[?reset : 1] > 90)[*reset] \} \]
-Here we have a smart meter $s_i$ as owner, allowing for user $u_i$ and electrical company $e_j$ as readers.
-For $e_j$ there is a time constraint, signifying that $e_j$ must wait 90 days between reads.
 
+Here we have a smart meter $s_i$ as owner, allowing for user $u_i$ and electrical company $e_j$ as readers.
+The electrical company is associated with a time policy, determining when it can perform reads.
+From reading the policy it is not clear what the desired effect of that policy is.
+This makes it hard for the programmer to reason about whether or not he is using the \emph{correct} policy.
+
+The policy ensures that the electrical company can only read consumption data once every 90 days.
+It provides no restrictions on other readers.
 In \thelang{} we can express a similar policy:
+
 \begin{center}
 \dlmc{\{\{s->u, e @ u: 1s; 90d \}\}}
 \end{center}
 
+This policy is much clearer in the restrictions it expresses.
+Because of this \thelang{} policies can be read, left to right, directly from code.
+This makes it very easy for a programmer to reason about the policy.
+The above example is read as:
+
+\begin{adjustwidth}{1cm}{1cm}
+\begin{center}
+\textit{The data is owned by the smart meter }\dlmc{s}\textit{, allowing reads }\dlmc{->}\textit{ by the user }\dlmc{u}\textit{ and the electrical company }\dlmc{e}\textit{.
+With regards to time }\dlmc{@}\textit{, the user }\dlmc{u}\textit{ is allowed to read at most once per second }\dlmc{1s}\textit{, while everyone else at most once per 90 days }\dlmc{90d}\textit{.}
+\end{center}
+\end{adjustwidth}
+
 In the TDLM policy we have a lot of complex concepts, arriving from its theory-near approach.
 The syntax is near its underlying driver: the timed automata, as can be seen from the use of an actual clock comparison and the reset event and value.
 
-We have however opted for abstracting away from these more complex concepts, so that the programmer need only focus on describing his policy in real-world terms.
-For the \thelang{} policy it could be read as:
-\begin{center}
-\textit{The data is owned by the smart meter, allowing only the user and the electrical company to read. With regards to time, the user is allowed to read at most once per second, while everyone else at most once per 90 days.}
-\end{center}
+We have however opted for abstracting away from these more complex concepts, such that the programmer need only focus on describing his policy in real-world terms.
