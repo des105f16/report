@@ -1,8 +1,8 @@
 % !TEX root = ../../master.tex
 
 In this chapter we will present the \thelanglong{} language, hereafter referred to simply as \thelang.
-However, this chapter will only show how to apply ordinary labels, as those presented in the previous chapter.
-The following chapter will go into the details of time policies.\mikael{Bedre forklarende meta.}
+This chapter will go into details about applying labels to a C program.
+The following chapter will go into the details of time policies.
 
 \thelang{} is based upon C99 and will extend the syntax of C with the concept of labels, as discussed in the previous chapter.
 This fact gives us the following two properties:
@@ -13,7 +13,7 @@ This fact gives us the following two properties:
 The first property allows for incrementally adding labels to old source code.
 This becomes even more palpable if the \thelang{} compiler is able to infer labels.
 The second property frees the \thelang{} compiler from handling many of the same things that instead can be handled by already existing C99 compilers.
-\mikael{Fordele ved ikke at skrive hel C compiler.}
+Not having to work out every detail of a complete C compiler frees us to focus on the extension itself.
 
 The rest of this chapter will be organized as follows.
 Firstly, we will present the scope under which we have limited our implementation.

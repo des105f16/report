@@ -60,10 +60,10 @@ In the sections below we describe how these constructs are handled in \thelang.
 The following sections will describe how labels are used in \thelang.
 The descriptions will follow the password checker example from \cref{example:sec:check_password}.
 The fully labeled source can be seen in \cref{example:code:check_password-explicit}, on page \pageref{example:code:check_password-explicit}.
-We make use of the \dlmc{principal} declaration in the example to simulate the actual obtaining of system principals.
+Note that we make use of the \dlmc{principal} declaration in the example to simulate the actual obtaining of system principals.
 
 \subsection{Function declarations}
-The first thing we would want to label in a program is what can be seen as the bigger components; the functions that either obtain data from outside or send data to outside the program -- our channels.\mikael{Omformuler så det handler om channels.}
+The first thing we would want to label in a program is what can be seen as our potentially sensitive endpoints; the functions that either obtain data from outside or send data to outside the program -- our channels.
 In \thelang{} we have no distinction between input channels and any other function which has a return value.
 However, output channels are distinguishable by having the \dlmc{<-} construct, preceded by one or more principals (readers).
 Output channel declarations are initially checked as with any other function.
