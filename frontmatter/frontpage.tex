@@ -14,6 +14,7 @@
 %
 %  You can find the GNU General Public License at <http://www.gnu.org/licenses/>.
 %
+% !TEX root = ../master.tex
 \pdfbookmark[0]{Front page}{label:frontpage}%
 \begin{titlepage}
   \addtolength{\hoffset}{0.5\evensidemargin-0.5\oddsidemargin} %set equal margins on the frontpage - remove this line if you want default margins
@@ -46,7 +47,30 @@
       Mikael Elkiær Christensen\\
       Mikkel Sandø Larsen
     }
-    \mikaelin{Indsæt sjovt billede}
+    \\[2.5cm]
+    \begin{tikzpicture}[inner sep=1mm, >=latex, scale=1.5]
+      \node (l1) at (-1,0) {$L_1$};
+      \node (l2) at (1,0) {$L_2$};
+
+      \node (meet) at (0,-1) {\small $L_1$ {\LARGE $\! \sqcap \!$} $L_2$};
+      \node (bot) at (0,-2) {$\bot$};
+
+      \node (join) at (0,1) {\small $L_1$ {\LARGE $\! \sqcup \!$} $L_2$};
+      \node (top) at (0,2) {$\top$};
+
+      \draw[->] (l1) edge (join);
+      \draw[->] (l2) edge (join);
+      \draw[->] (l1) edge (meet);
+      \draw[->] (l2) edge (meet);
+
+      \draw[->, dashed, gray] (l1) edge [bend left] (top);
+      \draw[->, dashed, gray] (join) edge (top);
+      \draw[->, dashed, gray] (l2) edge [bend right] (top);
+
+      \draw[->, dashed, gray] (l1) edge [bend right] (bot);
+      \draw[->, dashed, gray] (meet) edge (bot);
+      \draw[->, dashed, gray] (l2) edge [bend left] (bot);
+    \end{tikzpicture}
   \end{center}
   \vfill
   \begin{center}
