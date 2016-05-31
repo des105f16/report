@@ -111,7 +111,7 @@ For \dlmc{check_password} we need to declassify and return \dlmc{match}:
 
 As can be seen we also need to obtain the proper authority before such a declassification is possible.
 This is done by using the \emph{if-acts-for} statement, identified by the \dlmc{-->?} operator, which is preceded by type of authority and followed by principals to acquire authority for.
-During compile-time checking we do not differ between the special keywords \dlmc{this} and \dlmc{caller} (see \cref{dlm:functioncall_authority}).
+During compile-time checking we do not differ between the special keywords \dlmc{this} and \dlmc{caller} (see \cref{dlm:auth_and_declass}).
 After obtaining the proper effective authority, we can declassify the label of \dlmc{match}.
 
 It is possible to leave out the explicit label of the declassification, as we will see in the following section.
