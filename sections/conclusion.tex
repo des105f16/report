@@ -39,6 +39,35 @@ The same can be said for time policies, where it can be particularly difficult t
 However, as the domain we wish our tool to apply to is mainly IoT embedded devices, we recognize that the need for a dynamic approach to labels and/or authority will not be of much importance.
 
 \section{Code generation}
+Dual to the lack of a runtime model, the developed tool does not perform code generation.
+We expect a finalized version of the tool to output C code that meets the requirements of the policies defined.
+Though in terms of code generation we identify a distinction between labels and the time policies.
+
+As labels are statically evaluated and since we do not support runtime labels, code generation is almost as simple as removing any label-specific policies.
+The only addition to that is the acts-for construct.
+This requires us to generate some system-dependent code that will manage the authority under which code is being executed.
+Asides from this management of authority, labels provide no additional overhead on the generated code.
+The information flow is simply checked at compile time, but is not required as part of the generated code.
+
+Time policies on the other hand would require additional code generated, in order to handle the time checks.
+One simple approach is to implement timed automata as described in \cref{automata:timepolicies}.
+Though as we described, the automata grows exponentially relative to the count component of policices.
+Because of this, the implementation might differ from a strict implementation of the automata.
+
+\myparagraph{Handling time policies}
+The language constructs used to handle time policies (if-can-call \dlmc{@?} and await \dlmc{@}) have not been included in the timed automata described in \cref{automata:timepolicies}.
+The use of these could lead to race conditions.
+Since the constructs have not been included in the automata, we cannot determine if that is the case for the use of one individual time policy.
+We have however already demonstrated examples of race conditions: 
+
+\begin{lstlisting}[style=dlmc]
+  if (@?foo)
+    foo();
+\end{lstlisting}
+
+Here it could be the case that from the check of whether \dlmc{foo} can be called and to the actual call, we are no longer within the period in which \dlmc{foo} can be read.
+Since the check is only required to be performed \emph{before} the function call, and not right before, we have no way of knowing how much time passes between the two.
+This issue is specific to the period component, as it is the only type of time restriction where waiting a longer time can make a function call invalid.
 
 %- Principal hierarchy
 %-- Possibly with time restrictions
