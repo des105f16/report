@@ -1,3 +1,4 @@
+% !TEX root = ../master.tex
 \pdfbookmark[0]{English title page}{label:titlepage_en}
 \aautitlepage{%
   \englishprojectinfo{
@@ -29,5 +30,14 @@
   Aalborg University\\
   \href{http://cs.aau.dk}{http://cs.aau.dk}
 }{% the abstract
-  \mikaelin{Husk abstract.}
+  This report describes the tool \thelanglong{} (\thelang), which can take new and existing C source code, allowing for labeling of security policies applied directly to the source.
+  The tool can then, based on the labeling, provide feedback about any potential breaches of security as labeled information flows through the program.
+
+  These security policy labels are based on \emph{The Decentralized Label Model} (DLM).
+  The report takes important concepts of DLM, extending on these in order to provide an extended description as well as a formalization in regards to the inferrance of security policy labels.
+  Additionally, an extension to the security policies are provided, by allowing the expression of time policies.
+  These time policies are similarly created with a focus on their simplicity and practical applications.
+
+  As a first step in formalizing the time policy extension, it will be shown how they can be translated into \emph{timed automata}.
+  In order to compare the practical applications, the time policies will be compared with \emph{The Timed Decentralized Label Model}, which takes a more theoretical approach.
 }
