@@ -7,7 +7,7 @@
 \section{The Timed Decentralized Label Model}
 The Timed Decentralized Label Model (TDLM) \cite{pedersen2015} is an extension to the original DLM.
 TDLM extends on the security labels of DLM with the addition of time policies.
-We are interested in is what kind of policies can be expressed.
+We are interested in is what kind of policies can be expressed using TDLM.
 We will first briefly explore its usage and afterwards we will compare it to \thelang.
 
 \subsection{Usage}
@@ -49,4 +49,13 @@ For $e_j$ there is a time constraint, signifying that $e_j$ must wait 90 days be
 In \thelang{} we can express a similar policy:
 \begin{center}
 \dlmc{\{\{s->u, e @ u: 1s; 90d \}\}}
+\end{center}
+
+In the TDLM policy we have a lot of complex concepts, arriving from its theory-near approach.
+The syntax is near its underlying driver: the timed automata, as can be seen from the use of an actual clock comparison and the reset event and value.
+
+We have however opted for abstracting away from these more complex concepts, so that the programmer need only focus on describing his policy in real-world terms.
+For the \thelang{} policy it could be read as:
+\begin{center}
+\textit{The data is owned by the smart meter, allowing only the user and the electrical company to read. With regards to time, the user is allowed to read at most once per second, while everyone else at most once per 90 days.}
 \end{center}
