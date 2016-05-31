@@ -199,7 +199,7 @@ if (cond) {
   val++;                  // $\mathcomment{\bot \sqcup \{a \rightarrow y\}}$
 }
 return val;               // $\mathcomment{\bot}$
-  \end{lstlisting}
+\end{lstlisting}
   In this example we would have an implicit leak of \dlmc{cond}, by way of \dlmc{val}.
   This is due to the assignment of \dlmc{val} inside of the \dlmc{if}-statement, as \dlmpc~ is increased to the join of the outer scope ($\bot$) and the label of the scope's predicate (\labelof{\dlmc{cond}}).
   For this program to pass \thetool, we would have to add a more strict policy to \dlmc{val}, so that it could match the policy of \dlmc{cond}.
@@ -255,7 +255,7 @@ this -->? a {
   return <|x, {{a->y,z}}|>;
 }
 return -1;
-  \end{lstlisting}
+\end{lstlisting}
   While we still leak some information about \dlmc{cond}, we now do it explicitly.
 \end{example}
 
@@ -307,7 +307,7 @@ int {{a->y, x}} val = 5;  // $\mathcomment{\{a \rightarrow y, x\}}$, $\mathcomme
 int {{a->y}} res;         // $\mathcomment{\{a \rightarrow y\}}$
 
 res = val;                // $\mathcomment{\labelof{val} \sqsubseteq \labelof{res}}$
-  \end{lstlisting}
+\end{lstlisting}
 
   As described above, the assignment operation introduces a constraint that must be checked for the information flow to be valid.
   Additionally the declaration of the \dlmc{val} variable includes an assignment operation.
