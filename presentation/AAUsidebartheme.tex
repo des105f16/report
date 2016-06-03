@@ -33,6 +33,9 @@
 % does not look nice, try deleting the line with the fontenc.
 \usepackage{helvet}
 
+\usepackage[lined,boxed,commentsnumbered,linesnumbered]{algorithm2e}
+\setlength{\algomargin}{2em}
+
 % colored hyperlinks
 \newcommand{\chref}[2]{%
   \href{#1}{{\usebeamercolor[bg]{AAUsidebar}#2}}%
@@ -199,7 +202,11 @@
 \subsection{Algorithm}
 \begin{frame}
   \frametitle{Algorithm}
+  \centering
 
+  \scalebox{.9}{
+  \input{../algorithms/inference}
+  }
 \end{frame}
 
 \subsection{Polyvariance function evaluation}
