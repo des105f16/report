@@ -1,0 +1,82 @@
+digraph prof {
+  size="15,10"; ratio = fill;
+	node [style=filled];
+  rankdir="LR";
+  concentrate=true;
+
+  {rank="same";
+    0;
+  }
+  {rank="same";
+    1;
+    2[fillcolor=red];
+    3[fillcolor=blue; fontcolor=white];
+    4[fillcolor=green];
+  }
+  {rank="same";
+    12[fillcolor=red; label="1, 2"];
+    13[fillcolor=blue; fontcolor=white; label="1, 3"];
+    23[fillcolor=blue; fontcolor=white; label="2, 3"];
+    14[fillcolor=green; label="1, 4"];
+    24[fillcolor=green; label="2, 4"];
+    34[fillcolor=green; label="3, 4"];
+  }
+  {rank="same"; node[fillcolor=green];
+    123 [label="1, 2, 3"; fillcolor=blue; fontcolor=white];
+    124[label="1, 2, 4"];
+    134[label="1, 3, 4"];
+    234[label="2, 3, 4"];
+  }
+  {rank="same"; node[fillcolor=green];
+    1234[label="1, 2, 3, 4"; fillcolor=green];
+  }
+
+  edge [color=gray];
+  0->1;
+  1->0;
+
+  edge [color=red4];
+
+  1->12;12->1;
+  12->2;2->12;
+  2->0;
+
+  edge [color=blue4];
+
+  3->0;
+  3->13;
+  13->3;
+  3->23;
+  23->3;
+  13->123;
+  123->13;
+  23->123;
+  123->23;
+  123->12;
+  12->123;
+  1->13;
+  2->23;
+
+  edge[color=green4];
+
+  4->0;
+  1->14;14->1;
+  2->24;24->2;
+  3->34;34->3;
+  4->14;14->4;
+  4->24;24->4;
+  4->34;34->4;
+  12->124;124->12;
+  13->134;134->13;
+  14->124;124->14;
+  14->134;134->14;
+  23->234;234->23;
+  24->124;124->24;
+  24->234;234->24;
+  34->134;134->34;
+  34->234;234->34;
+  123->1234;1234->123;
+  124->1234;1234->124;
+  134->1234;1234->134;
+  234->1234;1234->234;
+}
