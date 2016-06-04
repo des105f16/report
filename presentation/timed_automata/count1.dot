@@ -1,0 +1,18 @@
+digraph prof {
+  size="15,10"; ratio = fill;
+	node [style=filled];
+  rankdir="LR";
+  concentrate=true;
+
+  {rank="same";
+    0;
+  }
+  {rank="same";
+    1;
+  }
+
+  edge [color=gray];
+  0->1;
+  1->0;
+
+}
