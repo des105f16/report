@@ -36,6 +36,8 @@
 \usepackage[lined,boxed,commentsnumbered,linesnumbered]{algorithm2e}
 \setlength{\algomargin}{2em}
 
+\usetikzlibrary{arrows,automata,positioning}
+
 % colored hyperlinks
 \newcommand{\chref}[2]{%
   \href{#1}{{\usebeamercolor[bg]{AAUsidebar}#2}}%
@@ -182,7 +184,7 @@
 
 \begin{frame}
   \frametitle{Example lattice}
-
+  \scalebox{0.5}{\input{figures/lattice_example.tikz}}
 \end{frame}
 
 \begin{frame}

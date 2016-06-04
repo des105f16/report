@@ -1,0 +1,30 @@
+\newcommand{\es}{\emptyset}
+\newcommand{\pol}[2]{$\{ a \rightarrow #1; \; b \rightarrow #2 \}$}
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm, semithick]
+	\node (ao-bo) {\pol{\es}{\es}};
+
+	\node (ab-bo) [below left of=ao-bo] {\pol{b}{\es}};
+	\node (aa-bo) [left of=ab-bo] {\pol{a}{\es}};
+	\node (ao-bb) [below right of=ao-bo] {\pol{\es}{b}};
+	\node (ao-ba) [right of=ao-bb] {\pol{\es}{a}};
+
+	\node (aa-bb) [below of=ab-bo] {\pol{a}{b}};
+	\node (ab-ba) [below of=ao-bb] {\pol{b}{a}};
+	\node (aa-ba) [left of=aa-bb] {\pol{a}{a}};
+	\node (ao-bab) [left of=aa-ba] {\pol{\es}{a, b}};
+	\node (ab-bb) [right of=ab-ba] {\pol{b}{b}};
+	\node (aab-bo) [right of=ab-bb] {\pol{a, b}{\es}};
+
+	\node (ab-bab) [below of=aa-bb] {\pol{b}{a, b}};
+	\node (aab-ba) [below of=ab-ba] {\pol{a, b}{a}};
+	\node (aab-bb) [below of=ab-bb] {\pol{a, b}{b}};
+	\node (aa-bab) [below of=aa-ba] {\pol{a}{a, b}};
+	
+	\node (aab-bab) [below=10cm of ao-bo] {\pol{a, b}{a, b} $= \bot $};
+
+	\path 	(aa-bab) edge (aab-bab)
+				(ab-bab) edge (aab-bab)
+				(aab-ba) edge (aab-bab)
+				(aab-bb) edge (aab-bab);
+	
+\end{tikzpicture}
