@@ -38,6 +38,8 @@
 
 \usetikzlibrary{arrows,automata,positioning}
 
+\usepackage{amsmath}
+
 % colored hyperlinks
 \newcommand{\chref}[2]{%
   \href{#1}{{\usebeamercolor[bg]{AAUsidebar}#2}}%
@@ -150,7 +152,13 @@
 \subsection{Overview}
 \begin{frame}
   \frametitle{Label policies}
+  \centering
 
+  \newcommand{\mathvspace}{\\[2em]}
+    \[ L_1 = \{ o_1 \rightarrow r_1, r_2 \} \quad L_2 = \{ o_1 \rightarrow r_1 ; \; o_2 \rightarrow r_1 \} \]
+    \[ L_1 \sqcup L_2  = \{ o_1 \rightarrow r_1 ; \; o_2 \rightarrow r_1 \} \]
+    \[ L_1 \sqcap L_2  = \{ o_1 \rightarrow r_1, r_2 \} \]
+    \[ L_2 \sqsubseteq L_1 \land L_1 \not\sqsubseteq L_2 \]
 \end{frame}
 
 \begin{frame}
