@@ -282,20 +282,20 @@
 \begin{frame}[fragile]
   \frametitle{Polyvariant function evaluation}
 
-  Alternative to function default label
-  \begin{itemize}
-    \item Evaluation dependent on each call
-    \item Set of constraints based on parameters
-    \item Downside: Evaluation of library functions
-  \end{itemize}
-  \vspace{1em}
-  Example
+  Example where inferrence fails
 \begin{lstlisting}[style=dlmc]
 int foo(int {{p->p}} x);
 p <- int foo(int x);
 
 int bar(int x) { return foo(x); }
 \end{lstlisting}
+  \vspace{1em}
+  Alternative to function evaluation
+  \begin{itemize}
+    \item Evaluation dependent on each call
+    \item Set of constraints based on parameters
+    \item Downside: Evaluation of library functions
+  \end{itemize}
 \end{frame}
 
 %%%%%%%%%%
