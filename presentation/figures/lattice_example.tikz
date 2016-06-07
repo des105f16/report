@@ -1,30 +1,74 @@
 \newcommand{\es}{\emptyset}
 \newcommand{\pol}[2]{$\{ a \rightarrow #1; \; b \rightarrow #2 \}$}
-\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm, semithick]
-	\node (ao-bo) {\pol{\es}{\es}};
+\begin{tikzpicture}[-,>=stealth',shorten >=1pt,auto,node distance=3cm, semithick]
+	% TOP
+	\node (ao-bo) {\pol{\es}{\es} $ = \top$};
 
+	% 1 READER
 	\node (ab-bo) [below left of=ao-bo] {\pol{b}{\es}};
 	\node (aa-bo) [left of=ab-bo] {\pol{a}{\es}};
 	\node (ao-bb) [below right of=ao-bo] {\pol{\es}{b}};
 	\node (ao-ba) [right of=ao-bb] {\pol{\es}{a}};
 
-	\node (aa-bb) [below of=ab-bo] {\pol{a}{b}};
+	% 2 READERS
+	\node (aa-ba) [below of=ab-bo] {\pol{a}{a}};
+	\node (aa-bb) [left of=aa-ba] {\pol{a}{b}};
+	\node (aab-bo) [left of=aa-bb] {\pol{a, b}{\es}};
 	\node (ab-ba) [below of=ao-bb] {\pol{b}{a}};
-	\node (aa-ba) [left of=aa-bb] {\pol{a}{a}};
-	\node (ao-bab) [left of=aa-ba] {\pol{\es}{a, b}};
-	\node (ab-bb) [right of=ab-ba] {\pol{b}{b}};
-	\node (aab-bo) [right of=ab-bb] {\pol{a, b}{\es}};
+	\node (ao-bab) [right of=ab-ba] {\pol{\es}{a, b}};
+	\node (ab-bb) [right of=ao-bab] {\pol{b}{b}};
 
-	\node (ab-bab) [below of=aa-bb] {\pol{b}{a, b}};
-	\node (aab-ba) [below of=ab-ba] {\pol{a, b}{a}};
-	\node (aab-bb) [below of=ab-bb] {\pol{a, b}{b}};
-	\node (aa-bab) [below of=aa-ba] {\pol{a}{a, b}};
+	% 3 READERS
+	\node (aab-ba) [below of=aa-bb] {\pol{a, b}{a}};
+	\node (aab-bb) [below of=aa-ba] {\pol{a, b}{b}};
+	\node (aa-bab) [below of=ab-ba] {\pol{a}{a, b}};
+	\node (ab-bab) [below of=ao-bab] {\pol{b}{a, b}};
 	
+	% BOTTOM
 	\node (aab-bab) [below=10cm of ao-bo] {\pol{a, b}{a, b} $= \bot $};
 
+	% TOP - 1 READER
+	\path 	(ao-bo) edge (aa-bo)
+				(ao-bo) edge (ab-bo)
+				(ao-bo) edge (ao-bb)
+				(ao-bo) edge (ao-ba)
+	;
+
+	% 1 READER - 2 READERS
+	\path	(aa-bo) edge (aab-bo)
+				(aa-bo) edge (aa-bb)
+				(aa-bo) edge (aa-ba)
+				(ab-bo) edge (aab-bo)
+				(ab-bo) edge (ab-bb)
+				(ab-bo) edge (ab-ba)
+				(ao-bb) edge (ao-bab)
+				(ao-bb) edge (aa-bb)
+				(ao-bb) edge (ab-bb)
+				(ao-ba) edge (ao-bab)
+				(ao-ba) edge (aa-ba)
+				(ao-ba) edge (ab-ba)
+	;
+
+	% 2 READERS - 3 READERS
+	\path	(aab-bo) edge (aab-ba)
+				(aab-bo) edge (aab-bb)
+				(aa-bb) edge (aab-bb)
+				(aa-bb) edge (aa-bab)
+				(aa-ba) edge (aab-ba)
+				(aa-ba) edge (aa-bab)
+				(ao-bab) edge (aa-bab)
+				(ao-bab) edge (ab-bab)
+				(ab-bb) edge (aab-bb)
+				(ab-bb) edge (ab-bab)
+				(ab-ba) edge (aab-ba)
+				(ab-ba) edge (ab-bab)
+	;
+
+	% BOTTOM - 3 READERS
 	\path 	(aa-bab) edge (aab-bab)
 				(ab-bab) edge (aab-bab)
 				(aab-ba) edge (aab-bab)
-				(aab-bb) edge (aab-bab);
+				(aab-bb) edge (aab-bab)
+	;
 	
 \end{tikzpicture}
