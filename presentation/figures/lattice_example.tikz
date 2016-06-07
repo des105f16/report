@@ -15,14 +15,14 @@
 	\node (aa-bb) [left of=aa-ba] {\pol{a}{b}};
 	\node (aab-bo) [left of=aa-bb] {\pol{a, b}{\es}};
 	\node (ab-ba) [below of=ao-bb] {\pol{b}{a}};
-	\node (ao-bab) [right of=ab-ba] {\pol{\es}{a, b}};
-	\node (ab-bb) [right of=ao-bab] {\pol{b}{b}};
+	\node (ab-bb) [right of=ab-ba] {\pol{b}{b}};
+	\node (ao-bab) [right of=ab-bb] {\pol{\es}{a, b}};
 
 	% 3 READERS
 	\node (aab-ba) [below of=aa-bb] {\pol{a, b}{a}};
 	\node (aab-bb) [below of=aa-ba] {\pol{a, b}{b}};
 	\node (aa-bab) [below of=ab-ba] {\pol{a}{a, b}};
-	\node (ab-bab) [below of=ao-bab] {\pol{b}{a, b}};
+	\node (ab-bab) [below of=ab-bb] {\pol{b}{a, b}};
 	
 	% BOTTOM
 	\node (aab-bab) [below=10cm of ao-bo] {\pol{a, b}{a, b} $= \bot $};
