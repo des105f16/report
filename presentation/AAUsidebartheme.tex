@@ -45,6 +45,8 @@
   \href{#1}{{\usebeamercolor[bg]{AAUsidebar}#2}}%
 }
 
+\input{../setup/listings}
+
 \title[CTIF]% optional, use only with long paper titles
 {C Timed Information Flow}
 
@@ -125,18 +127,6 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Programmer's Perspective}
-
-  Extension to C:
-  \begin{itemize}
-    \item Simple syntax
-    \item Minimal intrusiveness
-    \item Compiler errors
-    \item (Visual aids)
-  \end{itemize}
-\end{frame}
-
-\begin{frame}
   \frametitle{Arduino and Raspberry}
   Estimated sold units:
   \begin{itemize}
@@ -151,23 +141,29 @@
   \end{itemize}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Programmer's Perspective}
+
+  Extension to C:
+  \begin{itemize}
+    \item Simple syntax
+    \item Minimal intrusiveness
+    \item Compiler errors
+    \item (Visual aids)
+  \end{itemize}
+  \vspace{1em}
+  Time policies
+  \begin{itemize}
+    \item Same characteristics as above
+  \end{itemize}
+\end{frame}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % DECENTRALIZED LABEL MODEL
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section[DLM]{Decentralized Label Model}
 
 \subsection{Overview}
-\begin{frame}
-  \frametitle{Label policies}
-  \centering
-
-  \newcommand{\mathvspace}{\\[2em]}
-    \[ L_1 = \{ o_1 \rightarrow r_1, r_2 \} \quad L_2 = \{ o_1 \rightarrow r_1 ; \; o_2 \rightarrow r_1 \} \]
-    \[ L_1 \sqcup L_2  = \{ o_1 \rightarrow r_1 ; \; o_2 \rightarrow r_1 \} \]
-    \[ L_1 \sqcap L_2  = \{ o_1 \rightarrow r_1, r_2 \} \]
-    \[ L_2 \sqsubseteq L_1 \land L_1 \not\sqsubseteq L_2 \]
-\end{frame}
-
 \begin{frame}
   \frametitle{Abstract lattice}
   \begin{center}
@@ -198,10 +194,46 @@
 \end{frame}
 
 \begin{frame}
+  \frametitle{Label policies}
+  \centering
+
+  \newcommand{\mathvspace}{\\[2em]}
+    \[ L_1 = \{ o_1 \rightarrow r_1, r_2 \} \quad L_2 = \{ o_1 \rightarrow r_1 ; \; o_2 \rightarrow r_1 \} \]
+    \[ L_1 \sqcup L_2  = \{ o_1 \rightarrow r_1 ; \; o_2 \rightarrow r_1 \} \]
+    \[ L_1 \sqcap L_2  = \{ o_1 \rightarrow r_1, r_2 \} \]
+    \[ L_2 \sqsubseteq L_1 \land L_1 \not\sqsubseteq L_2 \]
+  \end{frame}
+
+\begin{frame}
   \frametitle{Example lattice}
   \scalebox{0.5}{\input{figures/lattice_example.tikz}}
 \end{frame}
 
+\subsection{Scope}
+\begin{frame}
+  \frametitle{Scope}
+
+  Run-time
+  \begin{itemize}
+    \item Principal hierarchy
+    \item Label as first-class citizen
+    \item Function call authority
+    \item Run-time label checking
+  \end{itemize}
+  \vspace{1em}
+  Integrity
+  \begin{itemize}
+    \item ``Opposite'' of privacy
+    \item \emph{CIF} and \emph{CBIF} employ this
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%
+% INFERENCE
+%%%%%%%%%%%
+\section{Inference}
+
+\subsection{Constraint checking}
 \begin{frame}
   \frametitle{Constraint checking}
 
@@ -221,21 +253,27 @@
   \end{itemize}
 \end{frame}
 
-\subsection{Scope}
+\subsection{Algorithm}
 \begin{frame}
-  \frametitle{Static \& Runtime}
+  \frametitle{Algorithm}
+  \centering
 
-  \begin{itemize}
-    \item Principal hierarchy
-    \item Label as first-class citizen
-    \item Function call authority
-    \item Run-time label checking
-  \end{itemize}
+  \scalebox{.9}{
+  \input{../algorithms/inference}
+  }
 \end{frame}
 
+\subsection{Polyvariance function evaluation}
 \begin{frame}
-  \frametitle{Integrity}
+  \frametitle{Polyvariance function evaluation}
 
+  Alternative to function default label
+  \begin{itemize}
+    \item Evaluation dependent on each call
+    \item Set of constraints based on parameters
+  \end{itemize}
+  \vspace{1em}
+  Example
 \end{frame}
 
 %%%%%%%%%%
@@ -252,33 +290,9 @@
 \subsection{Demonstration}
 \begin{frame}
   \frametitle{Demonstration}
-  Demonstration!
-\end{frame}
-
-%%%%%%%%%%%
-% INFERENCE
-%%%%%%%%%%%
-\section{Inference}
-
-\subsection{Algorithm}
-\begin{frame}
-  \frametitle{Algorithm}
   \centering
 
-  \scalebox{.9}{
-  \input{../algorithms/inference}
-  }
-\end{frame}
-
-\subsection{Polyvariance function evaluation}
-\begin{frame}
-  \frametitle{Polyvariance function evaluation}
-
-  Alternative to function default label -- join of parameters
-  \begin{itemize}
-    \item Constraints for calls
-    \item Constraints for return statements
-  \end{itemize}
+  \includegraphics[width=\textwidth]{figures/codemonkey}
 \end{frame}
 
 %%%%%%%%%%%%%%%
@@ -291,6 +305,7 @@
   \frametitle{Bill calculator}
   \centering
 
+  \dlmc{\{\{u->u, ec @ u: 1s, 00:00-01:00 14d\}\}}\\[2em]
   \scalebox{1}{\input{figures/ta_bill_calculator.tikz}}
 \end{frame}
 
@@ -298,6 +313,7 @@
   \frametitle{Password checker}
   \centering
 
+  \dlmc{\{\{pc-> @ 10m * 3\}\}}\\
   \scalebox{0.4}{\input{figures/ta_password_checker.tikz}}
 \end{frame}
 
@@ -328,15 +344,6 @@
   \centering
 
   \includegraphics[width=\textwidth]{timed_automata/count4.pdf}
-\end{frame}
-
-\subsection{Implementation}
-\begin{frame}
-  \frametitle{Implementation}
-
-  \begin{itemize}
-    \item Array for count
-  \end{itemize}
 \end{frame}
 
 {\aauwavesbg
