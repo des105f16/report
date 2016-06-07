@@ -1,0 +1,11 @@
+\newcommand{\ccc}{\texttt{get\_users}}
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=7cm, semithick]
+	\node(start) {};
+	\node[state] (S0) [right=0cm and 1cm of start]{$s_0$};
+	\node[state] (S1) [right of=start] {$s_1$};
+
+	\path[every node/.style={sloped,anchor=south,auto=false}]
+	(start) edge node {} (S0)
+	(S0) edge [bend left] node {$\texttt{calculate\_bill}, c_1 := 0$} (S1)
+	(S1) edge [bend left] node {$c_1 \geq 1s$} (S0);
+\end{tikzpicture}
